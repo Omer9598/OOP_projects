@@ -11,11 +11,14 @@ import danogl.gui.*;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
+import java.util.Random;
 
 
 public class BrickerGameManager extends GameManager {
 
-    int BORDER_WIDTH = 5;
+    private final int BORDER_WIDTH = 5;
+    private final float BALL_SPEED = 300;
+    private Ball ball;
 
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
         // Calling the constructor of mother class
@@ -33,7 +36,7 @@ public class BrickerGameManager extends GameManager {
         // creating the ball
         createBall(imageReader, windowDimensions, soundReader);
         // creating the paddles
-        createPaddles(imageReader, windowDimensions, inputListener);
+        createPaddles(imageReader, windowDimensions, inputListener, ball);
         // create the left and right walls
         createWall(Vector2.ZERO, new Vector2(BORDER_WIDTH,
                 windowDimensions.y()));
@@ -66,7 +69,8 @@ public class BrickerGameManager extends GameManager {
     /** This function will create the paddles and add it to gameObjects*/
     private void createPaddles(ImageReader imageReader,
                                Vector2 windowDimensions,
-                               UserInputListener userInputListener) {
+                               UserInputListener userInputListener,
+                               GameObject objectToFollow) {
         Renderable paddleImage = imageReader.readImage("assets/paddle.png",
                 true);
 
@@ -83,7 +87,7 @@ public class BrickerGameManager extends GameManager {
 
         // create AI user_Paddle
         GameObject aiPaddle = new AiPaddle(Vector2.ZERO,
-                new Vector2(100, 15), paddleImage);
+                new Vector2(100, 15), paddleImage, objectToFollow);
         gameObjects().addGameObject(aiPaddle);
         aiPaddle.setCenter(new Vector2(windowDimensions.x() / 2, 30));
     }
@@ -97,10 +101,20 @@ public class BrickerGameManager extends GameManager {
         // creating the Ball (inheriting from gameObject) and adding it
         Sound collisionSound = soundReader.readSound(
                 "assets/blop_cut_silenced.wav");
-        GameObject ball = new Ball(Vector2.ZERO, new Vector2(20, 20),
+        ball = new Ball(Vector2.ZERO, new Vector2(20, 20),
                 ballImage, collisionSound);
         ball.setCenter(windowDimensions.mult(0.5F));
-        ball.setVelocity(new Vector2(0, 400));
+        // setting the ball's velocity - start in a random direction
+        float ballVelX = BALL_SPEED;
+        float ballVelY = BALL_SPEED;
+        Random random = new Random();
+        if (random.nextBoolean()) {
+            ballVelX *= -1;
+        }
+        if (random.nextBoolean()) {
+            ballVelY *= -1;
+        }
+        ball.setVelocity(new Vector2(ballVelX, ballVelY));
         this.gameObjects().addGameObject(ball);
     }
 

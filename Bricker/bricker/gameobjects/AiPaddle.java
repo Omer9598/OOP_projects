@@ -5,6 +5,9 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
 public class AiPaddle extends GameObject {
+    private static final float PADDLE_SPEED = 300;
+    private GameObject objectToFollow;
+
     /**
      * Construct a new GameObject instance.
      *
@@ -14,7 +17,22 @@ public class AiPaddle extends GameObject {
      * @param renderable    The renderable representing the object. Can be null, in which case
      *                      the GameObject will not be rendered.
      */
-    public AiPaddle(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable) {
+    public AiPaddle(Vector2 topLeftCorner, Vector2 dimensions,
+                    Renderable renderable, GameObject objectToFollow) {
         super(topLeftCorner, dimensions, renderable);
+        this.objectToFollow = objectToFollow;
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+        Vector2 movementDir = Vector2.ZERO;
+        if (objectToFollow.getCenter().x() < getCenter().x()) {
+            movementDir = Vector2.LEFT;
+        }
+        if (objectToFollow.getCenter().x() > getCenter().x()) {
+            movementDir = Vector2.RIGHT;
+        }
+        setVelocity(movementDir.mult(PADDLE_SPEED));
     }
 }
