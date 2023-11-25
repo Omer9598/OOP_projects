@@ -5,6 +5,7 @@ public class Tournament {
     private static final int BOARD_SIZE_INDEX = 1;
     private static final int STREAK_NUM_INDEX = 2;
     private static final int RENDER_INDEX = 3;
+    //סתום כבר
     private static final int PLAYER_1_INDEX = 4;
     private static final int PLAYER_2_INDEX = 5;
     private static final String ERR_MESSAGE = "Choose a player, and start" +
