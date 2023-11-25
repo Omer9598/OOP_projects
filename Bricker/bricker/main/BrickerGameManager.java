@@ -1,7 +1,7 @@
 package bricker.main;
 
-import bricker.gameobjects.AiPaddle;
 import bricker.gameobjects.Ball;
+import bricker.gameobjects.Brick;
 import bricker.gameobjects.UserPaddle;
 import danogl.GameManager;
 import danogl.GameObject;
@@ -16,9 +16,8 @@ import java.util.Random;
 
 public class BrickerGameManager extends GameManager {
 
-    private final int BORDER_WIDTH = 5;
-    private final float BALL_SPEED = 300;
-    private Ball ball;
+    private final int BORDER_WIDTH = 12;
+    private final float BALL_SPEED = 250;
 
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
         // Calling the constructor of mother class
@@ -36,7 +35,7 @@ public class BrickerGameManager extends GameManager {
         // creating the ball
         createBall(imageReader, windowDimensions, soundReader);
         // creating the paddles
-        createPaddles(imageReader, windowDimensions, inputListener, ball);
+        createPaddles(imageReader, windowDimensions, inputListener);
         // create the left and right walls
         createWall(Vector2.ZERO, new Vector2(BORDER_WIDTH,
                 windowDimensions.y()));
@@ -44,6 +43,18 @@ public class BrickerGameManager extends GameManager {
                    new Vector2(BORDER_WIDTH, windowDimensions.y()));
         // create background
         createBackground(imageReader, windowDimensions);
+        // create bricks
+        createBricks(windowDimensions, imageReader);
+    }
+
+    /**
+     * This function will create the bricks of the game
+     */
+    private void createBricks(Vector2 windowDimensions, ImageReader imageReader) {
+        GameObject brick = new Brick(Vector2.ZERO,
+                new Vector2(windowDimensions.x(),15),
+                imageReader.readImage("assets/Brick.png", false));
+        gameObjects().addGameObject(brick);
     }
 
     /**
@@ -69,8 +80,7 @@ public class BrickerGameManager extends GameManager {
     /** This function will create the paddles and add it to gameObjects*/
     private void createPaddles(ImageReader imageReader,
                                Vector2 windowDimensions,
-                               UserInputListener userInputListener,
-                               GameObject objectToFollow) {
+                               UserInputListener userInputListener) {
         Renderable paddleImage = imageReader.readImage("assets/paddle.png",
                 true);
 
@@ -84,12 +94,6 @@ public class BrickerGameManager extends GameManager {
         gameObjects().addGameObject(user_Paddle);
         user_Paddle.setCenter(new Vector2(windowDimensions.x() / 2,
                 windowDimensions.y() - 30));
-
-        // create AI user_Paddle
-        GameObject aiPaddle = new AiPaddle(Vector2.ZERO,
-                new Vector2(100, 15), paddleImage, objectToFollow);
-        gameObjects().addGameObject(aiPaddle);
-        aiPaddle.setCenter(new Vector2(windowDimensions.x() / 2, 30));
     }
 
     /** This function will create the game ball and add it to the gameObjects */
@@ -101,7 +105,7 @@ public class BrickerGameManager extends GameManager {
         // creating the Ball (inheriting from gameObject) and adding it
         Sound collisionSound = soundReader.readSound(
                 "assets/blop_cut_silenced.wav");
-        ball = new Ball(Vector2.ZERO, new Vector2(20, 20),
+        Ball ball = new Ball(Vector2.ZERO, new Vector2(20, 20),
                 ballImage, collisionSound);
         ball.setCenter(windowDimensions.mult(0.5F));
         // setting the ball's velocity - start in a random direction
@@ -123,3 +127,10 @@ public class BrickerGameManager extends GameManager {
                 new Vector2(700, 500)).run();
     }
 }
+
+
+//        // create AI user_Paddle
+//        GameObject aiPaddle = new AiPaddle(Vector2.ZERO,
+//                new Vector2(100, 15), paddleImage, objectToFollow);
+//        gameObjects().addGameObject(aiPaddle);
+//        aiPaddle.setCenter(new Vector2(windowDimensions.x() / 2, 30));
