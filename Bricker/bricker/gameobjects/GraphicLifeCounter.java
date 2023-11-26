@@ -43,7 +43,7 @@ public class GraphicLifeCounter extends GameObject {
                     new Vector2(xCord, yCord),
                     dimensions, renderable);
             xCord += dimensions.x() + 2;
-            gameObjectCollection.addGameObject(heart, Layer.STATIC_OBJECTS);
+            gameObjectCollection.addGameObject(heart, Layer.BACKGROUND);
             heartsArr[i] = heart;
         }
     }
@@ -55,7 +55,7 @@ public class GraphicLifeCounter extends GameObject {
         if (numOfLives > livesCounter.value()) {
             // deleting one of the hearts and updating the number of lives
             gameObjectCollection.removeGameObject(
-                    heartsArr[livesCounter.value()], Layer.STATIC_OBJECTS);
+                    heartsArr[livesCounter.value()], Layer.BACKGROUND);
         }
     }
 }

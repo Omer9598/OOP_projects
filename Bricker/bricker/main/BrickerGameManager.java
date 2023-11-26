@@ -34,7 +34,7 @@ public class BrickerGameManager extends GameManager {
         // Calling the constructor of mother class
         super(windowTitle, windowDimensions);
         brickCounter = new Counter(0);
-        livesCounter = new Counter(INIT_NUM_OF_LIVES);
+        livesCounter = new Counter(0);
     }
 
     @Override
