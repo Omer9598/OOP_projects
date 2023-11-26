@@ -2,13 +2,12 @@ package bricker.gameobjects;
 
 import danogl.GameObject;
 import danogl.collisions.Collision;
-import danogl.collisions.GameObjectCollection;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import bricker.brick_strategies.CollisionStrategy;
 
 public class Brick extends GameObject {
-    private CollisionStrategy collisionStrategy;
+    private final CollisionStrategy collisionStrategy;
 
     /**
      * Construct a new GameObject instance.

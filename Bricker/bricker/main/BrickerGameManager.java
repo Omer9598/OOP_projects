@@ -4,6 +4,7 @@ import bricker.brick_strategies.CollisionStrategy;
 import bricker.gameobjects.Ball;
 import bricker.gameobjects.Brick;
 import bricker.gameobjects.UserPaddle;
+
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
@@ -18,10 +19,10 @@ import java.util.Random;
 public class BrickerGameManager extends GameManager {
 
     private final int BORDERS = 10;
-    private final float BALL_SPEED = 200;
-    private final float BRICK_HEIGHT = 15;
-    private final float BRICKS_IN_A_ROW = 8;
-    private final float BRICKS_GAP = 3;
+    private final float BALL_SPEED = 300;
+    private Ball ball;
+    private Vector2 windowDimensions;
+    private WindowController windowController;
 
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
         // Calling the constructor of mother class
@@ -33,9 +34,10 @@ public class BrickerGameManager extends GameManager {
                                SoundReader soundReader,
                                UserInputListener inputListener,
                                WindowController windowController) {
+        this.windowController = windowController;
         super.initializeGame(imageReader, soundReader, inputListener,
                 windowController);
-        Vector2 windowDimensions = windowController.getWindowDimensions();
+        windowDimensions = windowController.getWindowDimensions();
         // creating the ball
         createBall(imageReader, windowDimensions, soundReader);
         // creating the paddles
@@ -53,28 +55,64 @@ public class BrickerGameManager extends GameManager {
         createBricks(windowDimensions, imageReader);
     }
 
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+        checkForGameEnd();
+        }
+
+    /**
+     * This function will check if a game has ended (win or lose), and ask
+     * the player if he wants to play again
+     */
+    private void checkForGameEnd() {
+        String prompt = "";
+        // Checking if the game ended
+        float ballHeight = ball.getCenter().y();
+        if (ballHeight > windowDimensions.y()) {
+            // The player lost
+            prompt = "You lose!";
+        }
+        // TODO - add condition to win
+        // game ended - asking to play again
+        if (!prompt.isEmpty()) {
+            prompt += " Play again?";
+            if (windowController.openYesNoDialog(prompt)) {
+                windowController.resetGame();
+            } else {
+                windowController.closeWindow();
+            }
+        }
+    }
+
+
+
     /**
      * This function will create the bricks of the game with the recommended
      * number of bricks - 5 rows, 8 bricks in each row
      */
     private void createBricks(Vector2 windowDimensions, ImageReader imageReader) {
         // finding the width of each brick
+        float bricksGap = 3;
+        float brickInRow = 8;
         float brickWidth = ((windowDimensions.x() - 2 * BORDERS) /
-                BRICKS_IN_A_ROW) - BRICKS_GAP - 3;
-        float bricksBottom = 5 * (BRICKS_GAP + BRICK_HEIGHT) + 2 * BORDERS;
+                brickInRow) - bricksGap - 3;
+        float brickHeight = 15;
+        float bricksBottom = 5 * (bricksGap + brickHeight) + 2 * BORDERS;
 
         // creating the bricks
-        for (float rowPixel = 2 * BORDERS + BRICKS_GAP;
+        for (float rowPixel = 2 * BORDERS + bricksGap;
              rowPixel < bricksBottom;
-             rowPixel += BRICK_HEIGHT + BRICKS_GAP) {
-            for (float colPixel = 2 * BORDERS + BRICKS_GAP;
+             rowPixel += brickHeight + bricksGap) {
+            for (float colPixel = 2 * BORDERS + bricksGap;
                  colPixel < windowDimensions.x() - 4 * BORDERS;
-                 colPixel += brickWidth + BRICKS_GAP) {
+                 colPixel += brickWidth + bricksGap) {
                 GameObject brick = new Brick(new Vector2(colPixel, rowPixel),
-                        new Vector2(brickWidth, BRICK_HEIGHT),
+                        new Vector2(brickWidth, brickHeight),
                         imageReader.readImage("assets/Brick.png", false),
                         new CollisionStrategy(gameObjects()));
-                gameObjects().addGameObject(brick);
+                // adding the bricks to a static layer
+                gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
             }
         }
     }
@@ -127,7 +165,7 @@ public class BrickerGameManager extends GameManager {
         // creating the Ball (inheriting from gameObject) and adding it
         Sound collisionSound = soundReader.readSound(
                 "assets/blop_cut_silenced.wav");
-        Ball ball = new Ball(Vector2.ZERO, new Vector2(20, 20),
+        ball = new Ball(Vector2.ZERO, new Vector2(20, 20),
                 ballImage, collisionSound);
         ball.setCenter(windowDimensions.mult(0.5F));
         // setting the ball's velocity - start in a random direction
