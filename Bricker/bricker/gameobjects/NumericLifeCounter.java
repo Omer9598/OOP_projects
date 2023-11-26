@@ -23,4 +23,9 @@ public class NumericLifeCounter extends GameObject {
         super(topLeftCorner, dimensions, renderable);
         this.livesCounter = livesCounter;
     }
+
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+    }
 }

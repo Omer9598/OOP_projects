@@ -12,6 +12,7 @@ public class GraphicLifeCounter extends GameObject {
     private final Counter livesCounter;
     private final GameObjectCollection gameObjectCollection;
     private int numOfLives;
+    private GameObject[] heartsArr;
 
     /**
      * Construct a new GameObject instance.
@@ -21,7 +22,6 @@ public class GraphicLifeCounter extends GameObject {
      * @param dimensions            Width and height in window coordinates.
      * @param renderable            The renderable representing the object. Can be null, in which case
      *                              the GameObject will not be rendered.
-     * @param gameObjectCollection
      */
     public GraphicLifeCounter(Vector2 topLeftCorner, Vector2 dimensions,
                               Renderable renderable, Counter livesCounter,
@@ -29,8 +29,10 @@ public class GraphicLifeCounter extends GameObject {
                               int numOfLives) {
         super(topLeftCorner, dimensions, renderable);
         this.livesCounter = livesCounter;
+        this.livesCounter.increaseBy(numOfLives);
         this.gameObjectCollection = gameObjectCollection;
         this.numOfLives = numOfLives;
+        this.heartsArr = new GameObject[numOfLives];
 
         float xCord = topLeftCorner.x();
         float yCord = topLeftCorner.y();
@@ -42,6 +44,7 @@ public class GraphicLifeCounter extends GameObject {
                     dimensions, renderable);
             xCord += dimensions.x() + 2;
             gameObjectCollection.addGameObject(heart, Layer.STATIC_OBJECTS);
+            heartsArr[i] = heart;
         }
     }
 
@@ -49,11 +52,10 @@ public class GraphicLifeCounter extends GameObject {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        if (numOfLives < livesCounter.value()) {
+        if (numOfLives > livesCounter.value()) {
             // deleting one of the hearts and updating the number of lives
-            gameObjectCollection.removeGameObject(this,
-                    Layer.STATIC_OBJECTS);
-            numOfLives--;
+            gameObjectCollection.removeGameObject(
+                    heartsArr[livesCounter.value()], Layer.STATIC_OBJECTS);
         }
     }
 }

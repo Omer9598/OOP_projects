@@ -35,8 +35,8 @@ public class Paddle extends GameObject {
 
     @Override
     public void update(float deltaTime) {
-        // deltaTime is the time that elapsed from the last frame
         super.update(deltaTime);
+        float gapPaddleToWindow = 48;
         // handling left and right key presses - moving the paddle
         Vector2 movementDir = Vector2.ZERO;
         if (inputListener.isKeyPressed(KeyEvent.VK_LEFT)) {
@@ -51,7 +51,7 @@ public class Paddle extends GameObject {
         if (MIN_DISTANCE_FROM_SCREEN_EDGE > getTopLeftCorner().x()) {
             // setting the paddle to the left border
             setTopLeftCorner(new Vector2(MIN_DISTANCE_FROM_SCREEN_EDGE,
-                    windowDimensions.y() - 38));
+                    windowDimensions.y() - gapPaddleToWindow));
         }
         if (windowDimensions.x() - MIN_DISTANCE_FROM_SCREEN_EDGE -
                 getDimensions().x() < getTopLeftCorner().x()) {
@@ -59,7 +59,7 @@ public class Paddle extends GameObject {
             setTopLeftCorner(new Vector2(windowDimensions.x() -
                     MIN_DISTANCE_FROM_SCREEN_EDGE -
                     getDimensions().x(),
-                    windowDimensions.y() - 38));
+                    windowDimensions.y() - gapPaddleToWindow));
         }
     }
 }

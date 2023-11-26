@@ -28,6 +28,7 @@ public class BrickerGameManager extends GameManager {
     private final Counter brickCounter;
     private final Counter livesCounter;
     private final int INIT_NUM_OF_LIVES = 3;
+    private GraphicLifeCounter hearts;
 
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
         // Calling the constructor of mother class
@@ -41,21 +42,20 @@ public class BrickerGameManager extends GameManager {
                                SoundReader soundReader,
                                UserInputListener inputListener,
                                WindowController windowController) {
-        this.windowController = windowController;
         super.initializeGame(imageReader, soundReader, inputListener,
                 windowController);
+        this.windowController = windowController;
+        windowController.setTargetFramerate(80);
         windowDimensions = windowController.getWindowDimensions();
         // creating the ball
         createBall(imageReader, soundReader);
         // creating the paddle
-        createPaddles(imageReader, windowDimensions, inputListener);
+        createPaddles(imageReader, inputListener);
         // create the left, right and upper walls
-        createWall(Vector2.ZERO, new Vector2(BORDERS,
-                windowDimensions.y()));
+        createWall(Vector2.ZERO, new Vector2(BORDERS, windowDimensions.y()));
         createWall(new Vector2(windowDimensions.x(), 0),
                    new Vector2(BORDERS, windowDimensions.y()));
-        createWall(Vector2.ZERO, new Vector2(windowDimensions.x(),
-                BORDERS));
+        createWall(Vector2.ZERO, new Vector2(windowDimensions.x(), BORDERS));
         // create background
         createBackground(imageReader);
         // create bricks
@@ -65,16 +65,14 @@ public class BrickerGameManager extends GameManager {
     }
 
     private void createLives(ImageReader imageReader) {
-        float heartWidthAndHeight = 30F;
+        float heartDim = 30F;
         Vector2 heartsTopLeftCorner = new Vector2(2, windowDimensions.y() - 30);
-        Vector2 heartDimensions = new Vector2(heartWidthAndHeight,
-                heartWidthAndHeight);
+        Vector2 heartDimensions = new Vector2(heartDim, heartDim);
         // creating graphic hearts
-        GraphicLifeCounter graphicLifeCounter = new GraphicLifeCounter(
-                heartsTopLeftCorner, heartDimensions,
+        hearts = new GraphicLifeCounter(heartsTopLeftCorner, heartDimensions,
                 imageReader.readImage("assets/heart.png", true),
                 livesCounter, gameObjects(), INIT_NUM_OF_LIVES);
-        graphicLifeCounter.update(0.5f);
+        gameObjects().addGameObject(hearts, Layer.BACKGROUND);
     }
 
     @Override
@@ -83,11 +81,14 @@ public class BrickerGameManager extends GameManager {
         float ballHeight = ball.getCenter().y();
         if (ballHeight > windowDimensions.y()) {
             livesCounter.decrement();
+            checkForGameEnd();
             // updating the ball's position to the middle of the board
             startBall();
         }
-        checkForGameEnd();
+        else {
+            checkForGameEnd();
         }
+    }
 
     /**
      * This function will check if a game has ended (win or lose), and ask
@@ -102,7 +103,7 @@ public class BrickerGameManager extends GameManager {
         }
         if (brickCounter.value() == 0) {
             // the player won
-            prompt = "you win!";
+            prompt = "You win!";
         }
         // game ended - asking to play again
         if (!prompt.isEmpty()) {
@@ -170,11 +171,10 @@ public class BrickerGameManager extends GameManager {
 
     /** This function will create the paddles and add it to gameObjects*/
     private void createPaddles(ImageReader imageReader,
-                               Vector2 windowDimensions,
                                UserInputListener userInputListener) {
         Renderable paddleImage = imageReader.readImage("assets/paddle.png",
                 true);
-
+        float gapPaddleToWindow = 40;
         // create user userPaddle
         GameObject user_Paddle = new Paddle(
                 Vector2.ZERO,
@@ -184,7 +184,7 @@ public class BrickerGameManager extends GameManager {
                 windowDimensions);
         gameObjects().addGameObject(user_Paddle);
         user_Paddle.setCenter(new Vector2(windowDimensions.x() / 2,
-                windowDimensions.y() - 35));
+                windowDimensions.y() - gapPaddleToWindow));
     }
 
     /** This function will create the game ball and add it to the gameObjects */
