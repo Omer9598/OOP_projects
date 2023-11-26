@@ -1,5 +1,6 @@
 package bricker.main;
 
+import bricker.brick_strategies.CollisionStrategy;
 import bricker.gameobjects.Ball;
 import bricker.gameobjects.Brick;
 import bricker.gameobjects.UserPaddle;
@@ -16,8 +17,11 @@ import java.util.Random;
 
 public class BrickerGameManager extends GameManager {
 
-    private final int BORDER_WIDTH = 12;
-    private final float BALL_SPEED = 250;
+    private final int BORDERS = 10;
+    private final float BALL_SPEED = 200;
+    private final float BRICK_HEIGHT = 15;
+    private final float BRICKS_IN_A_ROW = 8;
+    private final float BRICKS_GAP = 3;
 
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
         // Calling the constructor of mother class
@@ -36,11 +40,13 @@ public class BrickerGameManager extends GameManager {
         createBall(imageReader, windowDimensions, soundReader);
         // creating the paddles
         createPaddles(imageReader, windowDimensions, inputListener);
-        // create the left and right walls
-        createWall(Vector2.ZERO, new Vector2(BORDER_WIDTH,
+        // create the left, right and upper walls
+        createWall(Vector2.ZERO, new Vector2(BORDERS,
                 windowDimensions.y()));
         createWall(new Vector2(windowDimensions.x(), 0),
-                   new Vector2(BORDER_WIDTH, windowDimensions.y()));
+                   new Vector2(BORDERS, windowDimensions.y()));
+        createWall(Vector2.ZERO, new Vector2(windowDimensions.x(),
+                BORDERS));
         // create background
         createBackground(imageReader, windowDimensions);
         // create bricks
@@ -48,13 +54,29 @@ public class BrickerGameManager extends GameManager {
     }
 
     /**
-     * This function will create the bricks of the game
+     * This function will create the bricks of the game with the recommended
+     * number of bricks - 5 rows, 8 bricks in each row
      */
     private void createBricks(Vector2 windowDimensions, ImageReader imageReader) {
-        GameObject brick = new Brick(Vector2.ZERO,
-                new Vector2(windowDimensions.x(),15),
-                imageReader.readImage("assets/Brick.png", false));
-        gameObjects().addGameObject(brick);
+        // finding the width of each brick
+        float brickWidth = ((windowDimensions.x() - 2 * BORDERS) /
+                BRICKS_IN_A_ROW) - BRICKS_GAP - 3;
+        float bricksBottom = 5 * (BRICKS_GAP + BRICK_HEIGHT) + 2 * BORDERS;
+
+        // creating the bricks
+        for (float rowPixel = 2 * BORDERS + BRICKS_GAP;
+             rowPixel < bricksBottom;
+             rowPixel += BRICK_HEIGHT + BRICKS_GAP) {
+            for (float colPixel = 2 * BORDERS + BRICKS_GAP;
+                 colPixel < windowDimensions.x() - 4 * BORDERS;
+                 colPixel += brickWidth + BRICKS_GAP) {
+                GameObject brick = new Brick(new Vector2(colPixel, rowPixel),
+                        new Vector2(brickWidth, BRICK_HEIGHT),
+                        imageReader.readImage("assets/Brick.png", false),
+                        new CollisionStrategy(gameObjects()));
+                gameObjects().addGameObject(brick);
+            }
+        }
     }
 
     /**
