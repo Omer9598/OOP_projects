@@ -3,7 +3,8 @@ package bricker.main;
 import bricker.brick_strategies.CollisionStrategy;
 import bricker.gameobjects.Ball;
 import bricker.gameobjects.Brick;
-import bricker.gameobjects.UserPaddle;
+import bricker.gameobjects.GraphicLifeCounter;
+import bricker.gameobjects.Paddle;
 
 import danogl.GameManager;
 import danogl.GameObject;
@@ -25,11 +26,14 @@ public class BrickerGameManager extends GameManager {
     private Vector2 windowDimensions;
     private WindowController windowController;
     private final Counter brickCounter;
+    private final Counter livesCounter;
+    private final int INIT_NUM_OF_LIVES = 3;
 
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
         // Calling the constructor of mother class
         super(windowTitle, windowDimensions);
         brickCounter = new Counter(0);
+        livesCounter = new Counter(INIT_NUM_OF_LIVES);
     }
 
     @Override
@@ -42,8 +46,8 @@ public class BrickerGameManager extends GameManager {
                 windowController);
         windowDimensions = windowController.getWindowDimensions();
         // creating the ball
-        createBall(imageReader, windowDimensions, soundReader);
-        // creating the paddles
+        createBall(imageReader, soundReader);
+        // creating the paddle
         createPaddles(imageReader, windowDimensions, inputListener);
         // create the left, right and upper walls
         createWall(Vector2.ZERO, new Vector2(BORDERS,
@@ -53,24 +57,35 @@ public class BrickerGameManager extends GameManager {
         createWall(Vector2.ZERO, new Vector2(windowDimensions.x(),
                 BORDERS));
         // create background
-        createBackground(imageReader, windowDimensions);
+        createBackground(imageReader);
         // create bricks
-        createBricks(windowDimensions, imageReader);
+        createBricks(imageReader);
+        // create lives
+        createLives(imageReader);
     }
 
-    /**
-     * This function will init the number of hearts in a single game.
-     * When a player loses a heart, the ball jumps back to the center of the
-     * screen.
-     * When the player is out of hearts, the game stops
-     */
-//    private void createHearts() {
-//
-//    }
+    private void createLives(ImageReader imageReader) {
+        float heartWidthAndHeight = 30F;
+        Vector2 heartsTopLeftCorner = new Vector2(2, windowDimensions.y() - 30);
+        Vector2 heartDimensions = new Vector2(heartWidthAndHeight,
+                heartWidthAndHeight);
+        // creating graphic hearts
+        GraphicLifeCounter graphicLifeCounter = new GraphicLifeCounter(
+                heartsTopLeftCorner, heartDimensions,
+                imageReader.readImage("assets/heart.png", true),
+                livesCounter, gameObjects(), INIT_NUM_OF_LIVES);
+        graphicLifeCounter.update(0.5f);
+    }
 
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
+        float ballHeight = ball.getCenter().y();
+        if (ballHeight > windowDimensions.y()) {
+            livesCounter.decrement();
+            // updating the ball's position to the middle of the board
+            startBall();
+        }
         checkForGameEnd();
         }
 
@@ -81,8 +96,7 @@ public class BrickerGameManager extends GameManager {
     private void checkForGameEnd() {
         String prompt = "";
         // Checking if the game ended
-        float ballHeight = ball.getCenter().y();
-        if (ballHeight > windowDimensions.y()) {
+        if (livesCounter.value() == 0) {
             // The player lost
             prompt = "You lose!";
         }
@@ -103,12 +117,11 @@ public class BrickerGameManager extends GameManager {
     }
 
 
-
     /**
      * This function will create the bricks of the game with the recommended
      * number of bricks - 5 rows, 8 bricks in each row
      */
-    private void createBricks(Vector2 windowDimensions, ImageReader imageReader)
+    private void createBricks(ImageReader imageReader)
     {
         // finding the width of each brick
         float bricksGap = 3;
@@ -139,8 +152,7 @@ public class BrickerGameManager extends GameManager {
     /**
      * This function will create the background
      */
-    private void createBackground(ImageReader imageReader,
-                                  Vector2 windowDimensions) {
+    private void createBackground(ImageReader imageReader) {
         GameObject background = new GameObject(Vector2.ZERO, windowDimensions,
                 imageReader.readImage("assets/DARK_BG2_small.jpeg", false));
         background.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
@@ -164,7 +176,7 @@ public class BrickerGameManager extends GameManager {
                 true);
 
         // create user userPaddle
-        GameObject user_Paddle = new UserPaddle(
+        GameObject user_Paddle = new Paddle(
                 Vector2.ZERO,
                 new Vector2(100, 15),
                 paddleImage,
@@ -172,12 +184,11 @@ public class BrickerGameManager extends GameManager {
                 windowDimensions);
         gameObjects().addGameObject(user_Paddle);
         user_Paddle.setCenter(new Vector2(windowDimensions.x() / 2,
-                windowDimensions.y() - 30));
+                windowDimensions.y() - 35));
     }
 
     /** This function will create the game ball and add it to the gameObjects */
-    private void createBall(ImageReader imageReader, Vector2 windowDimensions,
-                            SoundReader soundReader) {
+    private void createBall(ImageReader imageReader, SoundReader soundReader) {
         // using the imageReader class from danogl
         Renderable ballImage = imageReader.readImage("assets/ball.png",
                 true);
@@ -186,6 +197,14 @@ public class BrickerGameManager extends GameManager {
                 "assets/blop_cut_silenced.wav");
         ball = new Ball(Vector2.ZERO, new Vector2(20, 20),
                 ballImage, collisionSound);
+        startBall();
+    }
+
+    /**
+     * This function will center the ball and set its random velocity, when
+     * starting a new game and when a heart is lost
+     */
+    private void startBall() {
         ball.setCenter(windowDimensions.mult(0.5F));
         // setting the ball's velocity - start in a random direction
         float ballVelX = BALL_SPEED;
@@ -201,15 +220,9 @@ public class BrickerGameManager extends GameManager {
         this.gameObjects().addGameObject(ball);
     }
 
+
     public static void main(String[] args) {
         new BrickerGameManager("Bricker",
                 new Vector2(700, 500)).run();
     }
 }
-
-
-//        // create AI user_Paddle
-//        GameObject aiPaddle = new AiPaddle(Vector2.ZERO,
-//                new Vector2(100, 15), paddleImage, objectToFollow);
-//        gameObjects().addGameObject(aiPaddle);
-//        aiPaddle.setCenter(new Vector2(windowDimensions.x() / 2, 30));
