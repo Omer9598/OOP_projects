@@ -11,6 +11,7 @@ import danogl.collisions.Layer;
 import danogl.components.CoordinateSpace;
 import danogl.gui.*;
 import danogl.gui.rendering.Renderable;
+import danogl.util.Counter;
 import danogl.util.Vector2;
 
 import java.util.Random;
@@ -18,15 +19,17 @@ import java.util.Random;
 
 public class BrickerGameManager extends GameManager {
 
-    private final int BORDERS = 10;
-    private final float BALL_SPEED = 300;
+    private final int BORDERS = 12;
+    private final float BALL_SPEED = 250;
     private Ball ball;
     private Vector2 windowDimensions;
     private WindowController windowController;
+    private final Counter brickCounter;
 
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
         // Calling the constructor of mother class
         super(windowTitle, windowDimensions);
+        brickCounter = new Counter(0);
     }
 
     @Override
@@ -55,6 +58,16 @@ public class BrickerGameManager extends GameManager {
         createBricks(windowDimensions, imageReader);
     }
 
+    /**
+     * This function will init the number of hearts in a single game.
+     * When a player loses a heart, the ball jumps back to the center of the
+     * screen.
+     * When the player is out of hearts, the game stops
+     */
+//    private void createHearts() {
+//
+//    }
+
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
@@ -73,13 +86,17 @@ public class BrickerGameManager extends GameManager {
             // The player lost
             prompt = "You lose!";
         }
-        // TODO - add condition to win
+        if (brickCounter.value() == 0) {
+            // the player won
+            prompt = "you win!";
+        }
         // game ended - asking to play again
         if (!prompt.isEmpty()) {
             prompt += " Play again?";
             if (windowController.openYesNoDialog(prompt)) {
                 windowController.resetGame();
-            } else {
+            }
+            else {
                 windowController.closeWindow();
             }
         }
@@ -91,7 +108,8 @@ public class BrickerGameManager extends GameManager {
      * This function will create the bricks of the game with the recommended
      * number of bricks - 5 rows, 8 bricks in each row
      */
-    private void createBricks(Vector2 windowDimensions, ImageReader imageReader) {
+    private void createBricks(Vector2 windowDimensions, ImageReader imageReader)
+    {
         // finding the width of each brick
         float bricksGap = 3;
         float brickInRow = 8;
@@ -110,9 +128,10 @@ public class BrickerGameManager extends GameManager {
                 GameObject brick = new Brick(new Vector2(colPixel, rowPixel),
                         new Vector2(brickWidth, brickHeight),
                         imageReader.readImage("assets/Brick.png", false),
-                        new CollisionStrategy(gameObjects()));
+                        new CollisionStrategy(gameObjects(), brickCounter));
                 // adding the bricks to a static layer
                 gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
+                brickCounter.increaseBy(1);
             }
         }
     }
