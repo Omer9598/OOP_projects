@@ -11,8 +11,8 @@ public class GraphicLifeCounter extends GameObject {
 
     private final Counter livesCounter;
     private final GameObjectCollection gameObjectCollection;
-    private int numOfLives;
-    private GameObject[] heartsArr;
+    private final int numOfLives;
+    private final GameObject[] heartsArr;
 
     /**
      * Construct a new GameObject instance.

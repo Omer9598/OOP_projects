@@ -1,10 +1,7 @@
 package bricker.main;
 
 import bricker.brick_strategies.CollisionStrategy;
-import bricker.gameobjects.Ball;
-import bricker.gameobjects.Brick;
-import bricker.gameobjects.GraphicLifeCounter;
-import bricker.gameobjects.Paddle;
+import bricker.gameobjects.*;
 
 import danogl.GameManager;
 import danogl.GameObject;
@@ -27,8 +24,6 @@ public class BrickerGameManager extends GameManager {
     private WindowController windowController;
     private final Counter brickCounter;
     private final Counter livesCounter;
-    private final int INIT_NUM_OF_LIVES = 3;
-    private GraphicLifeCounter hearts;
 
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
         // Calling the constructor of mother class
@@ -60,16 +55,38 @@ public class BrickerGameManager extends GameManager {
         createBackground(imageReader);
         // create bricks
         createBricks(imageReader);
-        // create lives
-        createLives(imageReader);
+        // create graphic lives
+        createGraphicLives(imageReader);
+        // create numeric life symbol
+        createNumericLife();
     }
 
-    private void createLives(ImageReader imageReader) {
+    /**
+     * This function will create the lives counter symbol
+     */
+    private void createNumericLife() {
+        Vector2 numericLivesTopLeftCorner =
+                new Vector2(windowDimensions.x() - 100,
+                windowDimensions.y() - 30);
+        Vector2 numericLivesDimensions = new Vector2(20, 20);
+        // creating the graphic numeric lives counter
+        NumericLifeCounter numericLifeCounter = new NumericLifeCounter(
+                numericLivesTopLeftCorner, numericLivesDimensions,
+                livesCounter, gameObjects());
+        gameObjects().addGameObject(numericLifeCounter, Layer.BACKGROUND);
+    }
+
+    /**
+     * This function will create graphic lives symbols (hearts)
+     */
+    private void createGraphicLives(ImageReader imageReader) {
         float heartDim = 30F;
-        Vector2 heartsTopLeftCorner = new Vector2(2, windowDimensions.y() - 30);
+        Vector2 heartsTopLeftCorner = new Vector2(2,
+                windowDimensions.y() - 30);
         Vector2 heartDimensions = new Vector2(heartDim, heartDim);
         // creating graphic hearts
-        hearts = new GraphicLifeCounter(heartsTopLeftCorner, heartDimensions,
+        int INIT_NUM_OF_LIVES = 3;
+        GraphicLifeCounter hearts = new GraphicLifeCounter(heartsTopLeftCorner, heartDimensions,
                 imageReader.readImage("assets/heart.png", true),
                 livesCounter, gameObjects(), INIT_NUM_OF_LIVES);
         gameObjects().addGameObject(hearts, Layer.BACKGROUND);
