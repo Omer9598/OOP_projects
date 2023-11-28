@@ -85,10 +85,10 @@ public class BrickerGameManager extends GameManager {
                 windowDimensions.y() - 30);
         Vector2 heartDimensions = new Vector2(heartDim, heartDim);
         // creating graphic hearts
-        int INIT_NUM_OF_LIVES = 3;
+        int initNumOfLives = 4;
         GraphicLifeCounter hearts = new GraphicLifeCounter(heartsTopLeftCorner, heartDimensions,
                 imageReader.readImage("assets/heart.png", true),
-                livesCounter, gameObjects(), INIT_NUM_OF_LIVES);
+                livesCounter, gameObjects(), initNumOfLives);
         gameObjects().addGameObject(hearts, Layer.BACKGROUND);
     }
 
