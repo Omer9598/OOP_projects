@@ -7,8 +7,8 @@ import danogl.util.Vector2;
 
 import java.awt.event.KeyEvent;
 
-public class UserPaddle extends GameObject {
-    private static final float PADDLE_MOVEMENT_SPEED = 300;
+public class Paddle extends GameObject {
+    private static final float PADDLE_MOVEMENT_SPEED = 400;
     private static final float MIN_DISTANCE_FROM_SCREEN_EDGE = 3;
     private final UserInputListener inputListener;
     private final Vector2 windowDimensions;
@@ -25,9 +25,9 @@ public class UserPaddle extends GameObject {
      * @param inputListener    Object to get input from the user to move the paddle
      * @param windowDimensions The dimensions of the game window
      */
-    public UserPaddle(Vector2 topLeftCorner, Vector2 dimensions,
-                      Renderable renderable, UserInputListener inputListener,
-                      Vector2 windowDimensions) {
+    public Paddle(Vector2 topLeftCorner, Vector2 dimensions,
+                  Renderable renderable, UserInputListener inputListener,
+                  Vector2 windowDimensions) {
         super(topLeftCorner, dimensions, renderable);
         this.inputListener = inputListener;
         this.windowDimensions = windowDimensions;
@@ -35,8 +35,8 @@ public class UserPaddle extends GameObject {
 
     @Override
     public void update(float deltaTime) {
-        // deltaTime is the time that elapsed from the last frame
         super.update(deltaTime);
+        float gapPaddleToWindow = 48;
         // handling left and right key presses - moving the paddle
         Vector2 movementDir = Vector2.ZERO;
         if (inputListener.isKeyPressed(KeyEvent.VK_LEFT)) {
@@ -51,7 +51,7 @@ public class UserPaddle extends GameObject {
         if (MIN_DISTANCE_FROM_SCREEN_EDGE > getTopLeftCorner().x()) {
             // setting the paddle to the left border
             setTopLeftCorner(new Vector2(MIN_DISTANCE_FROM_SCREEN_EDGE,
-                    windowDimensions.y() - 38));
+                    windowDimensions.y() - gapPaddleToWindow));
         }
         if (windowDimensions.x() - MIN_DISTANCE_FROM_SCREEN_EDGE -
                 getDimensions().x() < getTopLeftCorner().x()) {
@@ -59,7 +59,7 @@ public class UserPaddle extends GameObject {
             setTopLeftCorner(new Vector2(windowDimensions.x() -
                     MIN_DISTANCE_FROM_SCREEN_EDGE -
                     getDimensions().x(),
-                    windowDimensions.y() - 38));
+                    windowDimensions.y() - gapPaddleToWindow));
         }
     }
 }
