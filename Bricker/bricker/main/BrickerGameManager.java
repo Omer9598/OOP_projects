@@ -1,6 +1,6 @@
 package bricker.main;
 
-import bricker.brick_strategies.RemoveBrickStrategy;
+import bricker.brick_strategies.BrickStrategyFactory;
 import bricker.gameobjects.*;
 
 import danogl.GameManager;
@@ -18,7 +18,6 @@ import java.util.Random;
 public class BrickerGameManager extends GameManager {
 
     private final int BORDERS = 12;
-    private final float BALL_SPEED = 250;
     private Ball ball;
     private Vector2 windowDimensions;
     private WindowController windowController;
@@ -141,6 +140,8 @@ public class BrickerGameManager extends GameManager {
      */
     private void createBricks(ImageReader imageReader)
     {
+        BrickStrategyFactory brickStrategyFactory =
+                new BrickStrategyFactory(gameObjects(), brickCounter);
         // finding the width of each brick
         float bricksGap = 3;
         float brickInRow = 8;
@@ -159,7 +160,7 @@ public class BrickerGameManager extends GameManager {
                 GameObject brick = new Brick(new Vector2(colPixel, rowPixel),
                         new Vector2(brickWidth, brickHeight),
                         imageReader.readImage("assets/Brick.png", false),
-                        new RemoveBrickStrategy(gameObjects(), brickCounter));
+                        brickStrategyFactory.getStrategy());
                 // adding the bricks to a static layer
                 gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
                 brickCounter.increaseBy(1);
@@ -224,8 +225,9 @@ public class BrickerGameManager extends GameManager {
     private void startBall() {
         ball.setCenter(windowDimensions.mult(0.5F));
         // setting the ball's velocity - start in a random direction
-        float ballVelX = BALL_SPEED;
-        float ballVelY = BALL_SPEED;
+        float ballSpeed = 250;
+        float ballVelX = ballSpeed;
+        float ballVelY = ballSpeed;
         Random random = new Random();
         if (random.nextBoolean()) {
             ballVelX *= -1;
