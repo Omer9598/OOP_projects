@@ -1,6 +1,6 @@
 package bricker.main;
 
-import bricker.brick_strategies.CollisionStrategy;
+import bricker.brick_strategies.RemoveBrickStrategy;
 import bricker.gameobjects.*;
 
 import danogl.GameManager;
@@ -159,7 +159,7 @@ public class BrickerGameManager extends GameManager {
                 GameObject brick = new Brick(new Vector2(colPixel, rowPixel),
                         new Vector2(brickWidth, brickHeight),
                         imageReader.readImage("assets/Brick.png", false),
-                        new CollisionStrategy(gameObjects(), brickCounter));
+                        new RemoveBrickStrategy(gameObjects(), brickCounter));
                 // adding the bricks to a static layer
                 gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
                 brickCounter.increaseBy(1);
