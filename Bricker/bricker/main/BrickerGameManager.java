@@ -12,8 +12,6 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
 
-import java.util.Random;
-
 
 public class BrickerGameManager extends GameManager {
 
@@ -23,6 +21,7 @@ public class BrickerGameManager extends GameManager {
     private WindowController windowController;
     private final Counter brickCounter;
     private final Counter livesCounter;
+    private BrickStrategyFactory brickStrategyFactory;
 
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
         // Calling the constructor of mother class
@@ -53,7 +52,7 @@ public class BrickerGameManager extends GameManager {
         // create background
         createBackground(imageReader);
         // create bricks
-        createBricks(imageReader);
+        createBricks(imageReader, soundReader);
         // create graphic lives
         createGraphicLives(imageReader);
         // create numeric life symbol
@@ -117,7 +116,7 @@ public class BrickerGameManager extends GameManager {
             // The player lost
             prompt = "You lose!";
         }
-        if (brickCounter.value() == 0) {
+        if (brickCounter.value() <= 0) {
             // the player won
             prompt = "You win!";
         }
@@ -125,6 +124,7 @@ public class BrickerGameManager extends GameManager {
         if (!prompt.isEmpty()) {
             prompt += " Play again?";
             if (windowController.openYesNoDialog(prompt)) {
+                livesCounter.reset();
                 windowController.resetGame();
             }
             else {
@@ -138,10 +138,9 @@ public class BrickerGameManager extends GameManager {
      * This function will create the bricks of the game with the recommended
      * number of bricks - 5 rows, 8 bricks in each row
      */
-    private void createBricks(ImageReader imageReader)
+    private void createBricks(ImageReader imageReader, SoundReader soundReader)
     {
-        BrickStrategyFactory brickStrategyFactory =
-                new BrickStrategyFactory(gameObjects(), brickCounter);
+        createBrickStrategyFactory(imageReader, soundReader);
         // finding the width of each brick
         float bricksGap = 3;
         float brickInRow = 8;
@@ -166,6 +165,21 @@ public class BrickerGameManager extends GameManager {
                 brickCounter.increaseBy(1);
             }
         }
+    }
+
+    /**
+     * This function will create the brickStrategyFactory, providing all the
+     * needed parameters
+     */
+    private void createBrickStrategyFactory(ImageReader imageReader,
+                                            SoundReader soundReader) {
+        // Parameters to create mockBalls
+        Renderable ballImage = imageReader.readImage("assets/mockBall.png",
+                true);
+        Sound collisionSound = soundReader.readSound(
+                "assets/blop_cut_silenced.wav");
+        brickStrategyFactory = new BrickStrategyFactory(gameObjects(),
+                brickCounter, ballImage, collisionSound);
     }
 
     /**
@@ -219,23 +233,11 @@ public class BrickerGameManager extends GameManager {
     }
 
     /**
-     * This function will center the ball and set its random velocity, when
-     * starting a new game and when a heart is lost
+     * This function will center the ball when starting a new game and
+     * when a heart is lost
      */
     private void startBall() {
         ball.setCenter(windowDimensions.mult(0.5F));
-        // setting the ball's velocity - start in a random direction
-        float ballSpeed = 250;
-        float ballVelX = ballSpeed;
-        float ballVelY = ballSpeed;
-        Random random = new Random();
-        if (random.nextBoolean()) {
-            ballVelX *= -1;
-        }
-        if (random.nextBoolean()) {
-            ballVelY *= -1;
-        }
-        ball.setVelocity(new Vector2(ballVelX, ballVelY));
         this.gameObjects().addGameObject(ball);
     }
 
