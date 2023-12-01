@@ -3,7 +3,9 @@ package bricker.brick_strategies;
 import bricker.gameobjects.Ball;
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
+import danogl.gui.ImageReader;
 import danogl.gui.Sound;
+import danogl.gui.SoundReader;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
@@ -15,16 +17,16 @@ public class CreateBallsStrategy extends RemoveBrickStrategy
         implements CollisionStrategy {
 
     private final GameObjectCollection gameObjects;
-    private final Renderable renderable;
-    private final Sound collisionSound;
+    private final ImageReader imageReader;
+    private final SoundReader soundReader;
 
     public CreateBallsStrategy(GameObjectCollection gameObjects,
-                               Renderable renderable, Sound collisionSound,
-                               Counter brickCounter) {
-    super(gameObjects, brickCounter);
+                               Counter brickCounter, ImageReader imageReader,
+                               SoundReader soundReader) {
+        super(gameObjects, brickCounter);
         this.gameObjects = gameObjects;
-        this.renderable = renderable;
-        this.collisionSound = collisionSound;
+        this.imageReader = imageReader;
+        this.soundReader = soundReader;
     }
 
 
@@ -45,8 +47,13 @@ public class CreateBallsStrategy extends RemoveBrickStrategy
             float yTopLeft = otherObj.getTopLeftCorner().y();
             Vector2 ballTopLeftCorner = new Vector2(xTopLeft, yTopLeft);
             Vector2 ballDimensions = new Vector2(15, 15);
+            Renderable ballImage = imageReader.readImage(
+                    "assets/mockBall.png", true);
+            Sound collisionSound = soundReader.readSound(
+                    "assets/blop_cut_silenced.wav");
             Ball mockBall = new Ball(ballTopLeftCorner, ballDimensions,
-                    renderable, collisionSound);
+                    ballImage, collisionSound);
+            mockBall.setBallRandomDirection();
             gameObjects.addGameObject(mockBall);
         }
     }

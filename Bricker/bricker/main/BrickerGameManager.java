@@ -49,13 +49,15 @@ public class BrickerGameManager extends GameManager {
         createWall(new Vector2(windowDimensions.x(), 0),
                    new Vector2(BORDERS, windowDimensions.y()));
         createWall(Vector2.ZERO, new Vector2(windowDimensions.x(), BORDERS));
-        // create background
+
         createBackground(imageReader);
-        // create bricks
-        createBricks(imageReader, soundReader);
-        // create graphic lives
+
+        // Creating the brickFactory to be used in createBricks function
+        createBrickStrategyFactory(imageReader, soundReader, inputListener,
+                windowDimensions);
+        createBricks(imageReader);
+
         createGraphicLives(imageReader);
-        // create numeric life symbol
         createNumericLife();
     }
 
@@ -125,6 +127,7 @@ public class BrickerGameManager extends GameManager {
             prompt += " Play again?";
             if (windowController.openYesNoDialog(prompt)) {
                 livesCounter.reset();
+                brickCounter.reset();
                 windowController.resetGame();
             }
             else {
@@ -138,9 +141,8 @@ public class BrickerGameManager extends GameManager {
      * This function will create the bricks of the game with the recommended
      * number of bricks - 5 rows, 8 bricks in each row
      */
-    private void createBricks(ImageReader imageReader, SoundReader soundReader)
+    private void createBricks(ImageReader imageReader)
     {
-        createBrickStrategyFactory(imageReader, soundReader);
         // finding the width of each brick
         float bricksGap = 3;
         float brickInRow = 8;
@@ -172,14 +174,12 @@ public class BrickerGameManager extends GameManager {
      * needed parameters
      */
     private void createBrickStrategyFactory(ImageReader imageReader,
-                                            SoundReader soundReader) {
-        // Parameters to create mockBalls
-        Renderable ballImage = imageReader.readImage("assets/mockBall.png",
-                true);
-        Sound collisionSound = soundReader.readSound(
-                "assets/blop_cut_silenced.wav");
+                                            SoundReader soundReader,
+                                            UserInputListener userInputListener,
+                                            Vector2 windowDimensions) {
         brickStrategyFactory = new BrickStrategyFactory(gameObjects(),
-                brickCounter, ballImage, collisionSound);
+                brickCounter, imageReader, soundReader, userInputListener,
+                windowDimensions);
     }
 
     /**
@@ -208,14 +208,14 @@ public class BrickerGameManager extends GameManager {
                 true);
         float gapPaddleToWindow = 40;
         // create user userPaddle
-        GameObject user_Paddle = new Paddle(
+        GameObject userPaddle = new Paddle(
                 Vector2.ZERO,
                 new Vector2(100, 15),
                 paddleImage,
                 userInputListener,
                 windowDimensions);
-        gameObjects().addGameObject(user_Paddle);
-        user_Paddle.setCenter(new Vector2(windowDimensions.x() / 2,
+        gameObjects().addGameObject(userPaddle);
+        userPaddle.setCenter(new Vector2(windowDimensions.x() / 2,
                 windowDimensions.y() - gapPaddleToWindow));
     }
 
@@ -238,6 +238,7 @@ public class BrickerGameManager extends GameManager {
      */
     private void startBall() {
         ball.setCenter(windowDimensions.mult(0.5F));
+        ball.setBallRandomDirection();
         this.gameObjects().addGameObject(ball);
     }
 

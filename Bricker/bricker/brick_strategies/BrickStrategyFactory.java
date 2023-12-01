@@ -1,9 +1,11 @@
 package bricker.brick_strategies;
 
 import danogl.collisions.GameObjectCollection;
-import danogl.gui.Sound;
-import danogl.gui.rendering.Renderable;
+import danogl.gui.ImageReader;
+import danogl.gui.SoundReader;
+import danogl.gui.UserInputListener;
 import danogl.util.Counter;
+import danogl.util.Vector2;
 
 import java.util.Random;
 
@@ -11,16 +13,24 @@ public class BrickStrategyFactory {
 
     private final GameObjectCollection gameObjects;
     private final Counter brickCounter;
-    private final Renderable renderable;
-    private final Sound collisionSound;
+    private final Counter paddleCounter;
+    private final ImageReader imageReader;
+    private final SoundReader soundReader;
+    private final Vector2 windowDimensions;
+    private final UserInputListener userInputListener;
 
     public BrickStrategyFactory(GameObjectCollection gameObjects,
-                                Counter brickCounter, Renderable renderable,
-                                Sound collisionSound) {
+                                Counter brickCounter, ImageReader imageReader,
+                                SoundReader soundReader,
+                                UserInputListener userInputListener,
+                                Vector2 windowDimensions) {
         this.gameObjects = gameObjects;
         this.brickCounter = brickCounter;
-        this.renderable = renderable;
-        this.collisionSound = collisionSound;
+        this.imageReader = imageReader;
+        this.soundReader = soundReader;
+        this.userInputListener = userInputListener;
+        this.windowDimensions = windowDimensions;
+        this.paddleCounter = new Counter(0);
     }
 
     /**
@@ -35,22 +45,23 @@ public class BrickStrategyFactory {
      */
     public CollisionStrategy getStrategy() {
         Random random = new Random();
-        int randomStrategy = random.nextInt(6);
+        int randomStrategy = random.nextInt(1);
         CollisionStrategy collisionStrategy = null;
 
         switch (randomStrategy) {
+//            case 0 -> collisionStrategy =
+//                    new RemoveBrickStrategy(gameObjects, brickCounter);
+//            case 1 -> collisionStrategy = new CreateBallsStrategy(gameObjects,
+//                    brickCounter, imageReader, soundReader);
             case 0 -> collisionStrategy =
-                    new RemoveBrickStrategy(gameObjects, brickCounter);
-            case 1 -> collisionStrategy =
-                    new CreateBallsStrategy(gameObjects, renderable,
-                            collisionSound, brickCounter);
-            default -> collisionStrategy =
-                    new RemoveBrickStrategy(gameObjects, brickCounter);
-
-//            case 2 -> collisionStrategy = null;
+                    new CreateSecondPaddle(gameObjects, brickCounter,
+                            gameObjects, imageReader, userInputListener,
+                            windowDimensions, paddleCounter);
 //            case 3 -> collisionStrategy = null;
 //            case 4 -> collisionStrategy = null;
 //            case 5 -> collisionStrategy = null;
+            default -> collisionStrategy =
+                    new RemoveBrickStrategy(gameObjects, brickCounter);
         }
         return collisionStrategy;
     }

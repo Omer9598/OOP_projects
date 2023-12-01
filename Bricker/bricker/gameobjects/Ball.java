@@ -28,8 +28,6 @@ public class Ball extends GameObject {
                 Renderable renderable, Sound collisionSound) {
         super(topLeftCorner, dimensions, renderable);
         this.collisionSound = collisionSound;
-        // All the balls start in a random direction
-        setBallRandomDirection();
     }
 
     @Override
@@ -44,7 +42,7 @@ public class Ball extends GameObject {
     /**
      * This function will set the ball in a random diagonal direction
      */
-    private void setBallRandomDirection() {
+    public void setBallRandomDirection() {
         // setting the ball's velocity - start in a random direction
         float ballSpeed = 250;
         float ballVelX = ballSpeed;
