@@ -1,5 +1,7 @@
 package bricker.brick_strategies;
 
+import bricker.gameobjects.Ball;
+import bricker.main.BrickerGameManager;
 import danogl.collisions.GameObjectCollection;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
@@ -18,18 +20,23 @@ public class BrickStrategyFactory {
     private final SoundReader soundReader;
     private final Vector2 windowDimensions;
     private final UserInputListener userInputListener;
+    private final Ball ball;
+    private final BrickerGameManager brickerGameManager;
 
     public BrickStrategyFactory(GameObjectCollection gameObjects,
                                 Counter brickCounter, ImageReader imageReader,
                                 SoundReader soundReader,
                                 UserInputListener userInputListener,
-                                Vector2 windowDimensions) {
+                                Vector2 windowDimensions, Ball ball,
+                                BrickerGameManager brickerGameManager) {
         this.gameObjects = gameObjects;
         this.brickCounter = brickCounter;
         this.imageReader = imageReader;
         this.soundReader = soundReader;
         this.userInputListener = userInputListener;
         this.windowDimensions = windowDimensions;
+        this.ball = ball;
+        this.brickerGameManager = brickerGameManager;
         this.paddleCounter = new Counter(0);
     }
 
@@ -45,19 +52,20 @@ public class BrickStrategyFactory {
      */
     public CollisionStrategy getStrategy() {
         Random random = new Random();
-        int randomStrategy = random.nextInt(1);
-        CollisionStrategy collisionStrategy = null;
+        int randomStrategy = random.nextInt(4);
+        CollisionStrategy collisionStrategy;
 
         switch (randomStrategy) {
-//            case 0 -> collisionStrategy =
-//                    new RemoveBrickStrategy(gameObjects, brickCounter);
-//            case 1 -> collisionStrategy = new CreateBallsStrategy(gameObjects,
-//                    brickCounter, imageReader, soundReader);
             case 0 -> collisionStrategy =
+                    new RemoveBrickStrategy(gameObjects, brickCounter);
+            case 1 -> collisionStrategy = new CreateBallsStrategy(gameObjects,
+                    brickCounter, imageReader, soundReader);
+            case 2 -> collisionStrategy =
                     new CreateSecondPaddle(gameObjects, brickCounter,
                             gameObjects, imageReader, userInputListener,
                             windowDimensions, paddleCounter);
-//            case 3 -> collisionStrategy = null;
+            case 3 -> collisionStrategy = new CameraChangeStrategy(gameObjects,
+                    ball, brickerGameManager, brickCounter);
 //            case 4 -> collisionStrategy = null;
 //            case 5 -> collisionStrategy = null;
             default -> collisionStrategy =

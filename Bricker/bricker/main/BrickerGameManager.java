@@ -26,8 +26,8 @@ public class BrickerGameManager extends GameManager {
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
         // Calling the constructor of mother class
         super(windowTitle, windowDimensions);
-        brickCounter = new Counter(0);
-        livesCounter = new Counter(0);
+        this.brickCounter = new Counter(0);
+        this.livesCounter = new Counter(0);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class BrickerGameManager extends GameManager {
                 windowController);
         this.windowController = windowController;
         windowController.setTargetFramerate(80);
-        windowDimensions = windowController.getWindowDimensions();
+        this.windowDimensions = windowController.getWindowDimensions();
         // creating the ball
         createBall(imageReader, soundReader);
         // creating the paddle
@@ -54,7 +54,7 @@ public class BrickerGameManager extends GameManager {
 
         // Creating the brickFactory to be used in createBricks function
         createBrickStrategyFactory(imageReader, soundReader, inputListener,
-                windowDimensions);
+                windowDimensions, this);
         createBricks(imageReader);
 
         createGraphicLives(imageReader);
@@ -104,6 +104,10 @@ public class BrickerGameManager extends GameManager {
         }
         else {
             checkForGameEnd();
+        }
+        // checking the camera status and update if needed
+        if (camera() != null && ball.getCollisionCounter() == 0) {
+            setCamera(null);
         }
     }
 
@@ -176,10 +180,11 @@ public class BrickerGameManager extends GameManager {
     private void createBrickStrategyFactory(ImageReader imageReader,
                                             SoundReader soundReader,
                                             UserInputListener userInputListener,
-                                            Vector2 windowDimensions) {
+                                            Vector2 windowDimensions,
+                                            BrickerGameManager brickerGameManager) {
         brickStrategyFactory = new BrickStrategyFactory(gameObjects(),
                 brickCounter, imageReader, soundReader, userInputListener,
-                windowDimensions);
+                windowDimensions, ball, brickerGameManager);
     }
 
     /**
@@ -246,5 +251,9 @@ public class BrickerGameManager extends GameManager {
     public static void main(String[] args) {
         new BrickerGameManager("Bricker",
                 new Vector2(700, 500)).run();
+    }
+
+    public Vector2 getWindowDimensions() {
+        return windowDimensions;
     }
 }

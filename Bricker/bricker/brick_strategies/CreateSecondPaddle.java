@@ -33,6 +33,10 @@ public class CreateSecondPaddle extends RemoveBrickStrategy
         this.numOfHits = new Counter(3);
     }
 
+    /**
+     * This function extends the function in RemoveBrickStrategy, to delete the
+     * hitted brick and then creating a second paddle
+     */
     @Override
     public void onCollision(GameObject thisObj, GameObject otherObj) {
         // deleting the brick

@@ -55,16 +55,16 @@ public class SecondPaddle extends Paddle implements CollisionStrategy {
         onCollision(this, other);
     }
 
+    /**
+     * Decrementing the number of hits
+     * Deleting the second paddle if necessary
+     */
     @Override
     public void onCollision(GameObject thisObj, GameObject otherObj) {
-        // checking if there is a second paddle already
-        if (paddleCounter.value() == 1)
-        {
-            numOfHits.decrement();
-            if (numOfHits.value() == 0) {
-                gameObjects.removeGameObject(this);
-                paddleCounter.decrement();
-            }
+        numOfHits.decrement();
+        if (numOfHits.value() == 0) {
+            gameObjects.removeGameObject(this);
+            paddleCounter.decrement();
         }
     }
 }

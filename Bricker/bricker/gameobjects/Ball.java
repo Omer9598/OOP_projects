@@ -4,6 +4,7 @@ import danogl.GameObject;
 import danogl.collisions.Collision;
 import danogl.gui.Sound;
 import danogl.gui.rendering.Renderable;
+import danogl.util.Counter;
 import danogl.util.Vector2;
 
 import java.util.Random;
@@ -11,6 +12,7 @@ import java.util.Random;
 public class Ball extends GameObject {
 
     private final Sound collisionSound;
+    private final Counter collisionCounter;
 
     /**
      * Construct a new GameObject instance.
@@ -28,6 +30,7 @@ public class Ball extends GameObject {
                 Renderable renderable, Sound collisionSound) {
         super(topLeftCorner, dimensions, renderable);
         this.collisionSound = collisionSound;
+        this.collisionCounter = new Counter(0);
     }
 
     @Override
@@ -37,6 +40,7 @@ public class Ball extends GameObject {
         Vector2 newVel = getVelocity().flipped(collision.getNormal());
         setVelocity(newVel);
         collisionSound.play();
+        if(collisionCounter.value() > 0) {collisionCounter.decrement();}
     }
 
     /**
@@ -56,4 +60,8 @@ public class Ball extends GameObject {
         }
         this.setVelocity(new Vector2(ballVelX, ballVelY));
     }
+
+    public void setCollisionCounter(int i) {collisionCounter.increaseBy(i);}
+
+    public int getCollisionCounter() {return collisionCounter.value();}
 }
