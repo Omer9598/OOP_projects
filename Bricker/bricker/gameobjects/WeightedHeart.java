@@ -1,7 +1,5 @@
-package bricker.brick_strategies;
+package bricker.gameobjects;
 
-import bricker.gameobjects.Paddle;
-import bricker.gameobjects.SecondPaddle;
 import danogl.GameObject;
 import danogl.collisions.Collision;
 import danogl.collisions.GameObjectCollection;
@@ -60,13 +58,4 @@ public class WeightedHeart extends GameObject {
         }
         gameObjects.removeGameObject(this);
     }
-
-    //    @Override
-//    public void update(float deltaTime) {
-//        super.update(deltaTime);
-//        // deleting the heart if it left the screen
-//        if(this.getCenter().y() > dimensions.y()) {
-//
-//        }
-//    }
 }
