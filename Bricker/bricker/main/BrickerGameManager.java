@@ -22,6 +22,7 @@ public class BrickerGameManager extends GameManager {
     private final Counter brickCounter;
     private final Counter livesCounter;
     private BrickStrategyFactory brickStrategyFactory;
+    private final Vector2 heartDimensions = new Vector2(30f, 30f);
 
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
         // Calling the constructor of mother class
@@ -80,15 +81,14 @@ public class BrickerGameManager extends GameManager {
      * This function will create graphic lives symbols (hearts)
      */
     private void createGraphicLives(ImageReader imageReader) {
-        float heartDim = 30F;
         Vector2 heartsTopLeftCorner = new Vector2(2,
                 windowDimensions.y() - 30);
-        Vector2 heartDimensions = new Vector2(heartDim, heartDim);
         // creating graphic hearts
-        int INIT_NUM_OF_LIVES = 3;
-        GraphicLifeCounter hearts = new GraphicLifeCounter(heartsTopLeftCorner, heartDimensions,
+        int numOfLives = 3;
+        GraphicLifeCounter hearts = new GraphicLifeCounter(heartsTopLeftCorner,
+                heartDimensions,
                 imageReader.readImage("assets/heart.png", true),
-                livesCounter, gameObjects(), INIT_NUM_OF_LIVES);
+                livesCounter, gameObjects(), numOfLives);
         gameObjects().addGameObject(hearts, Layer.BACKGROUND);
     }
 
@@ -184,7 +184,8 @@ public class BrickerGameManager extends GameManager {
                                             BrickerGameManager brickerGameManager) {
         brickStrategyFactory = new BrickStrategyFactory(gameObjects(),
                 brickCounter, imageReader, soundReader, userInputListener,
-                windowDimensions, ball, brickerGameManager);
+                windowDimensions, ball, brickerGameManager, livesCounter,
+                heartDimensions);
     }
 
     /**
@@ -247,13 +248,13 @@ public class BrickerGameManager extends GameManager {
         this.gameObjects().addGameObject(ball);
     }
 
+    public Vector2 getWindowDimensions() {
+        return windowDimensions;
+    }
+
 
     public static void main(String[] args) {
         new BrickerGameManager("Bricker",
                 new Vector2(700, 500)).run();
-    }
-
-    public Vector2 getWindowDimensions() {
-        return windowDimensions;
     }
 }

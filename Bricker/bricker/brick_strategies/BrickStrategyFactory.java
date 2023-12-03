@@ -22,13 +22,16 @@ public class BrickStrategyFactory {
     private final UserInputListener userInputListener;
     private final Ball ball;
     private final BrickerGameManager brickerGameManager;
+    private final Counter livesCounter;
+    private final Vector2 heartDimensions;
 
     public BrickStrategyFactory(GameObjectCollection gameObjects,
                                 Counter brickCounter, ImageReader imageReader,
                                 SoundReader soundReader,
                                 UserInputListener userInputListener,
                                 Vector2 windowDimensions, Ball ball,
-                                BrickerGameManager brickerGameManager) {
+                                BrickerGameManager brickerGameManager,
+                                Counter livesCounter, Vector2 heartDimensions) {
         this.gameObjects = gameObjects;
         this.brickCounter = brickCounter;
         this.imageReader = imageReader;
@@ -37,6 +40,8 @@ public class BrickStrategyFactory {
         this.windowDimensions = windowDimensions;
         this.ball = ball;
         this.brickerGameManager = brickerGameManager;
+        this.livesCounter = livesCounter;
+        this.heartDimensions = heartDimensions;
         this.paddleCounter = new Counter(0);
     }
 
@@ -52,7 +57,7 @@ public class BrickStrategyFactory {
      */
     public CollisionStrategy getStrategy() {
         Random random = new Random();
-        int randomStrategy = random.nextInt(4);
+        int randomStrategy = random.nextInt(5);
         CollisionStrategy collisionStrategy;
 
         switch (randomStrategy) {
@@ -66,7 +71,8 @@ public class BrickStrategyFactory {
                             windowDimensions, paddleCounter);
             case 3 -> collisionStrategy = new CameraChangeStrategy(gameObjects,
                     ball, brickerGameManager, brickCounter);
-//            case 4 -> collisionStrategy = null;
+            case 4 -> collisionStrategy = new ExtraLifeStrategy(gameObjects,
+                    brickCounter, livesCounter, heartDimensions, imageReader);
 //            case 5 -> collisionStrategy = null;
             default -> collisionStrategy =
                     new RemoveBrickStrategy(gameObjects, brickCounter);
