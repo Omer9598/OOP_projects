@@ -1,6 +1,6 @@
 package bricker.brick_strategies;
 
-import bricker.gameobjects.WeightedHeart;
+import bricker.game_objects.WeightedHeart;
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 import danogl.gui.ImageReader;

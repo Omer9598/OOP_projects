@@ -6,7 +6,7 @@ import danogl.gui.ImageReader;
 import danogl.gui.UserInputListener;
 import danogl.util.Counter;
 import danogl.util.Vector2;
-import bricker.gameobjects.SecondPaddle;
+import bricker.game_objects.SecondPaddle;
 
 public class CreateSecondPaddle extends RemoveBrickStrategy
         implements CollisionStrategy{

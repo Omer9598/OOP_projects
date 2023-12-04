@@ -1,7 +1,7 @@
 package bricker.main;
 
 import bricker.brick_strategies.BrickStrategyFactory;
-import bricker.gameobjects.*;
+import bricker.game_objects.*;
 
 import danogl.GameManager;
 import danogl.GameObject;
