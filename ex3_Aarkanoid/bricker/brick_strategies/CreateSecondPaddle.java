@@ -42,8 +42,11 @@ public class CreateSecondPaddle extends RemoveBrickStrategy
         // deleting the brick
         super.onCollision(thisObj, otherObj);
         // checking if there is a second paddle already
-        if (paddleCounter.value() == 1)
+        if (paddleCounter.value() >= 1)
         {
+            // Fixing a bug that causes paddleCounter == 2
+            paddleCounter.reset();
+            paddleCounter.increment();
             return;
         }
         // creating a new paddle at the center of the screen
