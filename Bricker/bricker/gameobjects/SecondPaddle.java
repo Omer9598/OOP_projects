@@ -62,7 +62,7 @@ public class SecondPaddle extends Paddle implements CollisionStrategy {
     @Override
     public void onCollision(GameObject thisObj, GameObject otherObj) {
         numOfHits.decrement();
-        if (numOfHits.value() == 0) {
+        if (numOfHits.value() <= 0) {
             gameObjects.removeGameObject(this);
             paddleCounter.decrement();
         }
