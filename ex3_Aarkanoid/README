@@ -3,6 +3,15 @@ Exercise explanations:
 1. I created the classes according the instructions in campus IL and the
 exercise.
 I divided the project to 3 packages:
-main - for the gameManager class that the main class is in
+main - for the gameManager class that the main class is in.
 gameobjects - for all the game objects such as paddle, ball, second paddle...
-brick
+brick_strategies - for all the strategies of the bricks, each strategy is
+implemented in one class or more.
+
+3. I limited the number of behaviors with a different class - if a doubled
+behavior is randomly picked, and then one of the strategies is another
+doubled behavior, i create an instance of a class that implements 3 strategies
+to a single brick. The mentioned class inherits from DoubledStrategy class.
+
+4. If we want to expand the API to create more then 3 behaviors to a single
+brick, we can create a new class that implements the number of behaviors needed.
