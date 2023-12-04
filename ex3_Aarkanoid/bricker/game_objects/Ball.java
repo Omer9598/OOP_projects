@@ -1,14 +1,18 @@
-package bricker.gameobjects;
+package bricker.game_objects;
 
 import danogl.GameObject;
 import danogl.collisions.Collision;
 import danogl.gui.Sound;
 import danogl.gui.rendering.Renderable;
+import danogl.util.Counter;
 import danogl.util.Vector2;
+
+import java.util.Random;
 
 public class Ball extends GameObject {
 
     private final Sound collisionSound;
+    private final Counter collisionCounter;
 
     /**
      * Construct a new GameObject instance.
@@ -26,6 +30,7 @@ public class Ball extends GameObject {
                 Renderable renderable, Sound collisionSound) {
         super(topLeftCorner, dimensions, renderable);
         this.collisionSound = collisionSound;
+        this.collisionCounter = new Counter(0);
     }
 
     @Override
@@ -35,5 +40,28 @@ public class Ball extends GameObject {
         Vector2 newVel = getVelocity().flipped(collision.getNormal());
         setVelocity(newVel);
         collisionSound.play();
+        if(collisionCounter.value() > 0) {collisionCounter.decrement();}
     }
+
+    /**
+     * This function will set the ball in a random diagonal direction
+     */
+    public void setBallRandomDirection() {
+        // setting the ball's velocity - start in a random direction
+        float ballSpeed = 250;
+        float ballVelX = ballSpeed;
+        float ballVelY = ballSpeed;
+        Random random = new Random();
+        if (random.nextBoolean()) {
+            ballVelX *= -1;
+        }
+        if (random.nextBoolean()) {
+            ballVelY *= -1;
+        }
+        this.setVelocity(new Vector2(ballVelX, ballVelY));
+    }
+
+    public void setCollisionCounter(int i) {collisionCounter.increaseBy(i);}
+
+    public int getCollisionCounter() {return collisionCounter.value();}
 }

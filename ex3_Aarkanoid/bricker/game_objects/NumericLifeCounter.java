@@ -1,4 +1,4 @@
-package bricker.gameobjects;
+package bricker.game_objects;
 
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
@@ -11,7 +11,7 @@ public class NumericLifeCounter extends GameObject {
 
     private final Counter livesCounter;
     private final GameObjectCollection gameObjectCollection;
-    private final int numOfLives;
+    private int numOfLives;
     private final Vector2 topLeftCorner;
     private final Vector2 dimensions;
     private GameObject textGameObject;
@@ -43,7 +43,7 @@ public class NumericLifeCounter extends GameObject {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        if (livesCounter.value() < numOfLives) {
+        if (livesCounter.value() != numOfLives) {
             // removing the old number of lives and creating the new
             gameObjectCollection.removeGameObject(textGameObject,
                     Layer.BACKGROUND);
@@ -52,6 +52,7 @@ public class NumericLifeCounter extends GameObject {
             textGameObject = new GameObject(topLeftCorner, dimensions,
                     numericLives);
             gameObjectCollection.addGameObject(textGameObject, Layer.BACKGROUND);
+            numOfLives = livesCounter.value();
         }
     }
 }

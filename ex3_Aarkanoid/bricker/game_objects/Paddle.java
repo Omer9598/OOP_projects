@@ -1,10 +1,9 @@
-package bricker.gameobjects;
+package bricker.game_objects;
 
 import danogl.GameObject;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-
 import java.awt.event.KeyEvent;
 
 public class Paddle extends GameObject {
@@ -36,7 +35,6 @@ public class Paddle extends GameObject {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        float gapPaddleToWindow = 48;
         // handling left and right key presses - moving the paddle
         Vector2 movementDir = Vector2.ZERO;
         if (inputListener.isKeyPressed(KeyEvent.VK_LEFT)) {
@@ -51,15 +49,14 @@ public class Paddle extends GameObject {
         if (MIN_DISTANCE_FROM_SCREEN_EDGE > getTopLeftCorner().x()) {
             // setting the paddle to the left border
             setTopLeftCorner(new Vector2(MIN_DISTANCE_FROM_SCREEN_EDGE,
-                    windowDimensions.y() - gapPaddleToWindow));
+                    this.getTopLeftCorner().y()));
         }
         if (windowDimensions.x() - MIN_DISTANCE_FROM_SCREEN_EDGE -
                 getDimensions().x() < getTopLeftCorner().x()) {
             // setting the paddle to the right border
             setTopLeftCorner(new Vector2(windowDimensions.x() -
-                    MIN_DISTANCE_FROM_SCREEN_EDGE -
-                    getDimensions().x(),
-                    windowDimensions.y() - gapPaddleToWindow));
+                    MIN_DISTANCE_FROM_SCREEN_EDGE - getDimensions().x(),
+                    this.getTopLeftCorner().y()));
         }
     }
 }

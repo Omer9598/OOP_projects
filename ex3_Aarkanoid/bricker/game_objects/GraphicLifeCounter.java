@@ -1,4 +1,4 @@
-package bricker.gameobjects;
+package bricker.game_objects;
 
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
@@ -9,9 +9,12 @@ import danogl.util.Vector2;
 
 public class GraphicLifeCounter extends GameObject {
 
+    private final Vector2 topLeftCorner;
+    private final Vector2 dimensions;
+    private final Renderable renderable;
     private final Counter livesCounter;
     private final GameObjectCollection gameObjectCollection;
-    private final int numOfLives;
+    private int numOfLives;
     private final GameObject[] heartsArr;
 
     /**
@@ -28,20 +31,29 @@ public class GraphicLifeCounter extends GameObject {
                               GameObjectCollection gameObjectCollection,
                               int numOfLives) {
         super(topLeftCorner, dimensions, renderable);
+        this.topLeftCorner = topLeftCorner;
+        this.dimensions = dimensions;
+        this.renderable = renderable;
         this.livesCounter = livesCounter;
         this.livesCounter.increaseBy(numOfLives);
         this.gameObjectCollection = gameObjectCollection;
         this.numOfLives = numOfLives;
-        this.heartsArr = new GameObject[numOfLives];
+        this.heartsArr = new GameObject[4];
+        createHeartsArr();
+        }
 
+    /**
+     * This function will create the hearts array, containing 3 heart instances
+     * at the beginning of each game
+     */
+    private void createHeartsArr() {
         float xCord = topLeftCorner.x();
         float yCord = topLeftCorner.y();
 
         // creating the initial number of lives
         for (int i = 0; i < numOfLives; i++) {
-            GameObject heart = new GameObject(
-                    new Vector2(xCord, yCord),
-                    dimensions, renderable);
+            GameObject heart = createHeart(dimensions,
+                    renderable, xCord, yCord);
             xCord += dimensions.x() + 2;
             gameObjectCollection.addGameObject(heart, Layer.BACKGROUND);
             heartsArr[i] = heart;
@@ -49,13 +61,37 @@ public class GraphicLifeCounter extends GameObject {
     }
 
 
+    /**
+     * This function will create a single heart
+     */
+    private static GameObject createHeart(Vector2 dimensions,
+                                          Renderable renderable,
+                                          float xCord, float yCord) {
+        return new GameObject(
+                new Vector2(xCord, yCord),
+                dimensions, renderable);
+    }
+
+
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
+        // Deleting one of the hearts and updating the number of lives
         if (numOfLives > livesCounter.value()) {
-            // deleting one of the hearts and updating the number of lives
             gameObjectCollection.removeGameObject(
                     heartsArr[livesCounter.value()], Layer.BACKGROUND);
+            numOfLives = livesCounter.value();
+        }
+        // Adding a heart and updating the number of lives
+        if (numOfLives < livesCounter.value()) {
+            float xCord = heartsArr[numOfLives - 1].getTopLeftCorner().x()
+                    + dimensions.x();
+            float yCord = heartsArr[numOfLives - 1].getTopLeftCorner().y();
+            GameObject newHeart = createHeart(dimensions, renderable, xCord,
+                    yCord);
+            heartsArr[numOfLives] = newHeart;
+            gameObjectCollection.addGameObject(newHeart, Layer.BACKGROUND);
+            numOfLives = livesCounter.value();
         }
     }
 }
