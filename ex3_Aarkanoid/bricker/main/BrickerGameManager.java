@@ -165,7 +165,7 @@ public class BrickerGameManager extends GameManager {
                 GameObject brick = new Brick(new Vector2(colPixel, rowPixel),
                         new Vector2(brickWidth, brickHeight),
                         imageReader.readImage("assets/Brick.png", false),
-                        brickStrategyFactory.getStrategy(0));
+                        brickStrategyFactory.getStrategy());
                 // adding the bricks to a static layer
                 gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
                 brickCounter.increaseBy(1);

@@ -88,23 +88,12 @@ public class BrickStrategyFactory {
      * each brick has a maximum of 3 strategies, including doubled strategy,
      * that is why this function can be called only twice
      */
-    public CollisionStrategy getStrategy(int numOfCalls) {
+    public CollisionStrategy getStrategy() {
         // To ensure max 3 strategies to a single brick
-//        if(numOfCalls > 1) {
-//            return null;
-//        }
-//        Random random = new Random();
-//        int randomStrategy = random.nextInt(6);
-//        if(numOfCalls > 0) {
-//            // Exclude the regular behavior
-//            randomStrategy = random.nextInt(5);
-//        }
-//        numOfCalls++;
+
 
         Random random = new Random();
-//        int randomStrategy = random.nextInt(1);
-        // TODO - delete when finish checking doubled behavior
-        int randomStrategy = DOUBLED_BEHAVIOR;
+        int randomStrategy = random.nextInt(6);
         switch (randomStrategy) {
             case MOCK_BALLS, SECOND_PADDLE, CAMERA_CHANGE, EXTRA_LIFE -> {
                 return getSpecialStrategy(randomStrategy);
@@ -114,9 +103,12 @@ public class BrickStrategyFactory {
             }
             case DOUBLED_BEHAVIOR -> {
                 // 2 new random numbers - no including regular behavior
-                int firstRandom = random.nextInt(4);
-                int secondRandom = random.nextInt(4);
-                // TODO - update such that there will be an option for 2 doubled behaviors
+                int firstRandom = random.nextInt(5);
+                int secondRandom = random.nextInt(5);
+                if(firstRandom == DOUBLED_BEHAVIOR ||
+                        secondRandom == DOUBLED_BEHAVIOR) {
+                    return getTripledStrategy();
+                }
                 CollisionStrategy firstStrategy =
                         getSpecialStrategy(firstRandom);
                 CollisionStrategy secondStrategy =
@@ -126,6 +118,25 @@ public class BrickStrategyFactory {
             }
         }
         return null;
+    }
+
+    /**
+     * This function will return a triple strategy, in case that one of the
+     * strategies in a doubled strategy is a doubled strategy
+     */
+    private CollisionStrategy getTripledStrategy() {
+        Random random = new Random();
+        int firstRandom = random.nextInt(4);
+        int secondRandom = random.nextInt(4);
+        int thirdRandom = random.nextInt(4);
+        CollisionStrategy firstStrategy =
+                getSpecialStrategy(firstRandom);
+        CollisionStrategy secondStrategy =
+                getSpecialStrategy(secondRandom);
+        CollisionStrategy thirdStrategy =
+                getSpecialStrategy(thirdRandom);
+        return new TripledStrategy(firstStrategy, secondStrategy, thirdStrategy,
+                brickCounter);
     }
 
     /**
