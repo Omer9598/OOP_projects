@@ -25,12 +25,12 @@ public class BrickStrategyFactory {
     private final Counter livesCounter;
     private final Vector2 heartDimensions;
     private final CollisionStrategy[] collisionStrategiesArr;
-    private static final int MOCK_BALLS = 0;
-    private static final int SECOND_PADDLE = 1;
-    private static final int CAMERA_CHANGE = 2;
-    private static final int EXTRA_LIFE = 3;
+    private final int MOCK_BALLS = 0;
+    private final int SECOND_PADDLE = 1;
+    private final int CAMERA_CHANGE = 2;
+    private final int EXTRA_LIFE = 3;
     private static final int DOUBLED_BEHAVIOR = 4;
-    private static final int REGULAR_STRATEGY = 5;
+    private final int REGULAR_STRATEGY = 5;
 
     public BrickStrategyFactory(GameObjectCollection gameObjects,
                                 Counter brickCounter, ImageReader imageReader,
@@ -89,9 +89,6 @@ public class BrickStrategyFactory {
      * that is why this function can be called only twice
      */
     public CollisionStrategy getStrategy() {
-        // To ensure max 3 strategies to a single brick
-
-
         Random random = new Random();
         int randomStrategy = random.nextInt(6);
         switch (randomStrategy) {
