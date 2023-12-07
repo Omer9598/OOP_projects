@@ -1,7 +1,9 @@
 package ascii_art.img_to_char;
 
+import image.Image;
+
+import java.awt.*;
 import java.util.Arrays;
-import java.util.OptionalDouble;
 
 public class BrightnessImgCharMatcher {
 
@@ -63,14 +65,31 @@ public class BrightnessImgCharMatcher {
     }
 
     /**
+     * This function will calculate the average brightness of the given image
+     * @return A double representing the brightness of the image
+     */
+    private static double averageBrightness(Image image) {
+        double brightnessSum = 0;
+        double pixelsSum = image.getWidth() * image.getWidth();
+        for (Color color : image.pixels()) {
+            // changing the pixels to black-and-white
+            double greyValue = (color.getRed() * 0.2126 + color.getGreen() *
+                    0.7152 + color.getBlue() * 0.0722) / 255.0;
+            brightnessSum += greyValue;
+        }
+        return brightnessSum / pixelsSum;
+    }
+
+    /**
      * Just a test function for sanity checks
      */
     public static void testFunction() {
         char[] chars = {'A', 'B', 'C', 'D'};
         double[] checkResult = brightnessOfCharArr(chars);
         checkResult = linearStretch(checkResult);
+        Image image = Image.fromFile("ex4_ASCII_Art/board.jpeg");
+        assert image != null;
+        double averagePixel = averageBrightness(image);
         double num = 5;
         }
 }
-
-
