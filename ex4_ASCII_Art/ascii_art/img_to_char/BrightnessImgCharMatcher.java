@@ -1,6 +1,7 @@
 package ascii_art.img_to_char;
 
 import java.util.Arrays;
+import java.util.OptionalDouble;
 
 public class BrightnessImgCharMatcher {
 
@@ -42,11 +43,32 @@ public class BrightnessImgCharMatcher {
     }
 
     /**
+     * This function will get an array of character's brightness levels, and
+     * return the linear stretch of the array
+     */
+    private static double[] linearStretch(double[] brightnessLvlArr) {
+        if (brightnessLvlArr == null) {
+            return null;
+        }
+        // Assume the brightest character has higher value then the darkest one
+        double minVal = Arrays.stream(brightnessLvlArr).min().getAsDouble();
+        double maxVal = Arrays.stream(brightnessLvlArr).max().getAsDouble();
+        double[] stretchedArr = new double[brightnessLvlArr.length];
+
+        for (int i = 0; i < brightnessLvlArr.length; i++) {
+            double curCharBrightness = brightnessLvlArr[i];
+            stretchedArr[i] = (curCharBrightness - minVal) / (maxVal - minVal);
+        }
+        return stretchedArr;
+    }
+
+    /**
      * Just a test function for sanity checks
      */
     public static void testFunction() {
         char[] chars = {'A', 'B', 'C', 'D'};
         double[] checkResult = brightnessOfCharArr(chars);
+        checkResult = linearStretch(checkResult);
         double num = 5;
         }
 }
