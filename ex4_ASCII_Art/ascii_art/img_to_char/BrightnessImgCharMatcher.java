@@ -7,8 +7,12 @@ import java.util.Arrays;
 
 public class BrightnessImgCharMatcher {
 
-    public char[][] chooseChars(int numCharsInRow, Character[] charSet) {
-        return null;
+    private final Image image;
+    private final String font;
+
+    public BrightnessImgCharMatcher(Image image, String font) {
+        this.image = image;
+        this.font = font;
     }
 
     /**
@@ -16,12 +20,12 @@ public class BrightnessImgCharMatcher {
      * doubles, such that the i'th double value will be the brightness value
      * of the i'th character
      */
-    private static double[] brightnessOfCharArr(char[] charArr) {
+    private double[] brightnessOfCharArr(Character[] charArr) {
         double[] resultArr = new double[charArr.length];
         for (int i = 0; i < charArr.length; i++) {
             // Exchange character to 2D boolean array and count true values
             boolean[][] boolArr = CharRenderer.getImg(charArr[i], 16,
-                    "Ariel");
+                    font);
             int boolArrLength = boolArr[0].length;
             resultArr[i] = countTrueValues(boolArr) /
                     (boolArrLength * boolArrLength);
@@ -66,6 +70,7 @@ public class BrightnessImgCharMatcher {
 
     /**
      * This function will calculate the average brightness of the given image
+     *
      * @return A double representing the brightness of the image
      */
     private static double averageBrightness(Image image) {
@@ -81,15 +86,57 @@ public class BrightnessImgCharMatcher {
     }
 
     /**
-     * Just a test function for sanity checks
+     * This function will convert an image to Ascii art:
+     * 1. dividing to sub-images
+     * 2. calculating brightness level to each sub-image
+     * 3. finding the closest char to the brightness level
+     * 4. saving the char at the right place in asciiArtArr
+     * @return asciiArtArr of relevant chars
      */
-    public static void testFunction() {
-        char[] chars = {'A', 'B', 'C', 'D'};
-        double[] checkResult = brightnessOfCharArr(chars);
-        checkResult = linearStretch(checkResult);
-        Image image = Image.fromFile("ex4_ASCII_Art/board.jpeg");
-        assert image != null;
-        double averagePixel = averageBrightness(image);
-        double num = 5;
+    public char[][] chooseChars(int numCharsInRow, Character[] charSet) {
+        // the number of pixels in each subImage
+        int pixels = image.getWidth() / numCharsInRow;
+        char[][] asciiArt = new char[image.getHeight() / pixels]
+                [image.getWidth() / pixels];
+
+        // stretching the charSet
+        double[] charSetBrightness = brightnessOfCharArr(charSet);
+        double[] stretchedCharSet = linearStretch(charSetBrightness);
+
+        int i = 0;
+        int j = 0;
+        // running on the divided image
+        for (Image subImage : image.squareSubImagesOfSize(pixels)) {
+            if (j == numCharsInRow) {
+                j = 0;
+                i++;
+            }
+            double averageBrightness = averageBrightness(subImage);
+            int charIndex = findClosestValue(averageBrightness,
+                    stretchedCharSet);
+            asciiArt[i][j] = charSet[charIndex];
+            j++;
         }
+        return asciiArt;
+    }
+
+    /**
+     * This function will return the index of the closest value in the doubles
+     * array given
+     */
+    private static int findClosestValue(double target, double[] arr) {
+        double minDifference = Math.abs(target - arr[0]);
+        int closestIndex = 0;
+
+        for (int i = 1; i < arr.length; i++) {
+            double curDifference = Math.abs(target - arr[i]);
+            if (curDifference < minDifference) {
+                // updating index and difference
+                minDifference = curDifference;
+                closestIndex = i;
+            }
+        }
+
+        return closestIndex;
+    }
 }
