@@ -140,7 +140,6 @@ public class BrightnessImgCharMatcher {
                 closestIndex = i;
             }
         }
-
         return closestIndex;
     }
 }
