@@ -12,11 +12,21 @@ public class Shell {
     private static final String CHARS_COMMAND = "chars";
     private static final String ADD_COMMAND = "add";
     private static final String REMOVE_COMMAND = "remove";
-//    private final Image image;
+    private static final String RESOLUTION_COMMAND = "res";
+    private static final int INITIAL_CHARS_IN_ROW = 64;
+    private static final int MIN_PIXELS_PER_CHAR = 2;
+    private final int minCharsInRow;
+    private final int maxCharsInRow;
+    private int charsInRow;
+    private final Image image;
     private final Set<Character> charSet = new HashSet<>();
 
     public Shell(Image img) {
-//        this.image = img;
+        this.image = img;
+        this.minCharsInRow = Math.max(1, img.getWidth() / img.getHeight());
+        this.maxCharsInRow = img.getWidth() / MIN_PIXELS_PER_CHAR;
+        this.charsInRow = Math.max(Math.min(INITIAL_CHARS_IN_ROW,
+                maxCharsInRow), minCharsInRow);
         // default charSet
         for (int i = 0; i < 10; i++) {
             Character character = (char) ('0' + i);
@@ -33,9 +43,14 @@ public class Shell {
             // checking if the input is one of the commands
             switch (words[0]) {
                 case CHARS_COMMAND -> showChars();
-                case ADD_COMMAND, REMOVE_COMMAND -> AddRemoveCommand(words);
+                case ADD_COMMAND, REMOVE_COMMAND -> AddRemoveCommands(words);
+                case RESOLUTION_COMMAND -> resChange(words);
+                default -> {
+                    throw new Exception("Did not executed due to incorrect" +
+                            " command");
+                }
             }
-            // No legal command found - asking for an input again
+            // Moving to the next command
             System.out.print(">>> ");
             cmd = scanner.nextLine().trim();
             words = cmd.split("\\s+");
@@ -43,19 +58,53 @@ public class Shell {
     }
 
     /**
+     * This function will change the resolution according to the command given:
+     * up - multiply rhe resolution by 2
+     * down - divide by 2
+     */
+    private void resChange(String[] words) throws Exception {
+        // Checking valid command after "res"
+        if(words.length != 2 ||
+                (!words[1].equals("up") && !words[1].equals("down"))) {
+            throw new Exception("Did not executed due to incorrect command");
+        }
+        if(words[1].equals("up")) {
+            // checking we are not exceeding the maxCharsIn
+            if(charsInRow == maxCharsInRow) {
+                throw new
+                        Exception("Did not change due to exceeding boundaries");
+            }
+            // Changing the resolution
+            charsInRow = charsInRow * 2;
+        }
+        if(words[1].equals("down")) {
+            if(charsInRow == minCharsInRow) {
+                throw new
+                        Exception("Did not change due to exceeding boundaries");
+            }
+            charsInRow = charsInRow / 2;
+        }
+        // Change made successfully, print the new resolution:
+        System.out.printf("Width set to %d%n", charsInRow);
+        }
+
+    /**
      * This function will handle the add and remove commands:
      * Throw an exception if its invalid, or add/ remove the given characters
      * to, or from charSet
      * @param words Array containing the words given in the console
      */
-    private void AddRemoveCommand(String[] words) throws Exception {
+    private void AddRemoveCommands(String[] words) throws Exception {
         if(words.length == 2) {
             char[] parseCharRange = parseCharRange(words[1]);
-            if(words[0].equals(ADD_COMMAND)) {
+            if(parseCharRange == null) {
+                throw new Exception("Did not add due to incorrect format");
+            }
+            if (words[0].equals(ADD_COMMAND)) {
                 addChars(parseCharRange);
                 return;
             }
-            if(words[0].equals(REMOVE_COMMAND)) {
+            if (words[0].equals(REMOVE_COMMAND)) {
                 removeChars(parseCharRange);
                 return;
             }
