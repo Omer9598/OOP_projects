@@ -1,5 +1,8 @@
 package ascii_art;
 
+import ascii_art.img_to_char.BrightnessImgCharMatcher;
+import ascii_output.AsciiOutput;
+import ascii_output.HtmlAsciiOutput;
 import image.Image;
 
 import java.util.HashSet;
@@ -13,11 +16,17 @@ public class Shell {
     private static final String ADD_COMMAND = "add";
     private static final String REMOVE_COMMAND = "remove";
     private static final String RESOLUTION_COMMAND = "res";
+    private static final String RENDER_COMMAND = "render";
+    private static final String FONT_NAME = "Courier New";
+    private static final String OUTPUT_FILENAME = "out.html";
+    private static final char[] INITIAL_CHARS_RANGE = new char[] {'0', '9'};
     private static final int INITIAL_CHARS_IN_ROW = 64;
     private static final int MIN_PIXELS_PER_CHAR = 2;
     private final int minCharsInRow;
     private final int maxCharsInRow;
     private int charsInRow;
+    private final BrightnessImgCharMatcher charMatcher;
+    private final AsciiOutput output;
     private final Set<Character> charSet = new HashSet<>();
 
     public Shell(Image img) {
@@ -25,11 +34,10 @@ public class Shell {
         this.maxCharsInRow = img.getWidth() / MIN_PIXELS_PER_CHAR;
         this.charsInRow = Math.max(Math.min(INITIAL_CHARS_IN_ROW,
                 maxCharsInRow), minCharsInRow);
+        this.charMatcher = new BrightnessImgCharMatcher(img, FONT_NAME);
+        this.output = new HtmlAsciiOutput(OUTPUT_FILENAME, FONT_NAME);
         // default charSet
-        for (int i = 0; i < 10; i++) {
-            Character character = (char) ('0' + i);
-            charSet.add(character);
-        }
+        addChars(INITIAL_CHARS_RANGE);
     }
 
     public void run() throws Exception {
@@ -43,6 +51,7 @@ public class Shell {
                 case CHARS_COMMAND -> showChars();
                 case ADD_COMMAND, REMOVE_COMMAND -> AddRemoveCommands(words);
                 case RESOLUTION_COMMAND -> resChange(words);
+                case RENDER_COMMAND -> render();
                 default -> throw new Exception("Did not executed due to" +
                         " incorrect command");
             }
@@ -51,6 +60,17 @@ public class Shell {
             cmd = scanner.nextLine().trim();
             words = cmd.split("\\s+");
         }
+    }
+
+    /**
+     * This function will create the HTML file
+     */
+    private void render() {
+        // Creating the ascii array
+        Character[] charArray = charSet.toArray(new Character[0]);
+        char[][] asciiArray = charMatcher.chooseChars(charsInRow, charArray);
+        // Creating the html file
+        output.output(asciiArray);
     }
 
     /**
