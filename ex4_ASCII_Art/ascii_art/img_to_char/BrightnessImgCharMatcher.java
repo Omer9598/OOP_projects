@@ -4,11 +4,13 @@ import image.Image;
 
 import java.awt.*;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class BrightnessImgCharMatcher {
 
     private final Image image;
     private final String font;
+    private final HashMap<Image, Double> cache = new HashMap<>();
 
     public BrightnessImgCharMatcher(Image image, String font) {
         this.image = image;
@@ -70,18 +72,22 @@ public class BrightnessImgCharMatcher {
 
     /**
      * This function will calculate the average brightness of the given image
-     *
      * @return A double representing the brightness of the image
      */
-    private static double averageBrightness(Image image) {
+    private double averageBrightness(Image image) {
+        // Check if the image is in the cache already
+        if(cache.containsKey(image)) {
+            return cache.get(image);
+        }
         double brightnessSum = 0;
         double pixelsSum = image.getWidth() * image.getWidth();
         for (Color color : image.pixels()) {
-            // changing the pixels to black-and-white
+            // Changing the pixels to black-and-white
             double greyValue = (color.getRed() * 0.2126 + color.getGreen() *
                     0.7152 + color.getBlue() * 0.0722) / 255.0;
             brightnessSum += greyValue;
         }
+        cache.put(image, brightnessSum / pixelsSum);
         return brightnessSum / pixelsSum;
     }
 
@@ -94,18 +100,16 @@ public class BrightnessImgCharMatcher {
      * @return asciiArtArr of relevant chars
      */
     public char[][] chooseChars(int numCharsInRow, Character[] charSet) {
-        // the number of pixels in each subImage
+        // The number of pixels in each subImage
         int pixels = image.getWidth() / numCharsInRow;
         char[][] asciiArt = new char[image.getHeight() / pixels]
                 [image.getWidth() / pixels];
-
-        // stretching the charSet
+        // Stretching the charSet
         double[] charSetBrightness = brightnessOfCharArr(charSet);
         double[] stretchedCharSet = linearStretch(charSetBrightness);
-
         int i = 0;
         int j = 0;
-        // running on the divided image
+        // Running on the divided image
         for (Image subImage : image.squareSubImagesOfSize(pixels)) {
             if (j == numCharsInRow) {
                 j = 0;

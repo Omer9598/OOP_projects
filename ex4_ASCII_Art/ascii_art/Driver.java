@@ -18,29 +18,3 @@ public class Driver {
         new Shell(img).run();
     }
 }
-
-
-
-
-
-
-// creating Html file of the image
-//        Image img = Image.fromFile("ex4_ASCII_Art/board.jpeg");
-//        Character[] charSet = {'a','b','c','d'};
-//        BrightnessImgCharMatcher charMatcher = new BrightnessImgCharMatcher(img, "Ariel");
-//        var chars = charMatcher.chooseChars(2,
-//                new Character[]{'m', 'o'});
-//        System.out.println(Arrays.deepToString(chars));
-//
-//        AsciiOutput asciiOutput = new HtmlAsciiOutput("output.html", "Ariel");
-//        char[][] chars = charMatcher.chooseChars(4, charSet);
-//        asciiOutput.output(chars);
-
-//        Character[] charSet = {'a','b','c','d'};
-//        Character[] charSet = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','y','x','u','v',' ','\''};
-//        Image img = Image.fromFile("ex4_ASCII_Art/dino.png");
-//        BrightnessImgCharMatcher charMatcher = new BrightnessImgCharMatcher(img, "Courier New");
-//        HtmlAsciiOutput asciiOutput = new HtmlAsciiOutput("out1.html", "Courier New");
-//        var charsInARow = img.getWidth() / 2;
-//        char[][] chars = charMatcher.chooseChars(charsInARow, charSet);
-//        asciiOutput.output(chars);
