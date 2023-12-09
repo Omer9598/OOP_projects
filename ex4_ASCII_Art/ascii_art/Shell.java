@@ -18,11 +18,9 @@ public class Shell {
     private final int minCharsInRow;
     private final int maxCharsInRow;
     private int charsInRow;
-    private final Image image;
     private final Set<Character> charSet = new HashSet<>();
 
     public Shell(Image img) {
-        this.image = img;
         this.minCharsInRow = Math.max(1, img.getWidth() / img.getHeight());
         this.maxCharsInRow = img.getWidth() / MIN_PIXELS_PER_CHAR;
         this.charsInRow = Math.max(Math.min(INITIAL_CHARS_IN_ROW,
@@ -45,10 +43,8 @@ public class Shell {
                 case CHARS_COMMAND -> showChars();
                 case ADD_COMMAND, REMOVE_COMMAND -> AddRemoveCommands(words);
                 case RESOLUTION_COMMAND -> resChange(words);
-                default -> {
-                    throw new Exception("Did not executed due to incorrect" +
-                            " command");
-                }
+                default -> throw new Exception("Did not executed due to" +
+                        " incorrect command");
             }
             // Moving to the next command
             System.out.print(">>> ");
