@@ -4,14 +4,14 @@ import danogl.collisions.GameObjectCollection;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
-
 import java.awt.*;
 
 public class Terrain {
     private final GameObjectCollection gameObjects;
     private final int groundLayer;
-    private Vector2 windowDimensions;
-    private float groundHeightAtX0 = 500;
+    private final Vector2 windowDimensions;
+    private final float groundHeightAtX0 = 500;
+    private final int seed;
 
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
 
@@ -21,6 +21,7 @@ public class Terrain {
         this.gameObjects = gameObjects;
         this.groundLayer = groundLayer;
         this.windowDimensions = windowDimensions;
+        this.seed = seed;
     }
 
     /**
@@ -30,7 +31,11 @@ public class Terrain {
      */
     public float groundHeightAt(float x) {
         // todo - find Perlin Noise function to return the y value
-        return groundHeightAtX0;
+        NoiseGenerator perlinFunction = new NoiseGenerator(seed);
+        float scaleFactor = 130.0f;
+        float offset = 150.0f;
+        return groundHeightAtX0 + scaleFactor *
+                (float) perlinFunction.noise(x) + offset;
     }
 
     /**
@@ -52,7 +57,7 @@ public class Terrain {
 
         // Creating the terrain
         for (int xVal = minX; xVal < maxX; xVal += Block.SIZE) {
-            int topBlock = ((int)(groundHeightAt(60) / Block.SIZE))
+            int topBlock = ((int)(groundHeightAt(xVal) / Block.SIZE))
                     * Block.SIZE;
             for (int yVal = topBlock;
                  yVal < windowDimensions.y();
@@ -60,6 +65,7 @@ public class Terrain {
                 Vector2 blockPosition = new Vector2(xVal, yVal);
                 Block block = new Block(blockPosition, renderable);
                 gameObjects.addGameObject(block);
+                block.setTag("ground");
             }
         }
     }

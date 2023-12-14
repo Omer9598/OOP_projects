@@ -23,7 +23,7 @@ public class PepseGameManager extends GameManager {
         Sky.create(gameObjects(), windowController.getWindowDimensions(),
                 Layer.BACKGROUND);
         Terrain terrain = new Terrain(gameObjects(), Layer.STATIC_OBJECTS,
-                windowController.getWindowDimensions(), 2);
+                windowController.getWindowDimensions(), 5);
         terrain.createInRange(MIN_X_TERRAIN, MAX_X_TERRAIN);
     }
 
