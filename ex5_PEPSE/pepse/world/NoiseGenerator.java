@@ -1,7 +1,7 @@
 package pepse.world;
 
 public class NoiseGenerator {
-    private double seed;
+    private final double seed;
     private long default_size;
     private int[] p;
 
@@ -42,15 +42,6 @@ public class NoiseGenerator {
         }
 
     }
-
-    public void setSeed(double seed) {
-        this.seed = seed;
-    }
-
-    public double getSeed() {
-        return this.seed;
-    }
-
 
     public double noise(double x) {
         double value = 0.0;

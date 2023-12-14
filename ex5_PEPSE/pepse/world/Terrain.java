@@ -10,7 +10,7 @@ public class Terrain {
     private final GameObjectCollection gameObjects;
     private final int groundLayer;
     private final Vector2 windowDimensions;
-    private final float groundHeightAtX0 = 500;
+    private final float groundHeightAtX0;
     private final int seed;
 
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
@@ -22,6 +22,7 @@ public class Terrain {
         this.groundLayer = groundLayer;
         this.windowDimensions = windowDimensions;
         this.seed = seed;
+        this.groundHeightAtX0 = windowDimensions.x() / 3;
     }
 
     /**
@@ -64,7 +65,7 @@ public class Terrain {
                  yVal += Block.SIZE) {
                 Vector2 blockPosition = new Vector2(xVal, yVal);
                 Block block = new Block(blockPosition, renderable);
-                gameObjects.addGameObject(block);
+                gameObjects.addGameObject(block, groundLayer);
                 block.setTag("ground");
             }
         }
