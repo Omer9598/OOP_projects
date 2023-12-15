@@ -11,11 +11,12 @@ import java.awt.*;
 
 public class Sun {
 
+    private static final Vector2 SUN_DIMENSIONS = new Vector2(120, 120);
+
     public static GameObject create(Vector2 windowDimensions, float cycleLength,
                                     GameObjectCollection gameObjects, int layer) {
         OvalRenderable ovalShape = new OvalRenderable(Color.orange);
-        Vector2 sunDimensions = new Vector2(120, 120);
-        GameObject sun = new GameObject(Vector2.ZERO, sunDimensions,ovalShape);
+        GameObject sun = new GameObject(Vector2.ZERO, SUN_DIMENSIONS, ovalShape);
         sun.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         sun.setTag("sun");
         gameObjects.addGameObject(sun, layer);
