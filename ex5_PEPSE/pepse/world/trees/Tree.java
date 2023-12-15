@@ -14,7 +14,7 @@ public class Tree {
 
     private static final Color TREE_TRUNK_COLOR = new Color(100, 50, 20);
     private static final Color LEAVES_COLOR = new Color(50, 180, 30);
-    private static final int TREE_HEIGHT = 6;
+    private static final int TREE_HEIGHT = 10;
     private final Terrain terrain;
     private final GameObjectCollection gameObjects;
     private final int treesLayer;
@@ -45,38 +45,49 @@ public class Tree {
                         LEAVES_COLOR));
 
         Random random = new Random();
-        for(int xVal = minX; xVal < maxX; xVal += Terrain.TERRAIN_JUMP) {
+        for (int xVal = minX; xVal < maxX; xVal += Terrain.TERRAIN_JUMP) {
             // Plant tree in probability of 0.1
-            if(random.nextDouble() < 0.1) {
-                int yVal = ((int)(terrain.groundHeightAt(xVal) / Block.SIZE)) *
+            if (random.nextDouble() < 0.1) {
+                int yVal = ((int) (terrain.groundHeightAt(xVal) / Block.SIZE)) *
                         Block.SIZE - Block.SIZE;
-                for(int i = 0; i < TREE_HEIGHT; i++) {
+                for (int i = 0; i < TREE_HEIGHT; i++) {
                     terrain.createBlock(treeRenderable, xVal, yVal,
                             "tree block", treesLayer);
                     yVal -= Terrain.TERRAIN_JUMP;
                 }
                 // Handling the tree tops
-                createTreeTop(leavesRenderable, xVal, yVal, leavesLayer);
+                createTreeTop(leavesRenderable, xVal, yVal);
             }
         }
     }
 
     /**
      * This function will create a tree top
-     * Choosing randomly from 3 to 6 to represent the size of the tree top
+     * Choosing randomly from 2 to 4 to represent the size of the tree top
      * xVal and yVal are the values of the root block of the current tree
      */
     private void createTreeTop(RectangleRenderable rectangleRenderable,
-                               int xVal, int yVal, int layer) {
+                               int rootX, int rootY) {
         Random random = new Random();
-        int treeSize = random.nextInt(4) + 3;
-        int xTopLeft = xVal - treeSize * (Terrain.TERRAIN_JUMP);
-        int yTopLeft = yVal - treeSize * (Terrain.TERRAIN_JUMP);
+        int treeSize = random.nextInt(2) + 2;
+        int leafBlockSize = Block.SIZE;
 
-        Leaf leaf = new Leaf(new Vector2(xTopLeft, yTopLeft),
-                rectangleRenderable, 20);
-
-        gameObjects.addGameObject(leaf, layer);
-        leaf.setTag("leaf");
+        for (int row = 0, currentY = rootY - treeSize * leafBlockSize;
+             row < treeSize * 2 + 1;
+             row++, currentY += leafBlockSize) {
+            for (int col = 0, currentX = rootX - treeSize * leafBlockSize;
+                 col < treeSize * 2 + 1;
+                 col++, currentX += leafBlockSize) {
+                // Create leaves in probability of 0.6
+                if(random.nextDouble() > 0.8) {
+                    continue;
+                }
+                Vector2 leafPosition = new Vector2(currentX, currentY);
+                Leaf leaf = new Leaf(leafPosition, rectangleRenderable, 20);
+                gameObjects.addGameObject(leaf, leavesLayer);
+                leaf.setTag("leaf");
+            }
+        }
     }
 }
+

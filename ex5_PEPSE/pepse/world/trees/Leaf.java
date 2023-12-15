@@ -6,7 +6,7 @@ import pepse.world.Block;
 
 public class Leaf extends Block {
 
-    private int lifeTime;
+    private final int lifeTime;
 
     public Leaf(Vector2 topLeftCorner, Renderable renderable, int lifeTime) {
         super(topLeftCorner, renderable);
