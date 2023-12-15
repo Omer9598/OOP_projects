@@ -9,9 +9,9 @@ import java.awt.*;
 public class Terrain {
     private final GameObjectCollection gameObjects;
     private final int groundLayer;
-    private final Vector2 windowDimensions;
     private final float groundHeightAtX0;
     private final int seed;
+    private static final int TERRAIN_DEPTH = 20 * Block.SIZE;
 
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
 
@@ -20,7 +20,6 @@ public class Terrain {
                    int seed) {
         this.gameObjects = gameObjects;
         this.groundLayer = groundLayer;
-        this.windowDimensions = windowDimensions;
         this.seed = seed;
         this.groundHeightAtX0 = windowDimensions.x() / 3;
     }
@@ -31,7 +30,6 @@ public class Terrain {
      * The y value will be determined by the Perlin Noise function
      */
     public float groundHeightAt(float x) {
-        // todo - find Perlin Noise function to return the y value
         NoiseGenerator perlinFunction = new NoiseGenerator(seed);
         float scaleFactor = 130.0f;
         float offset = 150.0f;
@@ -58,15 +56,13 @@ public class Terrain {
 
         // Creating the terrain
         for (int xVal = minX; xVal < maxX; xVal += Block.SIZE) {
-            int topBlock = ((int)(groundHeightAt(xVal) / Block.SIZE))
-                    * Block.SIZE;
-            for (int yVal = topBlock;
-                 yVal < windowDimensions.y();
-                 yVal += Block.SIZE) {
+            int yVal = ((int)(groundHeightAt(xVal) / Block.SIZE)) * Block.SIZE;
+            for (int depth = 0; depth < TERRAIN_DEPTH; depth++) {
                 Vector2 blockPosition = new Vector2(xVal, yVal);
                 Block block = new Block(blockPosition, renderable);
                 gameObjects.addGameObject(block, groundLayer);
                 block.setTag("ground");
+                yVal += Block.SIZE;
             }
         }
     }
