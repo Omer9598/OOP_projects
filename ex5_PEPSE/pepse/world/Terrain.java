@@ -12,6 +12,7 @@ public class Terrain {
     private final float groundHeightAtX0;
     private final int seed;
     private static final int TERRAIN_DEPTH = 20 * Block.SIZE;
+    public static final int TERRAIN_JUMP = Block.SIZE - 2;
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
     public Terrain(GameObjectCollection gameObjects,
                    int groundLayer, Vector2 windowDimensions,
@@ -47,16 +48,24 @@ public class Terrain {
         RectangleRenderable renderable =
                 new RectangleRenderable(ColorSupplier.approximateColor
                         (BASE_GROUND_COLOR));
-        for (int xVal = minX; xVal < maxX; xVal += Block.SIZE - 2) {
+        for (int xVal = minX; xVal < maxX; xVal += TERRAIN_JUMP) {
             int yVal = ((int)(groundHeightAt(xVal) / Block.SIZE)) * Block.SIZE;
             for (int depth = 0; depth < TERRAIN_DEPTH; depth++) {
-                Vector2 blockPosition = new Vector2(xVal, yVal);
-                Block block = new Block(blockPosition, renderable);
-                gameObjects.addGameObject(block, groundLayer);
-                block.setTag("ground");
-                yVal += Block.SIZE - 2;
+                createBlock(renderable, xVal, yVal, "ground block", groundLayer);
+                yVal += TERRAIN_JUMP;
             }
         }
+    }
+
+    /**
+     * This function will create a single ground block
+     */
+    public void createBlock(RectangleRenderable renderable, int xVal,
+                                  int yVal, String tag, int layer) {
+        Vector2 blockPosition = new Vector2(xVal, yVal);
+        Block block = new Block(blockPosition, renderable);
+        gameObjects.addGameObject(block, layer);
+        block.setTag(tag);
     }
 
     /**

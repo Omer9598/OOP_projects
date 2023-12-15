@@ -11,6 +11,7 @@ import pepse.world.Terrain;
 import pepse.world.daynight.Night;
 import pepse.world.daynight.Sun;
 import pepse.world.daynight.SunHalo;
+import pepse.world.trees.Tree;
 
 import java.awt.*;
 
@@ -26,7 +27,7 @@ public class PepseGameManager extends GameManager {
     private static final int LEAVES_LAYER = SKY_LAYER + 3;
     private static final int SUN_HALO_LAYER = SKY_LAYER + 10;
     private static final int TERRAIN_LAYER = Layer.STATIC_OBJECTS;
-    private static final int GAME_OBJECTS_LAYER = TERRAIN_LAYER + 1;
+//    private static final int GAME_OBJECTS_LAYER = TERRAIN_LAYER + 1;
     private static final int NIGHT_LAYER = Layer.FOREGROUND;
     @Override
     public void initializeGame(ImageReader imageReader,
@@ -44,6 +45,9 @@ public class PepseGameManager extends GameManager {
         GameObject sun = Sun.create(windowDimensions, CYCLE_LENGTH,
                 gameObjects(),SUN_LAYER);
         SunHalo.create(gameObjects(), sun, SUN_HALO_COLOR, SUN_HALO_LAYER);
+        Tree trees = new Tree(terrain, gameObjects(), TREE_TRUNKS_LAYER,
+                LEAVES_LAYER);
+        trees.createInRange(MIN_X_TERRAIN, MAX_X_TERRAIN);
     }
 
     public static void main(String[] args) {
