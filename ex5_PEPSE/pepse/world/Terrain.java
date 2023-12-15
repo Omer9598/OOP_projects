@@ -29,8 +29,8 @@ public class Terrain {
      */
     public float groundHeightAt(float x) {
         NoiseGenerator perlinFunction = new NoiseGenerator(seed);
-        float scaleFactor = 130.0f;
-        float offset = 150.0f;
+        float scaleFactor = 70.0f;
+        float offset = 60.0f;
         return groundHeightAtX0 + scaleFactor *
                 (float) perlinFunction.noise(x) + offset;
     }
@@ -40,28 +40,35 @@ public class Terrain {
      * function to determine the height
      */
     public void createInRange(int minX, int maxX) {
+        // Change the minX and maxX to be divided by Block.SIZE
+        minX = changeMinMaxX(minX, true);
+        maxX = changeMinMaxX(maxX, false);
+        // Creating the terrain
         RectangleRenderable renderable =
                 new RectangleRenderable(ColorSupplier.approximateColor
-                (BASE_GROUND_COLOR));
-
-        // Change the minX and maxX to be divided by Block.SIZE
-        if(minX % Block.SIZE != 0) {
-            minX = (int) Math.floor((double) minX / Block.SIZE) * Block.SIZE;
-        }
-        if(maxX % Block.SIZE != 0) {
-            maxX = (int) Math.ceil((double) maxX / Block.SIZE) * Block.SIZE;
-        }
-
-        // Creating the terrain
-        for (int xVal = minX; xVal < maxX; xVal += Block.SIZE) {
+                        (BASE_GROUND_COLOR));
+        for (int xVal = minX; xVal < maxX; xVal += Block.SIZE - 2) {
             int yVal = ((int)(groundHeightAt(xVal) / Block.SIZE)) * Block.SIZE;
             for (int depth = 0; depth < TERRAIN_DEPTH; depth++) {
                 Vector2 blockPosition = new Vector2(xVal, yVal);
                 Block block = new Block(blockPosition, renderable);
                 gameObjects.addGameObject(block, groundLayer);
                 block.setTag("ground");
-                yVal += Block.SIZE;
+                yVal += Block.SIZE - 2;
             }
         }
+    }
+
+    /**
+     * This function will change minX and maxX such that they will be divided by
+     * Block. SIZE
+     */
+    public static int changeMinMaxX(int xValue, boolean isMin) {
+        int minX = (int) Math.floor((double) xValue / Block.SIZE) * Block.SIZE;
+        int maxX = (int) Math.ceil((double) xValue / Block.SIZE) * Block.SIZE;
+        if(isMin) {
+            return minX;
+        }
+        return maxX;
     }
 }

@@ -15,8 +15,8 @@ import pepse.world.daynight.SunHalo;
 import java.awt.*;
 
 public class PepseGameManager extends GameManager {
-    private static final int MIN_X_TERRAIN = -30;
-    private static final int MAX_X_TERRAIN = 1800;
+    private static final int MIN_X_TERRAIN = -50;
+    private static final int MAX_X_TERRAIN = 1822;
     private static final int CYCLE_LENGTH = 50;
     private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
     // Game layers - in ascending order
