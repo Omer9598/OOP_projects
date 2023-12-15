@@ -11,9 +11,7 @@ import danogl.util.Vector2;
 import java.awt.*;
 
 public class Night {
-
     private static final float MIDNIGHT_OPACITY = 0.5f;
-
     public static GameObject create(GameObjectCollection gameObjects,
                                     Vector2 windowDimensions,
                                     float cycleLength,

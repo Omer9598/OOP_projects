@@ -8,11 +8,8 @@ import danogl.gui.rendering.OvalRenderable;
 import danogl.util.Vector2;
 
 import java.awt.*;
-
 public class Sun {
-
     private static final Vector2 SUN_DIMENSIONS = new Vector2(120, 120);
-
     public static GameObject create(Vector2 windowDimensions, float cycleLength,
                                     GameObjectCollection gameObjects, int layer) {
         OvalRenderable ovalShape = new OvalRenderable(Color.orange);

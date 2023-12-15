@@ -9,9 +9,7 @@ import danogl.util.Vector2;
 import java.awt.*;
 
 public class SunHalo {
-
     private static final Vector2 HALO_DIMENSIONS = new Vector2(300, 300);
-
     public static GameObject create(GameObjectCollection gameObjects,
                                     GameObject sun,
                                     Color color,

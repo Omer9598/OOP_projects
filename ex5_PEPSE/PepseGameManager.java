@@ -28,7 +28,6 @@ public class PepseGameManager extends GameManager {
     private static final int TERRAIN_LAYER = Layer.STATIC_OBJECTS;
     private static final int GAME_OBJECTS_LAYER = TERRAIN_LAYER + 1;
     private static final int NIGHT_LAYER = Layer.FOREGROUND;
-
     @Override
     public void initializeGame(ImageReader imageReader,
                                SoundReader soundReader,

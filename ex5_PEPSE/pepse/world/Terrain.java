@@ -12,9 +12,7 @@ public class Terrain {
     private final float groundHeightAtX0;
     private final int seed;
     private static final int TERRAIN_DEPTH = 20 * Block.SIZE;
-
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
-
     public Terrain(GameObjectCollection gameObjects,
                    int groundLayer, Vector2 windowDimensions,
                    int seed) {
