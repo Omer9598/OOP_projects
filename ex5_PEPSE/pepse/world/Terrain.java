@@ -11,8 +11,7 @@ public class Terrain {
     private final int groundLayer;
     private final float groundHeightAtX0;
     private final int seed;
-    private static final int TERRAIN_DEPTH = 20 * Block.SIZE;
-    public static final int TERRAIN_JUMP = Block.SIZE - 2;
+    private static final float TERRAIN_DEPTH = 20 * Block.SIZE;
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
     public Terrain(GameObjectCollection gameObjects,
                    int groundLayer, Vector2 windowDimensions,
@@ -40,7 +39,7 @@ public class Terrain {
      * This function will create the terrain in the game, using groundHeightAt
      * function to determine the height
      */
-    public void createInRange(int minX, int maxX) {
+    public void createInRange(float minX, float maxX) {
         // Change the minX and maxX to be divided by Block.SIZE
         minX = changeMinMaxX(minX, true);
         maxX = changeMinMaxX(maxX, false);
@@ -48,11 +47,11 @@ public class Terrain {
         RectangleRenderable renderable =
                 new RectangleRenderable(ColorSupplier.approximateColor
                         (BASE_GROUND_COLOR));
-        for (int xVal = minX; xVal < maxX; xVal += TERRAIN_JUMP) {
-            int yVal = ((int)(groundHeightAt(xVal) / Block.SIZE)) * Block.SIZE;
+        for (float xVal = minX; xVal < maxX; xVal += Block.SIZE) {
+            float yVal = ((int)(groundHeightAt(xVal) / Block.SIZE)) * Block.SIZE;
             for (int depth = 0; depth < TERRAIN_DEPTH; depth++) {
                 createBlock(renderable, xVal, yVal, "ground block", groundLayer);
-                yVal += TERRAIN_JUMP;
+                yVal += Block.SIZE;
             }
         }
     }
@@ -60,8 +59,8 @@ public class Terrain {
     /**
      * This function will create a single ground block
      */
-    public void createBlock(RectangleRenderable renderable, int xVal,
-                                  int yVal, String tag, int layer) {
+    public void createBlock(RectangleRenderable renderable, float xVal,
+                            float yVal, String tag, int layer) {
         Vector2 blockPosition = new Vector2(xVal, yVal);
         Block block = new Block(blockPosition, renderable);
         gameObjects.addGameObject(block, layer);
@@ -72,9 +71,9 @@ public class Terrain {
      * This function will change minX and maxX such that they will be divided by
      * Block. SIZE
      */
-    public static int changeMinMaxX(int xValue, boolean isMin) {
-        int minX = (int) Math.floor((double) xValue / Block.SIZE) * Block.SIZE;
-        int maxX = (int) Math.ceil((double) xValue / Block.SIZE) * Block.SIZE;
+    public static float changeMinMaxX(float xValue, boolean isMin) {
+        float minX = (int) Math.floor(xValue / Block.SIZE) * Block.SIZE;
+        float maxX = (int) Math.ceil(xValue / Block.SIZE) * Block.SIZE;
         if(isMin) {
             return minX;
         }

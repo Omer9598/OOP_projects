@@ -22,12 +22,12 @@ public class PepseGameManager extends GameManager {
     private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
     // Game layers - in ascending order
     private static final int SKY_LAYER = Layer.BACKGROUND;
-    private static final int SUN_LAYER = SKY_LAYER + 1;
-    private static final int TREE_TRUNKS_LAYER = SKY_LAYER + 2;
-    private static final int LEAVES_LAYER = SKY_LAYER + 3;
-    private static final int SUN_HALO_LAYER = SKY_LAYER + 10;
+    private static final int SUN_LAYER = Layer.BACKGROUND + 1;
+    private static final int SUN_HALO_LAYER = Layer.BACKGROUND + 10;
     private static final int TERRAIN_LAYER = Layer.STATIC_OBJECTS;
-//    private static final int GAME_OBJECTS_LAYER = TERRAIN_LAYER + 1;
+    private static final int TREE_TRUNKS_LAYER = Layer.STATIC_OBJECTS + 1;
+    private static final int LEAVES_LAYER = Layer.STATIC_OBJECTS + 2;
+//        private static final int GAME_OBJECTS_LAYER = Layer.STATIC_OBJECTS + 3;
     private static final int NIGHT_LAYER = Layer.FOREGROUND;
     @Override
     public void initializeGame(ImageReader imageReader,
