@@ -36,18 +36,34 @@ public class PepseGameManager extends GameManager {
                                WindowController windowController) {
         super.initializeGame(imageReader, soundReader, inputListener,
                 windowController);
+        windowController.setTargetFramerate(80);
+        gameObjects().layers().shouldLayersCollide(LEAVES_LAYER, TERRAIN_LAYER,
+                true);
         Vector2 windowDimensions = windowController.getWindowDimensions();
         Sky.create(gameObjects(), windowDimensions, SKY_LAYER);
-        Terrain terrain = new Terrain(gameObjects(), TERRAIN_LAYER,
-                windowDimensions, 5);
-        terrain.createInRange(MIN_X_TERRAIN, MAX_X_TERRAIN);
+        Terrain terrain = createTerrain(windowDimensions);
         Night.create(gameObjects(), windowDimensions, CYCLE_LENGTH, NIGHT_LAYER);
-        GameObject sun = Sun.create(windowDimensions, CYCLE_LENGTH,
-                gameObjects(),SUN_LAYER);
-        SunHalo.create(gameObjects(), sun, SUN_HALO_COLOR, SUN_HALO_LAYER);
+        createSunAndHalo(windowDimensions);
+        createTrees(terrain);
+    }
+
+    private void createTrees(Terrain terrain) {
         Tree trees = new Tree(terrain, gameObjects(), TREE_TRUNKS_LAYER,
                 LEAVES_LAYER);
         trees.createInRange(MIN_X_TERRAIN, MAX_X_TERRAIN);
+    }
+
+    private void createSunAndHalo(Vector2 windowDimensions) {
+        GameObject sun = Sun.create(windowDimensions, CYCLE_LENGTH,
+                gameObjects(),SUN_LAYER);
+        SunHalo.create(gameObjects(), sun, SUN_HALO_COLOR, SUN_HALO_LAYER);
+    }
+
+    private Terrain createTerrain(Vector2 windowDimensions) {
+        Terrain terrain = new Terrain(gameObjects(), TERRAIN_LAYER,
+                windowDimensions, 5);
+        terrain.createInRange(MIN_X_TERRAIN, MAX_X_TERRAIN);
+        return terrain;
     }
 
     public static void main(String[] args) {

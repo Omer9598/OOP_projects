@@ -106,12 +106,4 @@ public class Leaf extends GameObject {
         removeComponent(horizontalTransition);
         this.transform().setVelocity(Vector2.ZERO);
     }
-
-    // todo - use shouldCollideWith function to fix the bug?
-
-    @Override
-    public boolean shouldCollideWith(GameObject other) {
-        super.shouldCollideWith(other);
-        return other instanceof Block;
-    }
 }
