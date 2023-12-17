@@ -17,6 +17,7 @@ public class Leaf extends GameObject {
     private static final Random random = new Random();
     private static final int FADE_OUT_TIME = 10;
     private static final float FALL_VELOCITY = 35f;
+    private Transition<Float> horizontalTransition;
 
     public Leaf(Vector2 topLeftCorner, Renderable renderable) {
         super(topLeftCorner, LEAVES_DIMENSIONS, renderable);
@@ -27,7 +28,7 @@ public class Leaf extends GameObject {
         this.setDimensions(LEAVES_DIMENSIONS);
 
         // Setting the leaves wind movement in some delay
-        new ScheduledTask(this, random.nextInt(5),
+        new ScheduledTask(this, random.nextInt(4),
                 true, this::LeavesWindMovement);
         // Setting the leaves life cycle
         new ScheduledTask(this, random.nextInt(100),
@@ -41,14 +42,14 @@ public class Leaf extends GameObject {
     private void LeavesWindMovement() {
         new Transition<>(this,
                 this.renderer()::setRenderableAngle, -7f, 7f,
-                Transition.LINEAR_INTERPOLATOR_FLOAT, 0.8f,
+                Transition.LINEAR_INTERPOLATOR_FLOAT, 1.2f,
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
                 null);
 
         new Transition<>(this,
                 x -> this.setDimensions(new Vector2((1 + x / 100) * Block.SIZE, Block.SIZE)),
                 -6f, 6f, Transition.LINEAR_INTERPOLATOR_FLOAT,
-                0.3f, Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
+                0.6f, Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
                 null);
     }
 
@@ -71,7 +72,7 @@ public class Leaf extends GameObject {
     private void fallAndFadeOut() {
         this.transform().setVelocityY(FALL_VELOCITY);
         // Setting the horizontal movement
-        new Transition<>(this,
+        horizontalTransition = new Transition<>(this,
                 x -> this.transform().setVelocityX(x),
                 -20f, 20f,
                 Transition.CUBIC_INTERPOLATOR_FLOAT, 2f,
@@ -93,15 +94,24 @@ public class Leaf extends GameObject {
      */
     private void resetLeaf() {
         this.setCenter(originalCenter);
-        this.renderer().fadeIn(0);
+        this.renderer().setOpaqueness(1f);
+        this.setVelocity(Vector2.ZERO);
+        removeComponent(horizontalTransition);
         leavesLifeCycle();
     }
 
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
+        removeComponent(horizontalTransition);
         this.transform().setVelocity(Vector2.ZERO);
     }
 
-    // todo - use shouldCollideWith function to fix the bug
+    // todo - use shouldCollideWith function to fix the bug?
+
+    @Override
+    public boolean shouldCollideWith(GameObject other) {
+        super.shouldCollideWith(other);
+        return other instanceof Block;
+    }
 }
