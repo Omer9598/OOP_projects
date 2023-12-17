@@ -13,7 +13,8 @@ import java.util.Random;
 public class Tree {
     private static final Color TREE_TRUNK_COLOR = new Color(100, 50, 20);
     private static final Color LEAVES_COLOR = new Color(30, 180, 65);
-    private static final int TREE_HEIGHT = 10;
+    private final Random random = new Random();
+    private final int treeHeight;
     private final Terrain terrain;
     private final GameObjectCollection gameObjects;
     private final int treesLayer;
@@ -25,6 +26,7 @@ public class Tree {
         this.gameObjects = gameObjects;
         this.treesLayer = treesLayer;
         this.leavesLayer = leavesLayer;
+        this.treeHeight = random.nextInt(4) + 5;
     }
 
     /**
@@ -43,13 +45,12 @@ public class Tree {
                 new RectangleRenderable(ColorSupplier.approximateColor(
                         LEAVES_COLOR));
 
-        Random random = new Random();
         for (float xVal = minX; xVal < maxX; xVal += Block.SIZE) {
             // Plant tree in probability of 0.1
             if (random.nextDouble() < 0.1) {
                 float yVal = ((int) (terrain.groundHeightAt(xVal) / Block.SIZE)) *
                         Block.SIZE - Block.SIZE;
-                for (int i = 0; i < TREE_HEIGHT; i++) {
+                for (int i = 0; i < treeHeight; i++) {
                     terrain.createBlock(treeRenderable, xVal, yVal,
                             "tree block", treesLayer);
                     yVal -= Block.SIZE;
@@ -67,7 +68,6 @@ public class Tree {
      */
     private void createTreeTop(RectangleRenderable rectangleRenderable,
                                float rootX, float rootY) {
-        Random random = new Random();
         int treeSize = random.nextInt(2) + 1;
         float leafBlockSize = Block.SIZE;
 

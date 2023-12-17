@@ -25,8 +25,8 @@ public class PepseGameManager extends GameManager {
     private static final int SUN_LAYER = Layer.BACKGROUND + 1;
     private static final int SUN_HALO_LAYER = Layer.BACKGROUND + 10;
     private static final int TERRAIN_LAYER = Layer.STATIC_OBJECTS;
-    private static final int TREE_TRUNKS_LAYER = Layer.STATIC_OBJECTS + 1;
-    private static final int LEAVES_LAYER = Layer.STATIC_OBJECTS + 2;
+    private static final int TREE_TRUNKS_LAYER = Layer.STATIC_OBJECTS + 10;
+    private static final int LEAVES_LAYER = Layer.STATIC_OBJECTS + 20;
 //        private static final int GAME_OBJECTS_LAYER = Layer.STATIC_OBJECTS + 3;
     private static final int NIGHT_LAYER = Layer.FOREGROUND;
     @Override

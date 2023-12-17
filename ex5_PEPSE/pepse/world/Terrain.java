@@ -49,9 +49,15 @@ public class Terrain {
                         (BASE_GROUND_COLOR));
         for (float xVal = minX; xVal < maxX; xVal += Block.SIZE) {
             float yVal = ((int)(groundHeightAt(xVal) / Block.SIZE)) * Block.SIZE;
+            // Setting only the first 2 layers to be ground
+            int layer = groundLayer;
             for (int depth = 0; depth < TERRAIN_DEPTH; depth++) {
-                createBlock(renderable, xVal, yVal, "ground block", groundLayer);
+                if(depth < 2) {
+                    layer = groundLayer;
+                }
+                createBlock(renderable, xVal, yVal, "ground block", layer);
                 yVal += Block.SIZE;
+                layer = groundLayer - 1;
             }
         }
     }

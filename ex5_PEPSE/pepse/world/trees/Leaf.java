@@ -16,8 +16,7 @@ public class Leaf extends GameObject {
     private static final Vector2 LEAVES_DIMENSIONS = new Vector2(20, 20);
     private static final Random random = new Random();
     private static final int FADE_OUT_TIME = 10;
-    private static final float FALL_VELOCITY = 35f;
-    private Transition<Float> horizontalTransition;
+    private static final float FALL_VELOCITY = 45f;
 
     public Leaf(Vector2 topLeftCorner, Renderable renderable) {
         super(topLeftCorner, LEAVES_DIMENSIONS, renderable);
@@ -31,7 +30,7 @@ public class Leaf extends GameObject {
         new ScheduledTask(this, random.nextInt(4),
                 true, this::LeavesWindMovement);
         // Setting the leaves life cycle
-        new ScheduledTask(this, random.nextInt(100),
+        new ScheduledTask(this, random.nextInt(10),
                 false, this::leavesLifeCycle);
     }
 
@@ -61,7 +60,7 @@ public class Leaf extends GameObject {
      */
     private void leavesLifeCycle() {
         // Wait random amount of time before starting to fall and fadeout
-        new ScheduledTask(this, random.nextInt(10),
+        new ScheduledTask(this, random.nextInt(100),
                 false, this::fallAndFadeOut);
     }
 
@@ -72,7 +71,7 @@ public class Leaf extends GameObject {
     private void fallAndFadeOut() {
         this.transform().setVelocityY(FALL_VELOCITY);
         // Setting the horizontal movement
-        horizontalTransition = new Transition<>(this,
+        new Transition<>(this,
                 x -> this.transform().setVelocityX(x),
                 -20f, 20f,
                 Transition.CUBIC_INTERPOLATOR_FLOAT, 2f,
@@ -96,14 +95,28 @@ public class Leaf extends GameObject {
         this.setCenter(originalCenter);
         this.renderer().setOpaqueness(1f);
         this.setVelocity(Vector2.ZERO);
-        removeComponent(horizontalTransition);
+        // Removing the horizontal transition
+        removeHorizontalMovement();
         leavesLifeCycle();
+    }
+
+    /**
+     * This function will set the horizontal movement to 0 - creating a new
+     * Transition
+     */
+    private void removeHorizontalMovement() {
+        new Transition<>(this,
+                x -> this.transform().setVelocityX(x),
+                0f, 0f,
+                Transition.CUBIC_INTERPOLATOR_FLOAT, 100f,
+                Transition.TransitionType.TRANSITION_BACK_AND_FORTH, null);
     }
 
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-        removeComponent(horizontalTransition);
-        this.transform().setVelocity(Vector2.ZERO);
+        // Removing the horizontal transition
+        removeHorizontalMovement();
+        this.setVelocity(Vector2.ZERO);
     }
 }
