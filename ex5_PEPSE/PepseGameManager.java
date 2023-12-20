@@ -6,6 +6,7 @@ import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.util.Vector2;
+import pepse.world.Avatar;
 import pepse.world.Sky;
 import pepse.world.Terrain;
 import pepse.world.daynight.Night;
@@ -27,7 +28,8 @@ public class PepseGameManager extends GameManager {
     private static final int TERRAIN_LAYER = Layer.STATIC_OBJECTS;
     private static final int TREE_TRUNKS_LAYER = Layer.STATIC_OBJECTS + 10;
     private static final int LEAVES_LAYER = Layer.STATIC_OBJECTS + 20;
-//        private static final int GAME_OBJECTS_LAYER = Layer.STATIC_OBJECTS + 3;
+//        private static final int GAME_OBJECTS_LAYER = Layer.STATIC_OBJECTS + 30;
+    private static final int AVATAR_LAYER = Layer.DEFAULT;
     private static final int NIGHT_LAYER = Layer.FOREGROUND;
     @Override
     public void initializeGame(ImageReader imageReader,
@@ -45,6 +47,8 @@ public class PepseGameManager extends GameManager {
         Night.create(gameObjects(), windowDimensions, CYCLE_LENGTH, NIGHT_LAYER);
         createSunAndHalo(windowDimensions);
         createTrees(terrain);
+        Avatar.create(gameObjects(), AVATAR_LAYER, new Vector2(500, 0),
+                inputListener, imageReader);
     }
 
     private void createTrees(Terrain terrain) {
