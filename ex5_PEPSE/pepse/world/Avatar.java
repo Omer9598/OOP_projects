@@ -10,22 +10,22 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
 import java.awt.event.KeyEvent;
-import java.security.Key;
 
 public class Avatar extends GameObject {
     private static final float ENERGY_CHANGE = 0.5f;
     private static final float INITIAL_ENERGY = 100f;
+    private static final float HORIZONTAL_VELOCITY = 200f;
+    private static final float VERTICAL_UP_VELOCITY = 250f;
+    private static final float VERTICAL_ACCELERATION = 400f;
     private static UserInputListener inputListener;
-    private static GameObjectCollection gameObjects;
     private static final Vector2 AVATAR_DIMENSIONS = new Vector2(20, 35);
     // Avatar phase renderers
     private static AnimationRenderable staticAvatar;
     private static AnimationRenderable moveRightAvatar;
-    private static AnimationRenderable moveLeftAvatar;
     private static AnimationRenderable jumpAvatar;
     private static AnimationRenderable flyAvatar;
     private float energy;
-    private boolean isJumping = false;
+    private static boolean isJumping = false;
 
     /**
      * Construct a new GameObject instance.
@@ -49,15 +49,12 @@ public class Avatar extends GameObject {
                                 int layer, Vector2 topLeftCorner,
                                 UserInputListener inputListener,
                                 ImageReader imageReader) {
-        Avatar.gameObjects = gameObjects;
         Avatar.inputListener = inputListener;
 
         // Creating the avatar renderables
         Renderable[] staticAvatarArr = loadRenderables("avatar",
                 4, imageReader);
-        Renderable[] rightMoveArr = loadRenderables("right", 3,
-                imageReader);
-        Renderable[] leftMoveArr = loadRenderables("right", 3,
+        Renderable[] rightMoveArr = loadRenderables("right", 6,
                 imageReader);
         Renderable[] flyArr = loadRenderables("fly", 6,
                 imageReader);
@@ -66,7 +63,6 @@ public class Avatar extends GameObject {
 
         staticAvatar = new AnimationRenderable(staticAvatarArr, 0.2f);
         moveRightAvatar = new AnimationRenderable(rightMoveArr, 0.1f);
-        moveLeftAvatar = new AnimationRenderable(leftMoveArr, 0.1f);
         flyAvatar = new AnimationRenderable(flyArr, 0.1f);
         jumpAvatar = new AnimationRenderable(jumpArr, 0.1f);
         Avatar avatar = new Avatar(topLeftCorner, AVATAR_DIMENSIONS,
@@ -104,15 +100,65 @@ public class Avatar extends GameObject {
             }
         }
 
-        float xVelocity = 0;
-        float yVelocity = 0;
-
+        // Checking user input (click)
         boolean rightClick = inputListener.isKeyPressed(KeyEvent.VK_RIGHT);
         boolean leftClick = inputListener.isKeyPressed(KeyEvent.VK_LEFT);
-        boolean jumpClick = inputListener.isKeyPressed(KeyEvent.VK_SPACE);
+        boolean jumpClick = inputListener.isKeyPressed(KeyEvent.VK_SPACE) &&
+                getVelocity().y() == 0 && !isJumping;
         boolean flying = energy > 0 &&
                 inputListener.isKeyPressed(KeyEvent.VK_SPACE) &&
                 inputListener.isKeyPressed(KeyEvent.VK_SHIFT);
 
+        // Updating the current rendering
+        if(!flying && !jumpClick && !leftClick && rightClick &&
+                this.getVelocity().y() == 0)
+        {
+            // Not moving or falling (flying) than Avatar is static
+            renderer().setRenderable(staticAvatar);
+        }
+
+        // Avatar is moving - finding the velocity
+        setVelocityX(rightClick, leftClick);
+        setVelocityY(jumpClick, flying);
+    }
+
+    /**
+     * This function will check the vertical velocity of the avatar, updating
+     * the renderer, the velocity and the energy
+     */
+    private void setVelocityY(boolean jumpClick, boolean flying) {
+        if(jumpClick) {
+            isJumping = true;
+            energy -= ENERGY_CHANGE;
+            renderer().setRenderable(jumpAvatar);
+            transform().setVelocityY(VERTICAL_UP_VELOCITY);
+            transform().setAccelerationY(VERTICAL_ACCELERATION);
+        }
+        if(flying) {
+            energy -= ENERGY_CHANGE;
+            renderer().setRenderable(flyAvatar);
+            transform().setVelocityY(VERTICAL_UP_VELOCITY);
+            transform().setAccelerationY(VERTICAL_ACCELERATION);
+        }
+    }
+
+    /**
+     * This function will set the horizontal velocity - checking if the avatar
+     * is moving left or right.
+     * The function will also set the velocity and renderer of the avatar
+     */
+    private void setVelocityX(boolean rightClick, boolean leftClick) {
+        if(rightClick) {
+            transform().setVelocityX(HORIZONTAL_VELOCITY);
+            renderer().setRenderable(moveRightAvatar);
+            // todo - check if the following line is redundant
+            renderer().setIsFlippedHorizontally(false);
+        }
+        if(leftClick) {
+            transform().setVelocityX(-HORIZONTAL_VELOCITY);
+            renderer().setRenderable(moveRightAvatar);
+            // Flip the avatar to the left
+            renderer().setIsFlippedHorizontally(true);
+        }
     }
 }

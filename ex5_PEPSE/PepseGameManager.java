@@ -47,7 +47,7 @@ public class PepseGameManager extends GameManager {
         Night.create(gameObjects(), windowDimensions, CYCLE_LENGTH, NIGHT_LAYER);
         createSunAndHalo(windowDimensions);
         createTrees(terrain);
-        Avatar.create(gameObjects(), AVATAR_LAYER, new Vector2(500, 0),
+        Avatar.create(gameObjects(), AVATAR_LAYER, new Vector2(500, 250),
                 inputListener, imageReader);
     }
 
