@@ -5,6 +5,7 @@ import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
+import danogl.gui.rendering.Camera;
 import danogl.util.Vector2;
 import pepse.world.Avatar;
 import pepse.world.Block;
@@ -50,9 +51,12 @@ public class PepseGameManager extends GameManager {
         createTrees(terrain);
         float avatarYCord = terrain.groundHeightAt(windowDimensions.x() * 2)
                 - Block.SIZE * 2;
-        Avatar.create(gameObjects(), AVATAR_LAYER,
+        Avatar avatar = Avatar.create(gameObjects(), AVATAR_LAYER,
                 new Vector2(windowDimensions.x() * 0.5f, avatarYCord),
                 inputListener, imageReader);
+        setCamera(new Camera(avatar,
+                windowDimensions.mult(0.5f).subtract(avatar.getCenter()),
+                windowDimensions, windowDimensions));
     }
 
     private void createTrees(Terrain terrain) {

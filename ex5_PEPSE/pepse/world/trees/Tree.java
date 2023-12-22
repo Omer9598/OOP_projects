@@ -8,6 +8,7 @@ import pepse.world.Block;
 import pepse.world.Terrain;
 
 import java.awt.*;
+import java.util.Objects;
 import java.util.Random;
 
 public class Tree {
@@ -19,6 +20,7 @@ public class Tree {
     private final GameObjectCollection gameObjects;
     private final int treesLayer;
     private final int leavesLayer;
+    private Object seed;
 
     public Tree(Terrain terrain, GameObjectCollection gameObjects,
                 int treesLayer, int leavesLayer) {
@@ -46,8 +48,9 @@ public class Tree {
                         LEAVES_COLOR));
 
         for (float xVal = minX; xVal < maxX; xVal += Block.SIZE) {
+            Random randomTree = new Random(Objects.hash(xVal, seed));
             // Plant tree in probability of 0.1
-            if (random.nextDouble() < 0.1) {
+            if (randomTree.nextDouble() < 0.1) {
                 float yVal = ((int) (terrain.groundHeightAt(xVal) / Block.SIZE)) *
                         Block.SIZE - Block.SIZE;
                 for (int i = 0; i < treeHeight; i++) {

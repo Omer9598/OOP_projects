@@ -16,7 +16,7 @@ public class Avatar extends GameObject {
     private static final float ENERGY_CHANGE = 0.5f;
     private static final float INITIAL_ENERGY = 100f;
     private static final float HORIZONTAL_VELOCITY = 200f;
-    private static final float VERTICAL_UP_VELOCITY = -400f;
+    private static final float VERTICAL_UP_VELOCITY = -300f;
     private static final float VERTICAL_ACCELERATION = 500f;
     private static UserInputListener inputListener;
     private static final Vector2 AVATAR_DIMENSIONS = new Vector2(25, 40);

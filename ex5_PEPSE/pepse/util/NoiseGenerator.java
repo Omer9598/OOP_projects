@@ -1,20 +1,21 @@
-package pepse.world;
+package pepse.util;
+
 
 public class NoiseGenerator {
-    private final double seed;
+    private double seed;
     private long default_size;
     private int[] p;
+    private int[] permutation;
 
     public NoiseGenerator(double seed) {
         this.seed = seed;
         init();
     }
 
-
     private void init() {
         // Initialize the permutation array.
         this.p = new int[512];
-        int[] permutation = new int[]{151, 160, 137, 91, 90, 15, 131, 13, 201,
+        this.permutation = new int[]{151, 160, 137, 91, 90, 15, 131, 13, 201,
                 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69, 142, 8, 99,
                 37, 240, 21, 10, 23, 190, 6, 148, 247, 120, 234, 75, 0, 26,
                 197, 62, 94, 252, 219, 203, 117, 35, 11, 32, 57, 177, 33, 88,
@@ -53,7 +54,7 @@ public class NoiseGenerator {
             size /= 2.0;
         }
 
-        return value / initialSize;
+        return (value / initialSize);
     }
 
     public double smoothNoise(double x, double y, double z) {
@@ -81,14 +82,14 @@ public class NoiseGenerator {
         int BA = p[B] + Z;
         int BB = p[B + 1] + Z; // THE 8 CUBE CORNERS,
 
-        return lerp(w, lerp(v, lerp(u, grad(p[AA], 		x, 		y, 		z		), 	// AND ADD
-                                grad(p[BA],		x - 1, 	y, 		z		)), // BLENDED
-                        lerp(u, grad(p[AB], 	x, 		y - 1, 	z		), 	// RESULTS
-                                grad(p[BB], 	x - 1, 	y - 1, 	z		))),// FROM 8
-                lerp(v, lerp(u, grad(p[AA + 1], x, 		y, 		z - 1	), 	// CORNERS
-                                grad(p[BA + 1], x - 1, 	y, 		z - 1	)), // OF CUBE
-                        lerp(u, grad(p[AB + 1], x, 		y - 1,	z - 1	),
-                                grad(p[BB + 1], x - 1, 	y - 1, 	z - 1	))));
+        return lerp(w, lerp(v, lerp(u, grad(p[AA], x, y, z),    // AND ADD
+                                grad(p[BA], x - 1, y, z)), // BLENDED
+                        lerp(u, grad(p[AB], x, y - 1, z),    // RESULTS
+                                grad(p[BB], x - 1, y - 1, z))),// FROM 8
+                lerp(v, lerp(u, grad(p[AA + 1], x, y, z - 1),    // CORNERS
+                                grad(p[BA + 1], x - 1, y, z - 1)), // OF CUBE
+                        lerp(u, grad(p[AB + 1], x, y - 1, z - 1),
+                                grad(p[BB + 1], x - 1, y - 1, z - 1))));
     }
 
     private double fade(double t) {
@@ -103,6 +104,7 @@ public class NoiseGenerator {
         int h = hash & 15; // CONVERT LO 4 BITS OF HASH CODE
         double u = h < 8 ? x : y, // INTO 12 GRADIENT DIRECTIONS.
                 v = h < 4 ? y : h == 12 || h == 14 ? x : z;
-        return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
+//        return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
+        return (((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v))/5;
     }
 }

@@ -5,34 +5,37 @@ import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
 import java.awt.*;
+import java.util.Random;
+import pepse.util.NoiseGenerator;
 
 public class Terrain {
     private final GameObjectCollection gameObjects;
     private final int groundLayer;
-    private final float groundHeightAtX0;
     private final int seed;
+    public static Random randomWorld;
     private static final float TERRAIN_DEPTH = 20 * Block.SIZE;
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
+    private final Vector2 windowDimensions;
     public Terrain(GameObjectCollection gameObjects,
                    int groundLayer, Vector2 windowDimensions,
                    int seed) {
         this.gameObjects = gameObjects;
         this.groundLayer = groundLayer;
         this.seed = seed;
-        this.groundHeightAtX0 = windowDimensions.x() / 3;
+        this.windowDimensions = windowDimensions;
     }
 
     /**
      * This function will determine the terrain height in a given x value,
      * returning the y value
-     * The y value will be determined by the Perlin Noise function
+     * The y value will be determined by the Perlin NoiseGenerator function
      */
     public float groundHeightAt(float x) {
         NoiseGenerator perlinFunction = new NoiseGenerator(seed);
-        float scaleFactor = 70.0f;
-        float offset = 60.0f;
-        return groundHeightAtX0 + scaleFactor *
-                (float) perlinFunction.noise(x) + offset;
+        float value = (float) (windowDimensions.y()
+                -perlinFunction.noise(x / (Block.SIZE))
+                * windowDimensions.y() - windowDimensions.y() / 3);
+        return changeMinMaxX(value, true);
     }
 
     /**
@@ -40,6 +43,8 @@ public class Terrain {
      * function to determine the height
      */
     public void createInRange(float minX, float maxX) {
+        // Init pseudo-random
+        randomWorld = new Random();
         // Change the minX and maxX to be divided by Block.SIZE
         minX = changeMinMaxX(minX, true);
         maxX = changeMinMaxX(maxX, false);
