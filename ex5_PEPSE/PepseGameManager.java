@@ -22,6 +22,11 @@ public class PepseGameManager extends GameManager {
     private static final int MIN_X_TERRAIN = -50;
     private static final int MAX_X_TERRAIN = 1822;
     private static final int CYCLE_LENGTH = 50;
+    private static final float worldChunk = Block.SIZE * 5;
+    private static float leftBorder;
+    private static float rightBorder;
+    private static float avatarPrevX;
+    private static Avatar avatar;
     private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
     // Game layers - in ascending order
     private static final int SKY_LAYER = Layer.BACKGROUND;
@@ -45,14 +50,17 @@ public class PepseGameManager extends GameManager {
                 true);
         Vector2 windowDimensions = windowController.getWindowDimensions();
         Sky.create(gameObjects(), windowDimensions, SKY_LAYER);
-        Terrain terrain = createTerrain(windowDimensions);
         Night.create(gameObjects(), windowDimensions, CYCLE_LENGTH, NIGHT_LAYER);
+        leftBorder = Terrain.changeMinMaxX(MIN_X_TERRAIN, false);
+        rightBorder = Terrain.changeMinMaxX(MAX_X_TERRAIN, true);
+        Terrain terrain = createTerrain(windowDimensions);
         createSunAndHalo(windowDimensions);
         createTrees(terrain);
         float avatarYCord = terrain.groundHeightAt(windowDimensions.x() * 2)
                 - Block.SIZE * 2;
-        Avatar avatar = Avatar.create(gameObjects(), AVATAR_LAYER,
-                new Vector2(windowDimensions.x() * 0.5f, avatarYCord),
+        avatarPrevX = windowDimensions.x() * 0.5f;
+        avatar = Avatar.create(gameObjects(), AVATAR_LAYER,
+                new Vector2(avatarPrevX, avatarYCord),
                 inputListener, imageReader);
         setCamera(new Camera(avatar,
                 windowDimensions.mult(0.5f).subtract(avatar.getCenter()),
@@ -62,7 +70,7 @@ public class PepseGameManager extends GameManager {
     private void createTrees(Terrain terrain) {
         Tree trees = new Tree(terrain, gameObjects(), TREE_TRUNKS_LAYER,
                 LEAVES_LAYER);
-        trees.createInRange(MIN_X_TERRAIN, MAX_X_TERRAIN);
+        trees.createInRange(leftBorder, rightBorder);
     }
 
     private void createSunAndHalo(Vector2 windowDimensions) {
@@ -74,8 +82,40 @@ public class PepseGameManager extends GameManager {
     private Terrain createTerrain(Vector2 windowDimensions) {
         Terrain terrain = new Terrain(gameObjects(), TERRAIN_LAYER,
                 windowDimensions, 5);
-        terrain.createInRange(MIN_X_TERRAIN, MAX_X_TERRAIN);
+        terrain.createInRange(leftBorder, rightBorder);
         return terrain;
+    }
+
+    /**
+     * Updating the world according to the avatar movement
+     */
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+        avatarMovement();
+    }
+
+    /**
+     * This function handles avatar movement - creating and deleting the world
+     */
+    private void avatarMovement() {
+        // If the avatar moved worldChunk to the right
+        if(avatar.getCenter().x() >= avatarPrevX + worldChunk) {
+            avatarPrevX = avatar.getCenter().x();
+
+        }
+    }
+
+    /**
+     * This function will remove all the objects in all layers, from
+     * x value of startPoint to endPoint
+     */
+    private void removeWorldChunk(float startPoint, float endPoint, int layer) {
+        for(GameObject gameObject: gameObjects()) {
+            if(startPoint <= gameObject.getCenter().x() &&
+                    gameObject.getCenter().x() <= endPoint)
+                gameObjects().removeGameObject(gameObject, layer);
+        }
     }
 
     public static void main(String[] args) {

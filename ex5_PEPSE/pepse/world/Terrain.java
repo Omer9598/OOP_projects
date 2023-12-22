@@ -5,15 +5,13 @@ import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
 import java.awt.*;
-import java.util.Random;
 import pepse.util.NoiseGenerator;
 
 public class Terrain {
     private final GameObjectCollection gameObjects;
     private final int groundLayer;
     private final int seed;
-    public static Random randomWorld;
-    private static final float TERRAIN_DEPTH = 20 * Block.SIZE;
+    private static final float TERRAIN_DEPTH = 30;
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
     private final Vector2 windowDimensions;
     public Terrain(GameObjectCollection gameObjects,
@@ -43,8 +41,6 @@ public class Terrain {
      * function to determine the height
      */
     public void createInRange(float minX, float maxX) {
-        // Init pseudo-random
-        randomWorld = new Random();
         // Change the minX and maxX to be divided by Block.SIZE
         minX = changeMinMaxX(minX, true);
         maxX = changeMinMaxX(maxX, false);
