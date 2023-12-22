@@ -7,6 +7,7 @@ import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.util.Vector2;
 import pepse.world.Avatar;
+import pepse.world.Block;
 import pepse.world.Sky;
 import pepse.world.Terrain;
 import pepse.world.daynight.Night;
@@ -47,7 +48,10 @@ public class PepseGameManager extends GameManager {
         Night.create(gameObjects(), windowDimensions, CYCLE_LENGTH, NIGHT_LAYER);
         createSunAndHalo(windowDimensions);
         createTrees(terrain);
-        Avatar.create(gameObjects(), AVATAR_LAYER, new Vector2(500, 250),
+        float avatarYCord = terrain.groundHeightAt(windowDimensions.x() * 2)
+                - Block.SIZE * 2;
+        Avatar.create(gameObjects(), AVATAR_LAYER,
+                new Vector2(windowDimensions.x() * 0.5f, avatarYCord),
                 inputListener, imageReader);
     }
 

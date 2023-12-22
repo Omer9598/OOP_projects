@@ -3,6 +3,7 @@ package pepse.world;
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 
+import danogl.collisions.Layer;
 import danogl.gui.ImageReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.AnimationRenderable;
@@ -15,10 +16,10 @@ public class Avatar extends GameObject {
     private static final float ENERGY_CHANGE = 0.5f;
     private static final float INITIAL_ENERGY = 100f;
     private static final float HORIZONTAL_VELOCITY = 200f;
-    private static final float VERTICAL_UP_VELOCITY = 250f;
-    private static final float VERTICAL_ACCELERATION = 400f;
+    private static final float VERTICAL_UP_VELOCITY = -400f;
+    private static final float VERTICAL_ACCELERATION = 500f;
     private static UserInputListener inputListener;
-    private static final Vector2 AVATAR_DIMENSIONS = new Vector2(20, 35);
+    private static final Vector2 AVATAR_DIMENSIONS = new Vector2(25, 40);
     // Avatar phase renderers
     private static AnimationRenderable staticAvatar;
     private static AnimationRenderable moveRightAvatar;
@@ -50,7 +51,6 @@ public class Avatar extends GameObject {
                                 UserInputListener inputListener,
                                 ImageReader imageReader) {
         Avatar.inputListener = inputListener;
-
         // Creating the avatar renderables
         Renderable[] staticAvatarArr = loadRenderables("avatar",
                 4, imageReader);
@@ -68,6 +68,7 @@ public class Avatar extends GameObject {
         Avatar avatar = new Avatar(topLeftCorner, AVATAR_DIMENSIONS,
                 staticAvatar);
         avatar.physics().preventIntersectionsFromDirection(Vector2.ZERO);
+        gameObjects.layers().shouldLayersCollide(layer, Layer.STATIC_OBJECTS, true);
         gameObjects.addGameObject(avatar, layer);
         return avatar;
     }
@@ -92,7 +93,7 @@ public class Avatar extends GameObject {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
-        // Avatar didn't move - adding energy
+        // Avatar doesn't move vertically - adding energy
         if(getVelocity().y() == 0) {
             isJumping = false;
             if(energy < INITIAL_ENERGY) {
@@ -110,7 +111,7 @@ public class Avatar extends GameObject {
                 inputListener.isKeyPressed(KeyEvent.VK_SHIFT);
 
         // Updating the current rendering
-        if(!flying && !jumpClick && !leftClick && rightClick &&
+        if(!flying && !jumpClick && !leftClick && !rightClick &&
                 this.getVelocity().y() == 0)
         {
             // Not moving or falling (flying) than Avatar is static
@@ -120,6 +121,10 @@ public class Avatar extends GameObject {
         // Avatar is moving - finding the velocity
         setVelocityX(rightClick, leftClick);
         setVelocityY(jumpClick, flying);
+
+        if (!flying && !jumpClick && !rightClick && !leftClick){
+            renderer().setRenderable(staticAvatar);
+        }
     }
 
     /**
@@ -151,14 +156,18 @@ public class Avatar extends GameObject {
         if(rightClick) {
             transform().setVelocityX(HORIZONTAL_VELOCITY);
             renderer().setRenderable(moveRightAvatar);
-            // todo - check if the following line is redundant
             renderer().setIsFlippedHorizontally(false);
+            return;
         }
         if(leftClick) {
             transform().setVelocityX(-HORIZONTAL_VELOCITY);
             renderer().setRenderable(moveRightAvatar);
             // Flip the avatar to the left
             renderer().setIsFlippedHorizontally(true);
+            return;
         }
+        // If no right or left keys pressed - returning the avatar to static
+        transform().setVelocityX(0f);
+        renderer().setRenderable(staticAvatar);
     }
 }
