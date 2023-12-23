@@ -19,8 +19,8 @@ import pepse.world.trees.Tree;
 import java.awt.*;
 
 public class PepseGameManager extends GameManager {
-    private static final int MIN_X_TERRAIN = -50;
-    private static final int MAX_X_TERRAIN = 1822;
+    private static final int MIN_X_TERRAIN = -180;
+    private static final int MAX_X_TERRAIN = 1700;
     private static final int CYCLE_LENGTH = 50;
     private static final float worldChunk = Block.SIZE * 5;
     private static float leftBorder;
@@ -38,6 +38,9 @@ public class PepseGameManager extends GameManager {
 //        private static final int GAME_OBJECTS_LAYER = Layer.STATIC_OBJECTS + 30;
     private static final int AVATAR_LAYER = Layer.DEFAULT;
     private static final int NIGHT_LAYER = Layer.FOREGROUND;
+    private static Terrain terrain;
+    private static Tree trees;
+
     @Override
     public void initializeGame(ImageReader imageReader,
                                SoundReader soundReader,
@@ -53,9 +56,9 @@ public class PepseGameManager extends GameManager {
         Night.create(gameObjects(), windowDimensions, CYCLE_LENGTH, NIGHT_LAYER);
         leftBorder = Terrain.changeMinMaxX(MIN_X_TERRAIN, false);
         rightBorder = Terrain.changeMinMaxX(MAX_X_TERRAIN, true);
-        Terrain terrain = createTerrain(windowDimensions);
+        terrain = createTerrain(windowDimensions);
         createSunAndHalo(windowDimensions);
-        createTrees(terrain);
+        trees = createTrees(terrain);
         float avatarYCord = terrain.groundHeightAt(windowDimensions.x() * 2)
                 - Block.SIZE * 2;
         avatarPrevX = windowDimensions.x() * 0.5f;
@@ -67,10 +70,11 @@ public class PepseGameManager extends GameManager {
                 windowDimensions, windowDimensions));
     }
 
-    private void createTrees(Terrain terrain) {
+    private Tree createTrees(Terrain terrain) {
         Tree trees = new Tree(terrain, gameObjects(), TREE_TRUNKS_LAYER,
                 LEAVES_LAYER);
         trees.createInRange(leftBorder, rightBorder);
+        return trees;
     }
 
     private void createSunAndHalo(Vector2 windowDimensions) {
@@ -102,7 +106,22 @@ public class PepseGameManager extends GameManager {
         // If the avatar moved worldChunk to the right
         if(avatar.getCenter().x() >= avatarPrevX + worldChunk) {
             avatarPrevX = avatar.getCenter().x();
-
+            // Creating a world chunk to the right
+            terrain.createInRange(rightBorder, rightBorder + worldChunk);
+            trees.createInRange(rightBorder, rightBorder + worldChunk);
+            removeWorldChunk(leftBorder, leftBorder + worldChunk);
+            leftBorder += worldChunk;
+            rightBorder += worldChunk;
+        }
+        // If the avatar moved worldChunk to the left
+        if(avatar.getCenter().x() <= avatarPrevX - worldChunk) {
+            avatarPrevX = avatar.getCenter().x();
+            // Creating a world chunk to the left
+            terrain.createInRange(leftBorder - worldChunk, leftBorder);
+            trees.createInRange(leftBorder - worldChunk, leftBorder);
+            removeWorldChunk(rightBorder - worldChunk, rightBorder);
+            rightBorder -= worldChunk;
+            leftBorder -= worldChunk;
         }
     }
 
@@ -110,11 +129,15 @@ public class PepseGameManager extends GameManager {
      * This function will remove all the objects in all layers, from
      * x value of startPoint to endPoint
      */
-    private void removeWorldChunk(float startPoint, float endPoint, int layer) {
+    private void removeWorldChunk(float startPoint, float endPoint) {
         for(GameObject gameObject: gameObjects()) {
             if(startPoint <= gameObject.getCenter().x() &&
-                    gameObject.getCenter().x() <= endPoint)
-                gameObjects().removeGameObject(gameObject, layer);
+                    gameObject.getCenter().x() <= endPoint) {
+                gameObjects().removeGameObject(gameObject, LEAVES_LAYER);
+                gameObjects().removeGameObject(gameObject, TERRAIN_LAYER);
+                gameObjects().removeGameObject(gameObject, TERRAIN_LAYER - 1);
+                gameObjects().removeGameObject(gameObject, TREE_TRUNKS_LAYER);
+            }
         }
     }
 

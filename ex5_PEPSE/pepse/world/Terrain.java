@@ -53,7 +53,7 @@ public class Terrain {
             // Setting only the first 2 layers to be ground
             int layer = groundLayer;
             for (int depth = 0; depth < TERRAIN_DEPTH; depth++) {
-                if(depth < 2) {
+                if(depth < 1) {
                     layer = groundLayer;
                 }
                 createBlock(renderable, xVal, yVal, "ground block", layer);
