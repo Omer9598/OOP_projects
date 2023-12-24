@@ -12,7 +12,7 @@ public class Terrain {
     private final int groundLayer;
     private final int seed;
     private static final float TERRAIN_DEPTH = 18;
-    private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
+    private static final Color BASE_GROUND_COLOR = new Color(180, 115, 50);
     private final Vector2 windowDimensions;
     public Terrain(GameObjectCollection gameObjects,
                    int groundLayer, Vector2 windowDimensions,
@@ -45,14 +45,14 @@ public class Terrain {
         minX = changeMinMaxX(minX, true);
         maxX = changeMinMaxX(maxX, false);
         // Creating the terrain
-        RectangleRenderable renderable =
-                new RectangleRenderable(ColorSupplier.approximateColor
-                        (BASE_GROUND_COLOR));
         for (float xVal = minX; xVal < maxX; xVal += Block.SIZE) {
             float yVal = ((int)(groundHeightAt(xVal) / Block.SIZE)) * Block.SIZE;
             // Setting only the first layer to be solid ground
             int layer = groundLayer;
             for (int depth = 0; depth < TERRAIN_DEPTH; depth++) {
+                RectangleRenderable renderable =
+                        new RectangleRenderable(ColorSupplier.approximateColor
+                                (BASE_GROUND_COLOR));
                 if(depth < 1) {
                     layer = groundLayer;
                 }

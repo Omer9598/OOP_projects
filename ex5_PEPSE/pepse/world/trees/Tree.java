@@ -39,13 +39,6 @@ public class Tree {
         minX = Terrain.changeMinMaxX(minX, true);
         maxX = Terrain.changeMinMaxX(maxX, false);
 
-        RectangleRenderable treeRenderable =
-                new RectangleRenderable(ColorSupplier.approximateColor(
-                        TREE_TRUNK_COLOR));
-        RectangleRenderable leavesRenderable =
-                new RectangleRenderable(ColorSupplier.approximateColor(
-                        LEAVES_COLOR));
-
         for (float xVal = minX; xVal < maxX; xVal += Block.SIZE) {
             // Plant the trees pseudo-randomly
             Random randomTree = new Random(Objects.hash(xVal));
@@ -54,12 +47,15 @@ public class Tree {
                 float yVal = ((int) (terrain.groundHeightAt(xVal) / Block.SIZE)) *
                         Block.SIZE - Block.SIZE;
                 for (int i = 0; i < treeHeight; i++) {
+                    RectangleRenderable treeRenderable =
+                            new RectangleRenderable(ColorSupplier.approximateColor(
+                                    TREE_TRUNK_COLOR));
                     terrain.createBlock(treeRenderable, xVal, yVal,
                             "tree block", treesLayer);
                     yVal -= Block.SIZE;
                 }
                 // Handling the tree tops
-                createTreeTop(leavesRenderable, xVal, yVal);
+                createTreeTop(xVal, yVal);
             }
         }
     }
@@ -69,8 +65,7 @@ public class Tree {
      * Choosing randomly from 2 to 4 to represent the size of the tree top
      * xVal and yVal are the values of the root block of the current tree
      */
-    private void createTreeTop(RectangleRenderable rectangleRenderable,
-                               float rootX, float rootY) {
+    private void createTreeTop(float rootX, float rootY) {
         int treeSize = random.nextInt(2) + 1;
         float leafBlockSize = Block.SIZE;
 
@@ -85,8 +80,11 @@ public class Tree {
                 if (random.nextDouble() > 0.8) {
                     continue;
                 }
+                RectangleRenderable leavesRenderable =
+                        new RectangleRenderable(ColorSupplier.approximateColor(
+                                LEAVES_COLOR));
                 Vector2 leafPosition = new Vector2(currentX, currentY);
-                Leaf leaf = new Leaf(leafPosition, rectangleRenderable);
+                Leaf leaf = new Leaf(leafPosition, leavesRenderable);
                 gameObjects.addGameObject(leaf, leavesLayer);
             }
         }
