@@ -20,7 +20,7 @@ import java.awt.*;
 
 public class PepseGameManager extends GameManager {
     private static final int MIN_X_TERRAIN = -180;
-    private static final int MAX_X_TERRAIN = 1700;
+    private static final int MAX_X_TERRAIN = 1710;
     private static final int CYCLE_LENGTH = 50;
     private static final float worldChunk = Block.SIZE * 5;
     private static float leftBorder;
@@ -48,7 +48,7 @@ public class PepseGameManager extends GameManager {
                                WindowController windowController) {
         super.initializeGame(imageReader, soundReader, inputListener,
                 windowController);
-        windowController.setTargetFramerate(80);
+        windowController.setTargetFramerate(60);
         gameObjects().layers().shouldLayersCollide(LEAVES_LAYER, TERRAIN_LAYER,
                 true);
         Vector2 windowDimensions = windowController.getWindowDimensions();

@@ -19,7 +19,7 @@ public class Avatar extends GameObject {
     private static final float VERTICAL_UP_VELOCITY = -300f;
     private static final float VERTICAL_ACCELERATION = 500f;
     private static UserInputListener inputListener;
-    private static final Vector2 AVATAR_DIMENSIONS = new Vector2(25, 40);
+    private static final Vector2 AVATAR_DIMENSIONS = new Vector2(45, 60);
     // Avatar phase renderers
     private static AnimationRenderable staticAvatar;
     private static AnimationRenderable moveRightAvatar;
@@ -27,6 +27,7 @@ public class Avatar extends GameObject {
     private static AnimationRenderable flyAvatar;
     private float energy;
     private static boolean isJumping = false;
+    private static boolean gameStart = true;
 
     /**
      * Construct a new GameObject instance.
@@ -81,7 +82,6 @@ public class Avatar extends GameObject {
                                          ImageReader imageReader) {
         Renderable[] renderables = new Renderable[count];
         String directoryPath = "ex5_PEPSE/pepse/renderers/";
-
         for (int i = 0; i < count; i++) {
             String fullPath = directoryPath + baseFileName + (i + 1) + ".png";
             renderables[i] = imageReader.readImage(fullPath, true);
@@ -100,7 +100,6 @@ public class Avatar extends GameObject {
                 energy += ENERGY_CHANGE;
             }
         }
-
         // Checking user input (click)
         boolean rightClick = inputListener.isKeyPressed(KeyEvent.VK_RIGHT);
         boolean leftClick = inputListener.isKeyPressed(KeyEvent.VK_LEFT);
@@ -109,13 +108,17 @@ public class Avatar extends GameObject {
         boolean flying = energy > 0 &&
                 inputListener.isKeyPressed(KeyEvent.VK_SPACE) &&
                 inputListener.isKeyPressed(KeyEvent.VK_SHIFT);
-
         // Updating the current rendering
         if(!flying && !jumpClick && !leftClick && !rightClick &&
                 this.getVelocity().y() == 0)
         {
             // Not moving or falling (flying) than Avatar is static
             renderer().setRenderable(staticAvatar);
+        }
+
+        if(gameStart) {
+            jumpClick = true;
+            gameStart = false;
         }
 
         // Avatar is moving - finding the velocity

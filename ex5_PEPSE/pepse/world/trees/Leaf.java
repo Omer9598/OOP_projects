@@ -13,7 +13,8 @@ import java.util.Random;
 public class Leaf extends GameObject {
     private static final int LEAVES_ANGLE = 13;
     private final Vector2 originalCenter;
-    private static final Vector2 LEAVES_DIMENSIONS = new Vector2(20, 20);
+    private static final Vector2 LEAVES_DIMENSIONS =
+            new Vector2(Block.SIZE, Block.SIZE);
     private static final Random random = new Random();
     private static final int FADE_OUT_TIME = 10;
     private static final float FALL_VELOCITY = 45f;

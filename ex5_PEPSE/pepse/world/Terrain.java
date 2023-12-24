@@ -11,7 +11,7 @@ public class Terrain {
     private final GameObjectCollection gameObjects;
     private final int groundLayer;
     private final int seed;
-    private static final float TERRAIN_DEPTH = 30;
+    private static final float TERRAIN_DEPTH = 18;
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
     private final Vector2 windowDimensions;
     public Terrain(GameObjectCollection gameObjects,
@@ -50,7 +50,7 @@ public class Terrain {
                         (BASE_GROUND_COLOR));
         for (float xVal = minX; xVal < maxX; xVal += Block.SIZE) {
             float yVal = ((int)(groundHeightAt(xVal) / Block.SIZE)) * Block.SIZE;
-            // Setting only the first 2 layers to be ground
+            // Setting only the first layer to be solid ground
             int layer = groundLayer;
             for (int depth = 0; depth < TERRAIN_DEPTH; depth++) {
                 if(depth < 1) {
