@@ -47,13 +47,13 @@ public class Terrain {
         // Creating the terrain
         for (float xVal = minX; xVal < maxX; xVal += Block.SIZE) {
             float yVal = ((int)(groundHeightAt(xVal) / Block.SIZE)) * Block.SIZE;
-            // Setting only the first layer to be solid ground
+            // Setting only the 2 first layers to be solid ground
             int layer = groundLayer;
             for (int depth = 0; depth < TERRAIN_DEPTH; depth++) {
                 RectangleRenderable renderable =
                         new RectangleRenderable(ColorSupplier.approximateColor
                                 (BASE_GROUND_COLOR));
-                if(depth < 1) {
+                if(depth < 2) {
                     layer = groundLayer;
                 }
                 createBlock(renderable, xVal, yVal, "ground block", layer);

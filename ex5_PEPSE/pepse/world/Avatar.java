@@ -19,7 +19,7 @@ public class Avatar extends GameObject {
     private static final float VERTICAL_UP_VELOCITY = -300f;
     private static final float VERTICAL_ACCELERATION = 500f;
     private static UserInputListener inputListener;
-    private static final Vector2 AVATAR_DIMENSIONS = new Vector2(50, 70);
+    private static final Vector2 AVATAR_DIMENSIONS = new Vector2(60, 80);
     // Avatar phase renderers
     private static AnimationRenderable staticAvatar;
     private static AnimationRenderable moveRightAvatar;
