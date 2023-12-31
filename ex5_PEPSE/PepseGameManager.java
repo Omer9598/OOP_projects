@@ -103,7 +103,7 @@ public class PepseGameManager extends GameManager {
      * This function handles avatar movement - creating and deleting the world
      */
     private void avatarMovement() {
-        // If the avatar moved worldChunk to the right
+        // If avatar moved worldChunk to the right
         if(avatar.getCenter().x() >= avatarPrevX + worldChunk) {
             avatarPrevX = avatar.getCenter().x();
             // Creating a world chunk to the right
@@ -113,7 +113,7 @@ public class PepseGameManager extends GameManager {
             leftBorder += worldChunk;
             rightBorder += worldChunk;
         }
-        // If the avatar moved worldChunk to the left
+        // If avatar moved worldChunk to the left
         if(avatar.getCenter().x() <= avatarPrevX - worldChunk) {
             avatarPrevX = avatar.getCenter().x();
             // Creating a world chunk to the left
@@ -135,6 +135,7 @@ public class PepseGameManager extends GameManager {
                     gameObject.getCenter().x() <= endPoint) {
                 gameObjects().removeGameObject(gameObject, LEAVES_LAYER);
                 gameObjects().removeGameObject(gameObject, TERRAIN_LAYER);
+                // None-solid terrain layer
                 gameObjects().removeGameObject(gameObject, TERRAIN_LAYER - 1);
                 gameObjects().removeGameObject(gameObject, TREE_TRUNKS_LAYER);
             }
