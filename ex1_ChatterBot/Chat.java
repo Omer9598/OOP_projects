@@ -3,22 +3,29 @@ import java.util.Scanner;
 public class Chat {
     public static void main(String[] args) {
 
-        // illegal replies arrays
-        String[] bot_1_illegal_replies = {"what ", "say I should say "};
-        String[] bot_2_illegal_replies = {"whaaat ", "say "};
+        // Illegal replies arrays
+        String[] bot1IllegalReplies = {"what ", "say I should say "};
+        String[] bot2IllegalReplies = {"whaaat ", "say say "};
 
-        // creating an array of bots
-        ChatterBot[] bots_arr = {new ChatterBot("Sammy", bot_1_illegal_replies),
-                new ChatterBot("Ruthy", bot_2_illegal_replies)};
+        // Legal replies arrays
+        String[] bot1LegalReplies = {"You want me to say <phrase>, do you?" +
+                " alright: <phrase>"};
+        String[] bot2LegalReplies = {"say <phrase>? okay: <phrase>"};
 
-        // create the first statement for the bots
+        // Creating an array of bots
+        ChatterBot[] botsArr = {new ChatterBot("Sammy", bot1IllegalReplies,
+                bot1LegalReplies),
+                new ChatterBot("Ruthy", bot2IllegalReplies,
+                        bot2LegalReplies)};
+
+        // Create the first statement for the bots
         String statement =  "Omer";
 
         Scanner scanner = new Scanner(System.in);
 
-        // starting the infinite loop
+        // Starting the infinite loop
         while (true) {
-            for (ChatterBot bot : bots_arr) {
+            for (ChatterBot bot : botsArr) {
                 statement = bot.replyTo(statement);
                 System.out.print(bot.getName() + ": " + statement + " ");
                 // wait for the user to press enter

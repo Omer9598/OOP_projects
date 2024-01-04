@@ -13,17 +13,24 @@ import java.util.*;
  */
 class ChatterBot {
     static final String REQUEST_PREFIX = "say ";
-    String name;
-    Random rand = new Random();
-    String[] repliesToIllegalRequest;
+    private final String name;
+    private final Random rand = new Random();
+    private final String[] repliesToIllegalRequest;
+    private final String[] legalRequestsReplies;
 
-    // creating an array of 2 bots with 2 different "reply" arrays
-    ChatterBot(String name, String[] repliesToIllegalRequest) {
+    ChatterBot(String name, String[] repliesToIllegalRequest,
+               String[] legalRequestsReplies) {
         this.repliesToIllegalRequest = new
                 String[repliesToIllegalRequest.length];
+        this.legalRequestsReplies = new String[legalRequestsReplies.length];
+
+        // Copying the arrays given into the Bot fields
         System.arraycopy(repliesToIllegalRequest, 0,
                 this.repliesToIllegalRequest, 0,
                 repliesToIllegalRequest.length);
+        System.arraycopy(legalRequestsReplies, 0,
+                this.legalRequestsReplies, 0,
+                legalRequestsReplies.length);
         this.name = name;
     }
 
@@ -32,25 +39,39 @@ class ChatterBot {
     }
 
     /**
-     * this method replies to the statement given, based on the request
+     * This method replies to the statement given, based on the request
      * prefix
      */
     String replyTo(String statement) {
         if (statement.startsWith(REQUEST_PREFIX)) {
-            //we don’t repeat the request prefix, so delete it from the reply
-            return statement.replaceFirst(REQUEST_PREFIX, "");
+            // Legal request
+            String phrase = statement.replaceFirst(REQUEST_PREFIX, "");
+            return replyToLegalRequest(phrase);
         }
-        return respondToIllegalRequest(statement);
+        // Illegal request
+        return replyToIllegalRequest(statement);
     }
 
     /**
-     * this method will deal with a statement that doesn't start with the
+     * This method will deal with a legal statement
+     */
+    private String replyToLegalRequest(String phrase) {
+        // Selecting a pattern randomly
+        int randomIndex = rand.nextInt(legalRequestsReplies.length);
+        String pattern = legalRequestsReplies[randomIndex];
+        // Replace <phrase> with the phrase given
+        return pattern.replaceAll("<phrase>", phrase);
+    }
+
+    /**
+     * This method will deal with a statement that doesn't start with the
      * request prefix, and randomly pick a reply from the
      * "repliesToIllegalRequest" array if the "coin flip" is true
      */
-    String respondToIllegalRequest(String statement) {
+    String replyToIllegalRequest(String statement) {
         int randomIndex = rand.nextInt(repliesToIllegalRequest.length);
         String reply = repliesToIllegalRequest[randomIndex];
+        // Flipping a coin to determine if a word should be added
         if (rand.nextBoolean()) {
             reply = reply + statement;
         }
