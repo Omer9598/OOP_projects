@@ -13,6 +13,8 @@ import java.util.*;
  */
 class ChatterBot {
     static final String REQUEST_PREFIX = "say ";
+    static final String PLACEHOLDER_FOR_REQUESTED_PHRASE = "<phrase>";
+    static final String REQUEST_ILLEGAL_FOR_PLACEHOLDER = "<request>";
     private final String name;
     private final Random rand = new Random();
     private final String[] repliesToIllegalRequest;
@@ -46,35 +48,50 @@ class ChatterBot {
         if (statement.startsWith(REQUEST_PREFIX)) {
             // Legal request
             String phrase = statement.replaceFirst(REQUEST_PREFIX, "");
-            return replyToLegalRequest(phrase);
+            return replyToRequest(phrase, legalRequestsReplies,
+                    PLACEHOLDER_FOR_REQUESTED_PHRASE);
         }
         // Illegal request
-        return replyToIllegalRequest(statement);
+        return replyToRequest(statement, repliesToIllegalRequest,
+                REQUEST_ILLEGAL_FOR_PLACEHOLDER);
     }
 
     /**
-     * This method will deal with a legal statement
+     * This function will reply to legal or illegal request
      */
-    private String replyToLegalRequest(String phrase) {
-        // Selecting a pattern randomly
-        int randomIndex = rand.nextInt(legalRequestsReplies.length);
-        String pattern = legalRequestsReplies[randomIndex];
-        // Replace <phrase> with the phrase given
-        return pattern.replaceAll("<phrase>", phrase);
-    }
-
-    /**
-     * This method will deal with a statement that doesn't start with the
-     * request prefix, and randomly pick a reply from the
-     * "repliesToIllegalRequest" array if the "coin flip" is true
-     */
-    String replyToIllegalRequest(String statement) {
-        int randomIndex = rand.nextInt(repliesToIllegalRequest.length);
-        String reply = repliesToIllegalRequest[randomIndex];
-        // Flipping a coin to determine if a word should be added
-        if (rand.nextBoolean()) {
-            reply = reply + statement;
-        }
-        return reply;
+    private String replyToRequest(String phrase, String[] repliesArr,
+                                  String placeHolder) {
+        // Select a pattern randomly
+        int randomIndex = rand.nextInt(repliesArr.length);
+        String pattern = repliesArr[randomIndex];
+        // Replace the placeholder in the pattern
+        return pattern.replaceAll(placeHolder, phrase);
     }
 }
+
+
+//    /**
+//     * This method will deal with a legal statement
+//     */
+//    private String replyToLegalRequest(String phrase) {
+//        // Selecting a pattern randomly
+//        int randomIndex = rand.nextInt(legalRequestsReplies.length);
+//        String pattern = legalRequestsReplies[randomIndex];
+//        // Replace <phrase> with the phrase given
+//        return pattern.replaceAll(PLACEHOLDER_FOR_REQUESTED_PHRASE, phrase);
+//    }
+//
+//    /**
+//     * This method will deal with a statement that doesn't start with the
+//     * request prefix, and randomly pick a reply from the
+//     * "repliesToIllegalRequest" array if the "coin flip" is true
+//     */
+//    String replyToIllegalRequest(String statement) {
+//        int randomIndex = rand.nextInt(repliesToIllegalRequest.length);
+//        String reply = repliesToIllegalRequest[randomIndex];
+//        // Flipping a coin to determine if a word should be added
+//        if (rand.nextBoolean()) {
+//            reply = reply + statement;
+//        }
+//        return reply;
+//    }
