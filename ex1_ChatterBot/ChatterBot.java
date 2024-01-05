@@ -36,7 +36,7 @@ class ChatterBot {
         this.name = name;
     }
 
-    String getName() {
+    public String getName() {
         return this.name;
     }
 
@@ -44,7 +44,7 @@ class ChatterBot {
      * This method replies to the statement given, based on the request
      * prefix
      */
-    String replyTo(String statement) {
+    public String replyTo(String statement) {
         if (statement.startsWith(REQUEST_PREFIX)) {
             // Legal request
             return replyToLegalRequest(statement);
@@ -56,9 +56,9 @@ class ChatterBot {
     /**
      * This function will reply to legal or illegal request
      */
-    String replacePlaceholderInARandomPattern(String phrase,
-                                                      String[] repliesArr,
-                                                      String placeHolder) {
+    public String replacePlaceholderInARandomPattern(String[] repliesArr,
+                                                     String phrase,
+                                                     String placeHolder) {
         // Select a pattern randomly
         int randomIndex = rand.nextInt(repliesArr.length);
         String pattern = repliesArr[randomIndex];
@@ -70,9 +70,9 @@ class ChatterBot {
      * This method will deal with a legal statement, removing the request
      * prefix
      */
-    String replyToLegalRequest(String statement) {
+    public String replyToLegalRequest(String statement) {
         String phrase = statement.replaceFirst(REQUEST_PREFIX, "");
-        return replacePlaceholderInARandomPattern(phrase, repliesToLegalRequest,
+        return replacePlaceholderInARandomPattern(repliesToLegalRequest, phrase,
                 PLACEHOLDER_FOR_REQUESTED_PHRASE);
     }
 
@@ -81,8 +81,8 @@ class ChatterBot {
      * request prefix, and randomly pick a reply from the
      * "repliesToIllegalRequest" array if the "coin flip" is true
      */
-    String replyToIllegalRequest(String statement) {
-        return replacePlaceholderInARandomPattern(statement,
-                repliesToIllegalRequest, PLACEHOLDER_FOR_ILLEGAL_REQUEST);
+    public String replyToIllegalRequest(String statement) {
+        return replacePlaceholderInARandomPattern(repliesToIllegalRequest, statement,
+                PLACEHOLDER_FOR_ILLEGAL_REQUEST);
     }
 }
