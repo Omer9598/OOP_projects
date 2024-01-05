@@ -1,0 +1,29 @@
+omer_daniely
+206558835
+
+Sammy: say I should say
+Ruthy: say I should say ? okay: I should say
+Sammy: You want me to say I should say ? okay: I should say , do you? alright: I should say ? okay: I should say
+Ruthy: say say
+Sammy: You want me to say say , do you? alright: say
+Ruthy: say say
+Sammy: You want me to say say , do you? alright: say
+Ruthy: whaaat
+Sammy: what
+Ruthy: whaaat
+Sammy: say I should say
+Ruthy: say I should say ? okay: I should say
+Sammy: You want me to say I should say ? okay: I should say , do you? alright: I should say ? okay: I should say
+Ruthy: say say
+Sammy: You want me to say say , do you? alright: say
+Ruthy: whaaat
+Sammy: say I should say
+Ruthy: say I should say ? okay: I should say
+Sammy: You want me to say I should say ? okay: I should say , do you? alright: I should say ? okay: I should say
+Ruthy: say say
+Sammy: You want me to say say , do you? alright: say
+Ruthy: say say
+Sammy: You want me to say say , do you? alright: say
+Ruthy: whaaat
+Sammy: say I should say
+Ruthy: say I should say ? okay: I should say
