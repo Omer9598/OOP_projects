@@ -1,6 +1,12 @@
 import java.util.Scanner;
 
+/**
+ * This class contains the main function to run the code
+ */
 public class Chat {
+    /**
+     * The main function to run the code
+     */
     public static void main(String[] args) {
         // Illegal replies arrays
         String[] bot1IllegalReplies = {"what ", "say I should say "};

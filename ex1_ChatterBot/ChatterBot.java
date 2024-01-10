@@ -20,12 +20,17 @@ class ChatterBot {
     private final String[] repliesToIllegalRequest;
     private final String[] repliesToLegalRequest;
 
+    /**
+     * ChatterBot constructor
+     * @param name The name of the bot
+     * @param repliesToIllegalRequest an array of replies to an illegal request
+     * @param legalRequestsReplies an array of replies to a legal request
+     */
     ChatterBot(String name, String[] repliesToIllegalRequest,
                String[] legalRequestsReplies) {
         this.repliesToIllegalRequest = new
                 String[repliesToIllegalRequest.length];
         this.repliesToLegalRequest = new String[legalRequestsReplies.length];
-
         // Copying the arrays given into the Bot fields
         System.arraycopy(repliesToIllegalRequest, 0,
                 this.repliesToIllegalRequest, 0,
@@ -36,6 +41,9 @@ class ChatterBot {
         this.name = name;
     }
 
+    /**
+     * Getter to the name of the bot
+     */
     public String getName() {
         return this.name;
     }
@@ -54,7 +62,7 @@ class ChatterBot {
     }
 
     /**
-     * This function will reply to legal or illegal request
+     * This method will reply to legal or illegal request
      */
     public String replacePlaceholderInARandomPattern(String[] repliesArr,
                                                      String phrase,
