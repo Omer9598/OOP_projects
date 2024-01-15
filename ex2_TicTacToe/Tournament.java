@@ -1,5 +1,7 @@
+/**
+ * A class to start a single tournament, contains the main function
+ */
 public class Tournament {
-    // for the main function
     private static final int ROUNDS_INDEX = 0;
     private static final int BOARD_SIZE_INDEX = 1;
     private static final int STREAK_NUM_INDEX = 2;
@@ -33,8 +35,6 @@ public class Tournament {
         this.rounds = rounds;
         this.renderer = renderer;
         this.players = new Player[]{player1, player2};
-
-
         this.player1Wins = 0;
         this.player2Wins = 0;
         this.drawsCount = 0;
