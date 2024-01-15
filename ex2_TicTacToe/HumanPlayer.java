@@ -1,7 +1,8 @@
 import java.util.Scanner;
 
 public class HumanPlayer implements Player {
-    public HumanPlayer() {}
+    public HumanPlayer() {
+    }
 
     @Override
     /*
@@ -27,8 +28,22 @@ public class HumanPlayer implements Player {
                 valid_input = true;
                 continue;
             }
-            System.out.println("Invalid coordinates, type again: ");
+            handle_invalid_input(row, col, board);
             num = in.nextInt();
+        }
+    }
+
+
+    private void handle_invalid_input(int row, int col, Board board) {
+        // Invalid input
+        if (board.getMark(row, col) == null) {
+            System.out.println("Invalid mark position," +
+                    " please choose a different position.");
+        }
+        // Already marked position
+        if (board.getMark(row, col) != null &&
+                board.getMark(row, col) != Mark.BLANK) {
+            System.out.println("Mark position is already occupied.");
         }
     }
 }

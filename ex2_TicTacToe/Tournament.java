@@ -1,14 +1,15 @@
 public class Tournament {
     // for the main function
-    private static final int ARGS_NUM = 6;
     private static final int ROUNDS_INDEX = 0;
     private static final int BOARD_SIZE_INDEX = 1;
     private static final int STREAK_NUM_INDEX = 2;
     private static final int RENDER_INDEX = 3;
     private static final int PLAYER_1_INDEX = 4;
     private static final int PLAYER_2_INDEX = 5;
-    private static final String ERR_MESSAGE = "Choose a player, and start" +
-            " again\nThe players: [human, clever, whatever, genius]\n";
+    private static final String ERR_MESSAGE_PLAYER = "Choose a player, and start" +
+            " again.\nThe players: [human, clever, whatever, genius]\n";
+    private static final String ERR_MESSAGE_RENDERER = "Unknown renderer." +
+            " Please choose one of the following [console, none]";
     private static final String STATS_MESSAGE = "######### Results #########\n" +
             "Player 1, %s won: %d rounds\n" +
             "Player 2, %s won: %d rounds\n" +
@@ -45,7 +46,7 @@ public class Tournament {
                     this.renderer);
             Mark result = game.run();
 
-            // determine which player won
+            // Determine which player won
             switch (result) {
                 case BLANK:
                     draws++;
@@ -73,18 +74,28 @@ public class Tournament {
 
     /**
      * A helper function to check if the arguments provided are valid
+     * Return true if the one of the arguments is not valid according to the
+     * instructions
      */
-    private boolean checkValidArgs(int rounds, Renderer renderer,
-                                   Player player_1, Player player_2,
-                                   int num_args, int winStreak, int size) {
+    private boolean checkInvalidArgs(int rounds, Renderer renderer,
+                                     Player player_1, Player player_2,
+                                     int winStreak, int size) {
         if (rounds < 0) {
-            return false;
+            return true;
         }
         if (winStreak > size) {
-            return false;
+            return true;
         }
-        return renderer != null && player_1 != null && player_2 != null
-                && num_args == ARGS_NUM;
+        if (renderer == null) {
+            System.err.println(ERR_MESSAGE_RENDERER);
+            return true;
+        }
+        if (player_1 == null || player_2 == null) {
+            System.err.println(ERR_MESSAGE_PLAYER);
+            return true;
+        }
+        // Else - all arguments are valid
+        return false;
     }
 
     public static void main(String[] args) {
@@ -96,11 +107,11 @@ public class Tournament {
         String player_1_type = args[PLAYER_1_INDEX];
         String player_2_type = args[PLAYER_2_INDEX];
 
-        // creating the factories to build the players and renderer
+        // Creating the factories to build the players and renderer
         PlayerFactory playerFactory = new PlayerFactory();
         RendererFactory rendererFactory = new RendererFactory();
 
-        // building the players with their factories
+        // Building the players with their factories
         Renderer renderer = rendererFactory.buildRenderer(render_type,
                 board_size);
         Player player_1 = playerFactory.buildPlayer(player_1_type);
@@ -108,14 +119,12 @@ public class Tournament {
         Player[] playersArr = new Player[]{player_1, player_2};
 
         Tournament tournament = new Tournament(rounds, renderer, playersArr);
-        // checking valid arguments to play the tournament
-        if (tournament.checkValidArgs(rounds, renderer, player_1, player_2,
-                args.length, win_streak, board_size)) {
-            tournament.playTournament(board_size, win_streak,
-                    new String[]{player_1_type, player_2_type});
+        // Checking valid arguments to play the tournament
+        if (tournament.checkInvalidArgs(rounds, renderer, player_1, player_2,
+                win_streak, board_size)) {
             return;
         }
-        System.err.println(ERR_MESSAGE);
+        tournament.playTournament(board_size, win_streak,
+                new String[]{player_1_type, player_2_type});
     }
 }
-
