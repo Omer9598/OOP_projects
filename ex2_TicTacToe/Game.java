@@ -2,8 +2,8 @@
  * A class that creates the game
  */
 public class Game {
-    private final Player player_x;
-    private final Player player_o;
+    private final Player playerX;
+    private final Player playerO;
     private final Renderer renderer;
     private final int BOARD_SIZE;
     private final int WIN_STREAK;
@@ -16,8 +16,8 @@ public class Game {
      * A constructor that initializes default values
      */
     public Game(Player playerX, Player playerO, Renderer renderer) {
-        this.player_x = playerX;
-        this.player_o = playerO;
+        this.playerX = playerX;
+        this.playerO = playerO;
         this.renderer = renderer;
         // default values for the size and win streak
         this.BOARD_SIZE = 3;
@@ -29,8 +29,8 @@ public class Game {
      */
     public Game(Player playerX, Player playerO, int size, int winStreak,
                 Renderer renderer) {
-        this.player_x = playerX;
-        this.player_o = playerO;
+        this.playerX = playerX;
+        this.playerO = playerO;
         this.renderer = renderer;
         this.BOARD_SIZE = size;
         this.WIN_STREAK = winStreak;
@@ -48,12 +48,12 @@ public class Game {
             this.NUMBER_OF_MARKS++;
             this.renderer.renderBoard(this.BOARD);
             if (counter % 2 == 0) {
-                this.player_x.playTurn(this.BOARD, Mark.X);
+                this.playerX.playTurn(this.BOARD, Mark.X);
                 int[] markCoordinates = getLastMark(preMarkBoard,
                         this.BOARD.getBoard());
                 checkWinner(Mark.X, markCoordinates[0], markCoordinates[1]);
             } else {
-                this.player_o.playTurn(this.BOARD, Mark.O);
+                this.playerO.playTurn(this.BOARD, Mark.O);
                 int[] markCoordinates = getLastMark(preMarkBoard,
                         this.BOARD.getBoard());
                 checkWinner(Mark.O, markCoordinates[0], markCoordinates[1]);
@@ -98,13 +98,13 @@ public class Game {
      * This function will copy a given board to a new instance
      */
     private Mark[][] boardCopy() {
-        Mark[][] copied_board = new Mark[this.BOARD_SIZE][this.BOARD_SIZE];
+        Mark[][] copiedBoard = new Mark[this.BOARD_SIZE][this.BOARD_SIZE];
         for (int row = 0; row < this.BOARD_SIZE; row++) {
             for (int col = 0; col < this.BOARD_SIZE; col++) {
-                copied_board[row][col] = this.BOARD.getMark(row, col);
+                copiedBoard[row][col] = this.BOARD.getMark(row, col);
             }
         }
-        return copied_board;
+        return copiedBoard;
     }
 
 
@@ -148,28 +148,28 @@ public class Game {
     private void horizontalOrVerticalWin(Mark mark, int row, int col,
                                          Mark winner) {
         // horizontal
-        int horizontal_marks = 0;
+        int horizontalMarks = 0;
         // checking the left side
-        horizontal_marks += countMarkInDirection(row, col, 0,
+        horizontalMarks += countMarkInDirection(row, col, 0,
                 -1, mark);
         // checking the right side
-        horizontal_marks += countMarkInDirection(row, col, 0,
+        horizontalMarks += countMarkInDirection(row, col, 0,
                 1, mark);
 
         // vertical
-        int vertical_marks = 0;
+        int verticalMarks = 0;
         // checking upwards
-        vertical_marks += countMarkInDirection(row, col, -1,
+        verticalMarks += countMarkInDirection(row, col, -1,
                 0, mark);
         // checking downwards
-        vertical_marks += countMarkInDirection(row, col, 1,
+        verticalMarks += countMarkInDirection(row, col, 1,
                 0, mark);
 
         // we counted the new marked cube already
-        horizontal_marks -= 1;
-        vertical_marks -= 1;
+        horizontalMarks -= 1;
+        verticalMarks -= 1;
 
-        if (horizontal_marks == WIN_STREAK || vertical_marks == WIN_STREAK) {
+        if (horizontalMarks == WIN_STREAK || verticalMarks == WIN_STREAK) {
             this.WINNER = winner;
         }
     }
@@ -177,29 +177,30 @@ public class Game {
     /** Helper function to check if there is a diagonal win */
     private void diagonalWin(Mark mark, int row, int col, Mark winner) {
         // diagonal
-        int diagonal_marks = 0;
+        int diagonalMarks = 0;
         // right-up
-        diagonal_marks += countMarkInDirection(row, col, -1,
+        diagonalMarks += countMarkInDirection(row, col, -1,
                 1, mark);
         // left-down
-        diagonal_marks += countMarkInDirection(row, col, 1,
+        diagonalMarks += countMarkInDirection(row, col, 1,
                 -1, mark);
 
         // anti diagonal
-        int anti_diagonal_marks = 0;
+        int antiDiagonalMarks = 0;
         // up-left
-        anti_diagonal_marks += countMarkInDirection(row, col, -1,
+        antiDiagonalMarks += countMarkInDirection(row, col, -1,
                 -1, mark);
         // right-down
-        anti_diagonal_marks += countMarkInDirection(row, col, 1,
+        antiDiagonalMarks += countMarkInDirection(row, col, 1,
                 1, mark);
 
         // counted the new marked cube
-        anti_diagonal_marks -= 1;
-        diagonal_marks -= 1;
+        antiDiagonalMarks -= 1;
+        diagonalMarks -= 1;
 
         // checking if the player won
-        if (diagonal_marks == WIN_STREAK || anti_diagonal_marks == WIN_STREAK) {
+        if (diagonalMarks == WIN_STREAK || antiDiagonalMarks == WIN_STREAK)
+        {
             this.WINNER = winner;
         }
     }

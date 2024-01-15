@@ -15,26 +15,23 @@ public class HumanPlayer implements Player {
      */
     public void playTurn(Board board, Mark mark) {
         System.out.println("player" + mark + ", type coordinates: ");
-
-        // assume the input is int
+        // Assume the input is int
         int num = KeyboardInput.readInt();
-
-        boolean valid_input = false;
-
-        while (!valid_input) {
+        boolean validInput = false;
+        while (!validInput) {
             int col = num % 10;
             int row = num / 10;
             if (board.putMark(mark, row, col)) {
-                valid_input = true;
+                validInput = true;
                 continue;
             }
-            handle_invalid_input(row, col, board);
+            handleInvalidInput(row, col, board);
             num = KeyboardInput.readInt();
         }
     }
 
 
-    private void handle_invalid_input(int row, int col, Board board) {
+    private void handleInvalidInput(int row, int col, Board board) {
         // Invalid input
         if (board.getMark(row, col) == null) {
             System.out.println("Invalid mark position," +

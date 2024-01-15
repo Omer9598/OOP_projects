@@ -6,19 +6,19 @@ public class Board {
     private Mark[][] BOARD;
 
     // public class variables
-    public static int SIZE;
+    private final int SIZE;
 
     // ******** public methods ********
 
-    /** default constructor */
+    /** Default constructor */
     public Board () {SIZE = 3;}
 
     /**
      * class constructor  - initiates the board with blanks, board size will be
      * size * size
      */
-    public Board(int board_size) {
-        SIZE = board_size;
+    public Board(int size) {
+        this.SIZE = size;
 
         // init board
         BOARD = new Mark[SIZE][SIZE];
