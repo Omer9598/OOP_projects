@@ -1,4 +1,10 @@
+/**
+ * A class that has a better strategy compared to whatever player
+ */
 public class GeniusPlayer implements Player {
+    /**
+     * Implementing the genius player strategy
+     */
     @Override
     public void playTurn(Board board, Mark mark) {
         boolean marked = false;

@@ -29,10 +29,16 @@ public class Board {
         }
     }
 
+    /**
+     * Return the size of the board
+     */
     public int getSize() {
         return SIZE;
     }
 
+    /**
+     * Return the board
+     */
     Mark[][] getBoard() {
         return BOARD;
     }

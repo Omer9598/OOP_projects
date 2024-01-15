@@ -6,25 +6,38 @@ public class Tournament {
     private static final int RENDER_INDEX = 3;
     private static final int PLAYER_1_INDEX = 4;
     private static final int PLAYER_2_INDEX = 5;
-    private static final String ERR_MESSAGE_PLAYER = "Choose a player, and start" +
+    private static final String ERR_MESSAGE_PLAYER = "Choose a player," +
+            " and start" +
             " again.\nThe players: [human, clever, whatever, genius]\n";
     private static final String ERR_MESSAGE_RENDERER = "Unknown renderer." +
             " Please choose one of the following [console, none]";
-    private static final String STATS_MESSAGE = "######### Results #########\n" +
-            "Player 1, %s won: %d rounds\n" +
-            "Player 2, %s won: %d rounds\n" +
-            "Ties: %d\n";
+    private static final String STATS_MESSAGE =
+            "######### Results #########\n" +
+                    "Player 1, %s won: %d rounds\n" +
+                    "Player 2, %s won: %d rounds\n" +
+                    "Ties: %d\n";
 
-    private final Player player1;
-    private final Player player2;
+    private final Player[] players;
     private final Renderer renderer;
     private final int rounds;
 
-    public Tournament(int rounds, Renderer renderer, Player[] playerNames) {
+    private int player1Wins;
+    private int player2Wins;
+    private int drawsCount;
+
+    /**
+     * A constructor of the class - getting the players' names
+     */
+    public Tournament(int rounds, Renderer renderer, Player player1,
+                      Player player2) {
         this.rounds = rounds;
         this.renderer = renderer;
-        this.player1 = playerNames[0];
-        this.player2 = playerNames[1];
+        this.players = new Player[]{player1, player2};
+
+
+        this.player1Wins = 0;
+        this.player2Wins = 0;
+        this.drawsCount = 0;
     }
 
     /**
@@ -33,43 +46,52 @@ public class Tournament {
      * number of draws}
      */
     public void playTournament(int size, int winStreak, String[] playerNames) {
-        int player1Victories = 0, player2Victories = 0, draws = 0;
-        Player[] playersArr = {this.player1, this.player2};
+        this.player1Wins = 0;
+        this.player2Wins = 0;
+        this.drawsCount = 0;
 
         // Start playing "rounds" times
         for (int i = 0; i < rounds; i++) {
-            boolean player1IsX = i % 2 == 0;
-            Player xPlayer = playersArr[i % 2];
-            Player oPlayer = playersArr[1 - i % 2];
-
-            Game game = new Game(xPlayer, oPlayer, size, winStreak,
-                    this.renderer);
-            Mark result = game.run();
-
-            // Determine which player won
-            switch (result) {
-                case BLANK:
-                    draws++;
-                    break;
-                case X:
-                    if (player1IsX) {
-                        player1Victories++;
-                    } else {
-                        player2Victories++;
-                    }
-                    break;
-                case O:
-                    if (player1IsX) {
-                        player2Victories++;
-                    } else {
-                        player1Victories++;
-                    }
-                    break;
-            }
+            this.playRound(size, winStreak, this.players, i);
         }
         // Printing the tournament result
-        System.out.printf(STATS_MESSAGE, playerNames[0], player1Victories,
-                playerNames[1], player2Victories, draws);
+        System.out.printf(STATS_MESSAGE, playerNames[0], this.player1Wins,
+                playerNames[1], this.player2Wins, this.drawsCount);
+    }
+
+    private void playRound(int size, int winStreak, Player[] playersArr, int i) {
+        boolean player1IsX = i % 2 == 0;
+        Player xPlayer = playersArr[i % 2];
+        Player oPlayer = playersArr[1 - i % 2];
+
+        Game game = new Game(xPlayer, oPlayer, size, winStreak,
+                this.renderer);
+        Mark result = game.run();
+
+        // Determine which player won
+        determineWinner(player1IsX, result);
+    }
+
+    private void determineWinner(boolean player1IsX, Mark result) {
+        switch (result) {
+            case BLANK:
+                drawsCount++;
+                break;
+            case X:
+                if (player1IsX) {
+                    player1Wins++;
+                } else {
+                    player2Wins++;
+                }
+                break;
+            case O:
+                if (player1IsX) {
+                    player2Wins++;
+                } else {
+                    player1Wins++;
+                }
+                break;
+        }
     }
 
     /**
@@ -98,6 +120,9 @@ public class Tournament {
         return false;
     }
 
+    /**
+     * The main method of the program
+     */
     public static void main(String[] args) {
         // parsing the arguments
         int rounds = Integer.parseInt(args[ROUNDS_INDEX]);
@@ -116,9 +141,9 @@ public class Tournament {
                 board_size);
         Player player_1 = playerFactory.buildPlayer(player_1_type);
         Player player_2 = playerFactory.buildPlayer(player_2_type);
-        Player[] playersArr = new Player[]{player_1, player_2};
 
-        Tournament tournament = new Tournament(rounds, renderer, playersArr);
+        Tournament tournament = new Tournament(rounds, renderer,
+                player_1, player_2);
         // Checking valid arguments to play the tournament
         if (tournament.checkInvalidArgs(rounds, renderer, player_1, player_2,
                 win_streak, board_size)) {

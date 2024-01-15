@@ -1,5 +1,7 @@
+/**
+ * A class that creates the game
+ */
 public class Game {
-
     private final Player player_x;
     private final Player player_o;
     private final Renderer renderer;
@@ -10,6 +12,9 @@ public class Game {
     private Mark WINNER = null;
     private int NUMBER_OF_MARKS = 0;
 
+    /**
+     * A constructor that initializes default values
+     */
     public Game(Player playerX, Player playerO, Renderer renderer) {
         this.player_x = playerX;
         this.player_o = playerO;
@@ -19,6 +24,9 @@ public class Game {
         this.WIN_STREAK = 3;
     }
 
+    /**
+     * A constructor that initializes the game with the parameters given
+     */
     public Game(Player playerX, Player playerO, int size, int winStreak,
                 Renderer renderer) {
         this.player_x = playerX;
@@ -57,8 +65,18 @@ public class Game {
         return this.WINNER;
     }
 
+    /**
+     * Return the win streak of this game
+     */
     public int getWinStreak() {
         return WIN_STREAK;
+    }
+
+    /**
+     * Return the board size of the game
+     */
+    public int getBoardSize() {
+        return BOARD_SIZE;
     }
 
     /**
@@ -132,16 +150,20 @@ public class Game {
         // horizontal
         int horizontal_marks = 0;
         // checking the left side
-        horizontal_marks += countMarkInDirection(row, col, 0, -1, mark);
+        horizontal_marks += countMarkInDirection(row, col, 0,
+                -1, mark);
         // checking the right side
-        horizontal_marks += countMarkInDirection(row, col, 0, 1, mark);
+        horizontal_marks += countMarkInDirection(row, col, 0,
+                1, mark);
 
         // vertical
         int vertical_marks = 0;
         // checking upwards
-        vertical_marks += countMarkInDirection(row, col, -1, 0, mark);
+        vertical_marks += countMarkInDirection(row, col, -1,
+                0, mark);
         // checking downwards
-        vertical_marks += countMarkInDirection(row, col, 1, 0, mark);
+        vertical_marks += countMarkInDirection(row, col, 1,
+                0, mark);
 
         // we counted the new marked cube already
         horizontal_marks -= 1;
@@ -157,16 +179,20 @@ public class Game {
         // diagonal
         int diagonal_marks = 0;
         // right-up
-        diagonal_marks += countMarkInDirection(row, col, -1, 1, mark);
+        diagonal_marks += countMarkInDirection(row, col, -1,
+                1, mark);
         // left-down
-        diagonal_marks += countMarkInDirection(row, col, 1, -1, mark);
+        diagonal_marks += countMarkInDirection(row, col, 1,
+                -1, mark);
 
         // anti diagonal
         int anti_diagonal_marks = 0;
         // up-left
-        anti_diagonal_marks += countMarkInDirection(row, col, -1, -1, mark);
+        anti_diagonal_marks += countMarkInDirection(row, col, -1,
+                -1, mark);
         // right-down
-        anti_diagonal_marks += countMarkInDirection(row, col, 1, 1, mark);
+        anti_diagonal_marks += countMarkInDirection(row, col, 1,
+                1, mark);
 
         // counted the new marked cube
         anti_diagonal_marks -= 1;

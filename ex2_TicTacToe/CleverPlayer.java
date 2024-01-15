@@ -1,5 +1,11 @@
+/**
+ * A class of a player that is slightly better than whatever player
+ */
 public class CleverPlayer implements Player {
 
+    /**
+     * Implement a better strategy compared to whatever player
+     */
     @Override
     public void playTurn(Board board, Mark mark) {
         boolean marked = false;

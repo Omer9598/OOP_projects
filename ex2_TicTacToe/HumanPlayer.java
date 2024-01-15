@@ -1,23 +1,23 @@
-import java.util.Scanner;
-
+/**
+ * A class that represents the human player
+ */
 public class HumanPlayer implements Player {
-    public HumanPlayer() {
-    }
+    /**
+     * Default constructor of the class
+     */
+    public HumanPlayer() {}
 
     @Override
-    /*
-      This method will do a single turn of the player.
-      assuming the input is int, if invalid int is given, the method will
-      continue asking the player to pick a valid place to mark
+    /**
+     This method will do a single turn of the player.
+     assuming the input is int, if invalid int is given, the method will
+     continue asking the player to pick a valid place to mark
      */
     public void playTurn(Board board, Mark mark) {
-        // getting input from the user
-        Scanner in = new Scanner(System.in);
-
         System.out.println("player" + mark + ", type coordinates: ");
 
         // assume the input is int
-        int num = in.nextInt();
+        int num = KeyboardInput.readInt();
 
         boolean valid_input = false;
 
@@ -29,7 +29,7 @@ public class HumanPlayer implements Player {
                 continue;
             }
             handle_invalid_input(row, col, board);
-            num = in.nextInt();
+            num = KeyboardInput.readInt();
         }
     }
 
