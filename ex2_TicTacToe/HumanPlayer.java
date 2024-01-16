@@ -2,6 +2,14 @@
  * A class that represents the human player
  */
 public class HumanPlayer implements Player {
+
+    private final String INVALID_POSITION = "Invalid mark position," +
+            " please choose a different position.\n" +
+            "Invalid coordinates, type again:";
+
+    private final String NON_BLANK = "Mark position is already occupied.\n" +
+            "Invalid coordinates, type again:";
+
     /**
      * Default constructor of the class
      */
@@ -34,13 +42,12 @@ public class HumanPlayer implements Player {
     private void handleInvalidInput(int row, int col, Board board) {
         // Invalid input
         if (board.getMark(row, col) == null) {
-            System.out.println("Invalid mark position," +
-                    " please choose a different position.");
+            System.out.println(INVALID_POSITION);
         }
         // Already marked position
         if (board.getMark(row, col) != null &&
                 board.getMark(row, col) != Mark.BLANK) {
-            System.out.println("Mark position is already occupied.");
+            System.out.println(NON_BLANK);
         }
     }
 }

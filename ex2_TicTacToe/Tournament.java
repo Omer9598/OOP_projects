@@ -11,8 +11,9 @@ public class Tournament {
     private static final String ERR_MESSAGE_PLAYER = "Choose a player," +
             " and start" +
             " again.\nThe players: [human, clever, whatever, genius]\n";
-    private static final String ERR_MESSAGE_RENDERER = "Unknown renderer." +
-            " Please choose one of the following [console, none]";
+    private static final String ERR_MESSAGE_RENDERER = "Choose a renderer," +
+            " and start again.\n" +
+            "Please choose one of the following [console, none]";
     private static final String STATS_MESSAGE =
             "######### Results #########\n" +
                     "Player 1, %s won: %d rounds\n" +
@@ -110,6 +111,7 @@ public class Tournament {
         if (winStreak > size) {
             return true;
         }
+        // Check the renderer first - according to instructions
         if (renderer == null) {
             System.err.println(ERR_MESSAGE_RENDERER);
             return true;

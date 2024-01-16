@@ -10,7 +10,7 @@ that the genius player will always win the clever player.
 Using a common interface for the players allows easy code maintenance,
 development and code conversion to keep it more modular. The code can adapt or
 extend player classes uniformly and easily. We can unit test the code - testing
-small code units. The design patterns are Encapsulation, abstraction and
+small code units. The design patterns are Encapsulation, API, abstraction and
 polymorphism - hiding the implementation from the user to enhance security and
 reduce dealing with unnecessary internal details, as well as enabling adaption
 and extension of the code

@@ -4,12 +4,7 @@
 public class Board {
     // private class variables
     private Mark[][] BOARD;
-
-    // public class variables
     private final int SIZE;
-
-    // ******** public methods ********
-
     /** Default constructor */
     public Board () {SIZE = 3;}
 

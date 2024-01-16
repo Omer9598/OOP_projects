@@ -3,6 +3,7 @@
  * console
  */
 public class VoidRenderer implements Renderer {
+
     /**
      * A method that "renders" the board - does nothing
      */
