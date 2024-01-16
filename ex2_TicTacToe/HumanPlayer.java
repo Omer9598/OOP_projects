@@ -6,9 +6,9 @@ public class HumanPlayer implements Player {
     private final String INVALID_POSITION = "Invalid mark position," +
             " please choose a different position.\n" +
             "Invalid coordinates, type again:";
-
     private final String NON_BLANK = "Mark position is already occupied.\n" +
             "Invalid coordinates, type again:";
+    private final String PLAY_TURN = "Player %s, type coordinates: ";
 
     /**
      * Default constructor of the class
@@ -22,7 +22,7 @@ public class HumanPlayer implements Player {
      continue asking the player to pick a valid place to mark
      */
     public void playTurn(Board board, Mark mark) {
-        System.out.println("player" + mark + ", type coordinates: ");
+        System.out.printf((PLAY_TURN) + "%n", mark);
         // Assume the input is int
         int num = KeyboardInput.readInt();
         boolean validInput = false;
