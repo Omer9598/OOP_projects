@@ -45,7 +45,8 @@ public class Tournament {
      * returns an array of: {number of player1 wins, number of player2 wins,
      * number of draws}
      */
-    public void playTournament(int size, int winStreak, String[] playerNames) {
+    public void playTournament(int size, int winStreak, String playerName1,
+                               String playerName2) {
         this.player1Wins = 0;
         this.player2Wins = 0;
         this.drawsCount = 0;
@@ -55,11 +56,12 @@ public class Tournament {
             this.playRound(size, winStreak, this.players, i);
         }
         // Printing the tournament result
-        System.out.printf(STATS_MESSAGE, playerNames[0], this.player1Wins,
-                playerNames[1], this.player2Wins, this.drawsCount);
+        System.out.printf(STATS_MESSAGE, playerName1, this.player1Wins,
+                playerName2, this.player2Wins, this.drawsCount);
     }
 
-    private void playRound(int size, int winStreak, Player[] playersArr, int i) {
+    private void playRound(int size, int winStreak, Player[] playersArr,
+                           int i) {
         boolean player1IsX = i % 2 == 0;
         Player xPlayer = playersArr[i % 2];
         Player oPlayer = playersArr[1 - i % 2];
@@ -100,7 +102,7 @@ public class Tournament {
      * instructions
      */
     private boolean checkInvalidArgs(int rounds, Renderer renderer,
-                                     Player player_1, Player player_2,
+                                     Player player1, Player player2,
                                      int winStreak, int size) {
         if (rounds < 0) {
             return true;
@@ -112,7 +114,7 @@ public class Tournament {
             System.err.println(ERR_MESSAGE_RENDERER);
             return true;
         }
-        if (player_1 == null || player_2 == null) {
+        if (player1 == null || player2 == null) {
             System.err.println(ERR_MESSAGE_PLAYER);
             return true;
         }
@@ -126,30 +128,30 @@ public class Tournament {
     public static void main(String[] args) {
         // parsing the arguments
         int rounds = Integer.parseInt(args[ROUNDS_INDEX]);
-        int board_size = Integer.parseInt(args[BOARD_SIZE_INDEX]);
-        int win_streak = Integer.parseInt(args[STREAK_NUM_INDEX]);
-        String render_type = args[RENDER_INDEX];
-        String player_1_type = args[PLAYER_1_INDEX];
-        String player_2_type = args[PLAYER_2_INDEX];
+        int boardSize = Integer.parseInt(args[BOARD_SIZE_INDEX]);
+        int winStreak = Integer.parseInt(args[STREAK_NUM_INDEX]);
+        String renderType = args[RENDER_INDEX];
+        String player1Type = args[PLAYER_1_INDEX];
+        String player2Type = args[PLAYER_2_INDEX];
 
         // Creating the factories to build the players and renderer
         PlayerFactory playerFactory = new PlayerFactory();
         RendererFactory rendererFactory = new RendererFactory();
 
         // Building the players with their factories
-        Renderer renderer = rendererFactory.buildRenderer(render_type,
-                board_size);
-        Player player_1 = playerFactory.buildPlayer(player_1_type);
-        Player player_2 = playerFactory.buildPlayer(player_2_type);
+        Renderer renderer = rendererFactory.buildRenderer(renderType,
+                boardSize);
+        Player player1 = playerFactory.buildPlayer(player1Type);
+        Player player2 = playerFactory.buildPlayer(player2Type);
 
         Tournament tournament = new Tournament(rounds, renderer,
-                player_1, player_2);
+                player1, player2);
         // Checking valid arguments to play the tournament
-        if (tournament.checkInvalidArgs(rounds, renderer, player_1, player_2,
-                win_streak, board_size)) {
+        if (tournament.checkInvalidArgs(rounds, renderer, player1, player2,
+                winStreak, boardSize)) {
             return;
         }
-        tournament.playTournament(board_size, win_streak,
-                new String[]{player_1_type, player_2_type});
+        tournament.playTournament(boardSize, winStreak, player1Type,
+                player2Type);
     }
 }

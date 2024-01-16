@@ -1,0 +1,15 @@
+omer_daniely
+206558835
+
+The strategy i implemented for whatever player is taking random numbers in the
+borders of the board, until finding a vacant spot to put the mark.
+For the clever player, i created an array of "smart" selections to win.
+And for the genius player, i also created an array of "smart" selections, such
+that the genius player will always win the clever player.
+
+Using a common interface for the players allows easy code maintenance,
+development and code conversion to keep it more modular. The code can adapt or
+extend player classes uniformly and easily. We can unit test the code - testing
+small code units. The design patterns are Encapsulation, abstraction and
+polymorphism - hiding the implementation from the user to enhance security and
+reduce dealing with unnecessary internal details.
