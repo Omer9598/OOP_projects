@@ -2,14 +2,6 @@
  * A class that represents the human player
  */
 public class HumanPlayer implements Player {
-
-    private final String INVALID_POSITION = "Invalid mark position," +
-            " please choose a different position.\n" +
-            "Invalid coordinates, type again:";
-    private final String NON_BLANK = "Mark position is already occupied.\n" +
-            "Invalid coordinates, type again:";
-    private final String PLAY_TURN = "Player %s, type coordinates: ";
-
     /**
      * Default constructor of the class
      */
@@ -22,7 +14,7 @@ public class HumanPlayer implements Player {
      continue asking the player to pick a valid place to mark
      */
     public void playTurn(Board board, Mark mark) {
-        System.out.printf((PLAY_TURN) + "%n", mark);
+        System.out.print(Constants.playerRequestInputString(mark.toString()));
         // Assume the input is int
         int num = KeyboardInput.readInt();
         boolean validInput = false;
@@ -38,16 +30,15 @@ public class HumanPlayer implements Player {
         }
     }
 
-
     private void handleInvalidInput(int row, int col, Board board) {
         // Invalid input
         if (board.getMark(row, col) == null) {
-            System.out.println(INVALID_POSITION);
+            System.out.print(Constants.INVALID_COORDINATE);
         }
         // Already marked position
         if (board.getMark(row, col) != null &&
                 board.getMark(row, col) != Mark.BLANK) {
-            System.out.println(NON_BLANK);
+            System.out.print(Constants.OCCUPIED_COORDINATE);
         }
     }
 }

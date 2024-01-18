@@ -8,18 +8,11 @@ public class Tournament {
     private static final int RENDER_INDEX = 3;
     private static final int PLAYER_1_INDEX = 4;
     private static final int PLAYER_2_INDEX = 5;
-    private static final String ERR_MESSAGE_PLAYER = "Choose a player," +
-            " and start" +
-            " again.\nThe players: [human, clever, whatever, genius]\n";
-    private static final String ERR_MESSAGE_RENDERER = "Choose a renderer," +
-            " and start again.\n" +
-            "Please choose one of the following [console, none]";
     private static final String STATS_MESSAGE =
-            "######### Results #########\n" +
+            "#########K Results #########\n" +
                     "Player 1, %s won: %d rounds\n" +
                     "Player 2, %s won: %d rounds\n" +
                     "Ties: %d\n";
-
     private final Player[] players;
     private final Renderer renderer;
     private final int rounds;
@@ -113,11 +106,11 @@ public class Tournament {
         }
         // Check the renderer first - according to instructions
         if (renderer == null) {
-            System.err.println(ERR_MESSAGE_RENDERER);
+            System.err.print(Constants.UNKNOWN_RENDERER_NAME);
             return true;
         }
         if (player1 == null || player2 == null) {
-            System.err.println(ERR_MESSAGE_PLAYER);
+            System.err.print(Constants.UNKNOWN_PLAYER_NAME);
             return true;
         }
         // Else - all arguments are valid
