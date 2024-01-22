@@ -13,11 +13,7 @@ public class Tournament {
                     "Player 1, %s won: %d rounds\n" +
                     "Player 2, %s won: %d rounds\n" +
                     "Ties: %d\n";
-    public final static String UNKNOWN_PLAYER_NAME = "Choose a player," +
-            " and start again.\nThe players: [human, clever, whatever, genius]";
-    public final static String UNKNOWN_RENDERER_NAME = "Choose a renderer," +
-            " and start again. \nPlease choose one of the following" +
-            " [console, none]";
+
     private final Player[] players;
     private final Renderer renderer;
     private final int rounds;
@@ -111,11 +107,11 @@ public class Tournament {
         }
         // Check the renderer first - according to instructions
         if (renderer == null) {
-            System.err.print(UNKNOWN_RENDERER_NAME);
+            System.out.println(Constants.UNKNOWN_RENDERER_NAME);
             return true;
         }
         if (player1 == null || player2 == null) {
-            System.err.print(UNKNOWN_PLAYER_NAME);
+            System.out.println(Constants.UNKNOWN_PLAYER_NAME);
             return true;
         }
         // Else - all arguments are valid
