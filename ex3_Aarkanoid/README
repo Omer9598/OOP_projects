@@ -1,7 +1,9 @@
+omer_daniely
+206558835
 
 Exercise explanations:
-1. I created the classes according the instructions in campus IL and the
-exercise.
+1. I created the classes according to the instructions in campus IL and the
+instruction given in the moodle.
 I divided the project to 3 packages:
 main - for the gameManager class that the main class is in.
 gameobjects - for all the game objects such as paddle, ball, second paddle...

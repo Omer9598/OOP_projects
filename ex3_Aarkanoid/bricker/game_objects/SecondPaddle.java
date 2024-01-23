@@ -9,8 +9,10 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
 
+/**
+ * A class for the second (middle paddle)
+ */
 public class SecondPaddle extends Paddle implements CollisionStrategy {
-
     private final Counter numOfHits;
     private final Counter paddleCounter;
     private final GameObjectCollection gameObjects;
@@ -42,14 +44,31 @@ public class SecondPaddle extends Paddle implements CollisionStrategy {
         this.gameObjects = gameObjects;
     }
 
-
+    /**
+     * Update the second paddle if needed
+     *
+     * @param deltaTime The time elapsed, in seconds, since the last frame. Can
+     *                  be used to determine a new position/velocity by
+     *                  multiplying
+     *                  this delta with the velocity/acceleration respectively
+     *                  and adding to the position/velocity:
+     *                  velocity += deltaTime*acceleration
+     *                  pos += deltaTime*velocity
+     */
     @Override
     public void update(float deltaTime) {
         // Second paddle moves the same as the regular paddle
         super.update(deltaTime);
     }
 
-
+    /**
+     * On collision do something
+     * @param other     The GameObject with which a collision occurred.
+     * @param collision Information regarding this collision.
+     *                  A reasonable elastic behavior can be achieved with:
+     *                  setVelocity(getVelocity().flipped
+     *                  (collision.getNormal()));
+     */
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         onCollision(this, other);

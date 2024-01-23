@@ -9,8 +9,10 @@ import danogl.util.Vector2;
 
 import java.util.Random;
 
+/**
+ * A class to create the game ball
+ */
 public class Ball extends GameObject {
-
     private final Sound collisionSound;
     private final Counter collisionCounter;
 
@@ -33,6 +35,14 @@ public class Ball extends GameObject {
         this.collisionCounter = new Counter(0);
     }
 
+    /**
+     * What to do when the ball collides with something
+     * @param other The GameObject with which a collision occurred.
+     * @param collision Information regarding this collision.
+     *                  A reasonable elastic behavior can be achieved with:
+     *                  setVelocity(getVelocity().flipped(
+     *                  collision.getNormal()));
+     */
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
@@ -61,7 +71,13 @@ public class Ball extends GameObject {
         this.setVelocity(new Vector2(ballVelX, ballVelY));
     }
 
+    /**
+     * Setting the ball collision counter
+     */
     public void setCollisionCounter(int i) {collisionCounter.increaseBy(i);}
 
+    /**
+     * Return the collision counter
+     */
     public int getCollisionCounter() {return collisionCounter.value();}
 }

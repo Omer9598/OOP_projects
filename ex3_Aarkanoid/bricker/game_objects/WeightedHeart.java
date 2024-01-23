@@ -7,8 +7,10 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
 
+/**
+ * A class for the weighted heart game object
+ */
 public class WeightedHeart extends GameObject {
-
     private final Counter livesCounter;
     private final GameObjectCollection gameObjects;
 

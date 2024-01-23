@@ -3,8 +3,10 @@ package bricker.brick_strategies;
 import danogl.GameObject;
 import danogl.util.Counter;
 
+/**
+ * A class for a triple strategy
+ */
 public class TripledStrategy extends DoubledStrategy{
-
     private final CollisionStrategy thirdStrategy;
     private final Counter brickCounter;
 
@@ -17,6 +19,9 @@ public class TripledStrategy extends DoubledStrategy{
         this.brickCounter = brickCounter;
     }
 
+    /**
+     * Add a third strategy
+     */
     @Override
     public void onCollision(GameObject thisObj, GameObject otherObj) {
         super.onCollision(thisObj, otherObj);

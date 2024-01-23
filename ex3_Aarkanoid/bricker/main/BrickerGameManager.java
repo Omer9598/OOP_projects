@@ -12,9 +12,10 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
 
-
+/**
+ * A class for the game manager
+ */
 public class BrickerGameManager extends GameManager {
-
     private final int BORDERS = 12;
     private Ball ball;
     private Vector2 windowDimensions;
@@ -24,6 +25,9 @@ public class BrickerGameManager extends GameManager {
     private BrickStrategyFactory brickStrategyFactory;
     private final Vector2 heartDimensions = new Vector2(30f, 30f);
 
+    /**
+     * The class constructor
+     */
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
         // Calling the constructor of mother class
         super(windowTitle, windowDimensions);
@@ -31,6 +35,24 @@ public class BrickerGameManager extends GameManager {
         this.livesCounter = new Counter(0);
     }
 
+    /**
+     * Starting the game
+     *
+     * @param imageReader      Contains a single method: readImage, which
+     *                         reads an image from disk.
+     *                         See its documentation for help.
+     * @param soundReader      Contains a single method: readSound, which
+     *                         reads a wav file from
+     *                         disk. See its documentation for help.
+     * @param inputListener    Contains a single method: isKeyPressed,
+     *                         which returns whether
+     *                         a given key is currently pressed by the user
+     *                         or not. See its
+     *                         documentation.
+     * @param windowController Contains an array of helpful,
+     *                         self explanatory methods
+     *                         concerning the window.
+     */
     @Override
     public void initializeGame(ImageReader imageReader,
                                SoundReader soundReader,
@@ -48,7 +70,7 @@ public class BrickerGameManager extends GameManager {
         // create the left, right and upper walls
         createWall(Vector2.ZERO, new Vector2(BORDERS, windowDimensions.y()));
         createWall(new Vector2(windowDimensions.x(), 0),
-                   new Vector2(BORDERS, windowDimensions.y()));
+                new Vector2(BORDERS, windowDimensions.y()));
         createWall(Vector2.ZERO, new Vector2(windowDimensions.x(), BORDERS));
 
         createBackground(imageReader);
@@ -68,7 +90,7 @@ public class BrickerGameManager extends GameManager {
     private void createNumericLife() {
         Vector2 numericLivesTopLeftCorner =
                 new Vector2(windowDimensions.x() - 100,
-                windowDimensions.y() - 30);
+                        windowDimensions.y() - 30);
         Vector2 numericLivesDimensions = new Vector2(20, 20);
         // creating the graphic numeric lives counter
         NumericLifeCounter numericLifeCounter = new NumericLifeCounter(
@@ -92,6 +114,20 @@ public class BrickerGameManager extends GameManager {
         gameObjects().addGameObject(hearts, Layer.BACKGROUND);
     }
 
+    /**
+     * Update to check if the game ended
+     * @param deltaTime The time, in seconds, that passed since the
+     *                  last invocation
+     *                  of this method (i.e., since the last frame).
+     *                  This is useful for either accumulating the total
+     *                  time that passed since some
+     *                  event, or for physics integration (i.e.,
+     *                  multiply this by
+     *                  the acceleration to get an estimate of the added
+     *                  velocity or
+     *                  by the velocity to get an estimate of the difference
+     *                  in position).
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
@@ -101,8 +137,7 @@ public class BrickerGameManager extends GameManager {
             checkForGameEnd();
             // updating the ball's position to the middle of the board
             startBall();
-        }
-        else {
+        } else {
             checkForGameEnd();
         }
         // checking the camera status and update if needed
@@ -133,8 +168,7 @@ public class BrickerGameManager extends GameManager {
                 livesCounter.reset();
                 brickCounter.reset();
                 windowController.resetGame();
-            }
-            else {
+            } else {
                 windowController.closeWindow();
             }
         }
@@ -145,8 +179,7 @@ public class BrickerGameManager extends GameManager {
      * This function will create the bricks of the game with the recommended
      * number of bricks - 5 rows, 8 bricks in each row
      */
-    private void createBricks(ImageReader imageReader)
-    {
+    private void createBricks(ImageReader imageReader) {
         // finding the width of each brick
         float bricksGap = 3;
         float brickInRow = 8;
@@ -198,7 +231,8 @@ public class BrickerGameManager extends GameManager {
         gameObjects().addGameObject(background, Layer.BACKGROUND);
     }
 
-    /** This function will create a wall, according to the coordinates
+    /**
+     * This function will create a wall, according to the coordinates
      * given
      */
     private void createWall(Vector2 anchorPosition, Vector2 widthAndHeight) {
@@ -207,7 +241,9 @@ public class BrickerGameManager extends GameManager {
         gameObjects().addGameObject(wall);
     }
 
-    /** This function will create the paddles and add it to gameObjects*/
+    /**
+     * This function will create the paddles and add it to gameObjects
+     */
     private void createPaddles(ImageReader imageReader,
                                UserInputListener userInputListener) {
         Renderable paddleImage = imageReader.readImage("assets/paddle.png",
@@ -225,7 +261,9 @@ public class BrickerGameManager extends GameManager {
                 windowDimensions.y() - gapPaddleToWindow));
     }
 
-    /** This function will create the game ball and add it to the gameObjects */
+    /**
+     * This function will create the game ball and add it to the gameObjects
+     */
     private void createBall(ImageReader imageReader, SoundReader soundReader) {
         // using the imageReader class from danogl
         Renderable ballImage = imageReader.readImage("assets/ball.png",
@@ -248,11 +286,16 @@ public class BrickerGameManager extends GameManager {
         this.gameObjects().addGameObject(ball);
     }
 
+    /**
+     * Returns the window dimensions
+     */
     public Vector2 getWindowDimensions() {
         return windowDimensions;
     }
 
-
+    /**
+     * Main method to run the program
+     */
     public static void main(String[] args) {
         new BrickerGameManager("Bricker",
                 new Vector2(700, 500)).run();

@@ -4,9 +4,12 @@ import danogl.GameObject;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
+/**
+ * A class for the AI paddle
+ */
 public class AiPaddle extends GameObject {
     private static final float PADDLE_SPEED = 300;
-    private GameObject objectToFollow;
+    private final GameObject objectToFollow;
 
     /**
      * Construct a new GameObject instance.
@@ -23,6 +26,16 @@ public class AiPaddle extends GameObject {
         this.objectToFollow = objectToFollow;
     }
 
+    /**
+     * Update the paddle's movement according to the ball
+     * @param deltaTime The time elapsed, in seconds, since the last frame. Can
+     *                  be used to determine a new position/velocity by
+     *                  multiplying
+     *                  this delta with the velocity/acceleration respectively
+     *                  and adding to the position/velocity:
+     *                  velocity += deltaTime*acceleration
+     *                  pos += deltaTime*velocity
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);

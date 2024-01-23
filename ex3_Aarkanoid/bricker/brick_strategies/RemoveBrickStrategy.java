@@ -5,6 +5,9 @@ import danogl.collisions.GameObjectCollection;
 import danogl.collisions.Layer;
 import danogl.util.Counter;
 
+/**
+ * A class to remove a brick
+ */
 public class RemoveBrickStrategy implements CollisionStrategy{
     private final GameObjectCollection gameObjects;
     private final Counter brickCounter;

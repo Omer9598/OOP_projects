@@ -4,8 +4,12 @@ import danogl.GameObject;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+
 import java.awt.event.KeyEvent;
 
+/**
+ * A class for the paddle game object
+ */
 public class Paddle extends GameObject {
     private static final float PADDLE_MOVEMENT_SPEED = 400;
     private static final float MIN_DISTANCE_FROM_SCREEN_EDGE = 3;
@@ -32,6 +36,16 @@ public class Paddle extends GameObject {
         this.windowDimensions = windowDimensions;
     }
 
+    /**
+     * Update the paddle game object according to the player's decision
+     * @param deltaTime The time elapsed, in seconds, since the last frame. Can
+     *                  be used to determine a new position/velocity by
+     *                  multiplying
+     *                  this delta with the velocity/acceleration respectively
+     *                  and adding to the position/velocity:
+     *                  velocity += deltaTime*acceleration
+     *                  pos += deltaTime*velocity
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);

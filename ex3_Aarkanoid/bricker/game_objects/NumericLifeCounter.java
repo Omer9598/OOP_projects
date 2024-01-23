@@ -7,8 +7,10 @@ import danogl.gui.rendering.TextRenderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
 
+/**
+ * A class for the numeric life counter
+ */
 public class NumericLifeCounter extends GameObject {
-
     private final Counter livesCounter;
     private final GameObjectCollection gameObjectCollection;
     private int numOfLives;
@@ -40,6 +42,16 @@ public class NumericLifeCounter extends GameObject {
         gameObjectCollection.addGameObject(textGameObject, Layer.BACKGROUND);
     }
 
+    /**
+     * Update the numeric life counter according to the game
+     * @param deltaTime The time elapsed, in seconds, since the last frame. Can
+     *                  be used to determine a new position/velocity by
+     *                  multiplying
+     *                  this delta with the velocity/acceleration respectively
+     *                  and adding to the position/velocity:
+     *                  velocity += deltaTime*acceleration
+     *                  pos += deltaTime*velocity
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
