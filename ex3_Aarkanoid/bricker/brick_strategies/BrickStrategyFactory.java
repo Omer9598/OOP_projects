@@ -11,8 +11,10 @@ import danogl.util.Vector2;
 
 import java.util.Random;
 
+/**
+ * A factory to build brick strategies
+ */
 public class BrickStrategyFactory {
-
     private final GameObjectCollection gameObjects;
     private final Counter brickCounter;
     private final Counter paddleCounter;
@@ -32,6 +34,9 @@ public class BrickStrategyFactory {
     private static final int DOUBLED_BEHAVIOR = 4;
     private final int REGULAR_STRATEGY = 5;
 
+    /**
+     * Factory's constructor
+     */
     public BrickStrategyFactory(GameObjectCollection gameObjects,
                                 Counter brickCounter, ImageReader imageReader,
                                 SoundReader soundReader,

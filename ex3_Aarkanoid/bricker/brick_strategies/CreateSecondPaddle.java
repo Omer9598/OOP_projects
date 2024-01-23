@@ -8,9 +8,11 @@ import danogl.util.Counter;
 import danogl.util.Vector2;
 import bricker.game_objects.SecondPaddle;
 
+/**
+ * A class that creates a second paddle
+ */
 public class CreateSecondPaddle extends RemoveBrickStrategy
         implements CollisionStrategy{
-
     private final GameObjectCollection gameObjects;
     private final ImageReader imageReader;
     private final UserInputListener userInputListener;
@@ -18,6 +20,9 @@ public class CreateSecondPaddle extends RemoveBrickStrategy
     private final  Counter paddleCounter;
     private final Counter numOfHits;
 
+    /**
+     * Class constructor
+     */
     public CreateSecondPaddle(GameObjectCollection gameObjects,
                               Counter brickCounter,
                               GameObjectCollection gameObjects1,

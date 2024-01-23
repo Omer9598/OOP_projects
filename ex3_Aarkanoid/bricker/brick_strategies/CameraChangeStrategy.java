@@ -8,12 +8,17 @@ import danogl.gui.rendering.Camera;
 import danogl.util.Counter;
 import danogl.util.Vector2;
 
+/**
+ * A class for camera change strategy
+ */
 public class CameraChangeStrategy extends RemoveBrickStrategy
         implements CollisionStrategy{
-
     private final Ball ball;
     private final BrickerGameManager brickerGameManager;
 
+    /**
+     * Camera change strategy constructor
+     */
     public CameraChangeStrategy(GameObjectCollection gameObjects, Ball ball,
                                 BrickerGameManager brickerGameManager,
                                 Counter brickCounter) {
@@ -22,6 +27,9 @@ public class CameraChangeStrategy extends RemoveBrickStrategy
         this.brickerGameManager = brickerGameManager;
     }
 
+    /**
+     * Updating the camera when a ball hit the camera change brick
+     */
     @Override
     public void onCollision(GameObject thisObj, GameObject otherObj) {
         // deleting the brick hitted first

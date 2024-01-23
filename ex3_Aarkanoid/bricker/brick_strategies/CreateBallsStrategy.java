@@ -15,11 +15,13 @@ import danogl.util.Vector2;
  */
 public class CreateBallsStrategy extends RemoveBrickStrategy
         implements CollisionStrategy {
-
     private final GameObjectCollection gameObjects;
     private final ImageReader imageReader;
     private final SoundReader soundReader;
 
+    /**
+     * Class constructor
+     */
     public CreateBallsStrategy(GameObjectCollection gameObjects,
                                Counter brickCounter, ImageReader imageReader,
                                SoundReader soundReader) {

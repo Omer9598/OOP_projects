@@ -7,15 +7,19 @@ import danogl.gui.ImageReader;
 import danogl.util.Counter;
 import danogl.util.Vector2;
 
+/**
+ * A class for the extra life strategy
+ */
 public class ExtraLifeStrategy extends RemoveBrickStrategy
         implements CollisionStrategy{
-
     private final Counter livesCounter;
     private final Vector2 dimensions;
     private final ImageReader imageReader;
     private final GameObjectCollection gameObjects;
 
-
+    /**
+     * Class constructor
+     */
     public ExtraLifeStrategy(GameObjectCollection gameObjects,
                              Counter brickCounter, Counter livesCounter,
                              Vector2 dimensions, ImageReader imageReader) {
@@ -26,6 +30,9 @@ public class ExtraLifeStrategy extends RemoveBrickStrategy
         this.imageReader = imageReader;
     }
 
+    /**
+     * Adds a life for the player when this brick is hitted
+     */
     @Override
     public void onCollision(GameObject thisObj, GameObject otherObj) {
         // Deleting brick
