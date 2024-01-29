@@ -95,16 +95,14 @@ public class BrickStrategyFactory {
      */
     public CollisionStrategy getStrategy() {
         Random random = new Random();
-        int randomStrategy = random.nextInt(6);
+        int randomStrategy = random.nextInt(10);
+
         switch (randomStrategy) {
             case MOCK_BALLS, SECOND_PADDLE, CAMERA_CHANGE, EXTRA_LIFE -> {
                 return getSpecialStrategy(randomStrategy);
             }
-            case REGULAR_STRATEGY -> {
-                return collisionStrategiesArr[REGULAR_STRATEGY];
-            }
             case DOUBLED_BEHAVIOR -> {
-                // 2 new random numbers - no including regular behavior
+                // 2 new random numbers - not including regular behavior
                 int firstRandom = random.nextInt(5);
                 int secondRandom = random.nextInt(5);
                 if(firstRandom == DOUBLED_BEHAVIOR ||
@@ -118,8 +116,11 @@ public class BrickStrategyFactory {
                 return new DoubledStrategy(firstStrategy, secondStrategy,
                         brickCounter);
             }
+            // Probability of 0.5 for regular behaviour
+            default -> {
+                return collisionStrategiesArr[REGULAR_STRATEGY];
+            }
         }
-        return null;
     }
 
     /**
