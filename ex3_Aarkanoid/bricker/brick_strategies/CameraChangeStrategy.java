@@ -32,15 +32,19 @@ public class CameraChangeStrategy extends RemoveBrickStrategy
      */
     @Override
     public void onCollision(GameObject thisObj, GameObject otherObj) {
-        // deleting the brick hitted first
+        // Deleting the brick hitted first
         super.onCollision(thisObj, otherObj);
-        // checking current camera
+        // Check if the main ball hitted the brick
+        if (!(otherObj instanceof Ball)) {
+            return;
+        }
+        // Checking current camera
         if (brickerGameManager.camera() != null) {
             return;
         }
-        // collision counter to monitor collisions (one for the brick collision)
+        // Collision counter to monitor collisions (one for the brick collision)
         ball.setCollisionCounter(5);
-        // changing the camera view to the ball
+        // Changing the camera view to the ball
         brickerGameManager.setCamera(new Camera(ball, Vector2.ZERO,
                 brickerGameManager.getWindowDimensions().mult(1.2f),
                 brickerGameManager.getWindowDimensions()));

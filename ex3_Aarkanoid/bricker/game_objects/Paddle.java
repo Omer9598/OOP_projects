@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
  */
 public class Paddle extends GameObject {
     private static final float PADDLE_MOVEMENT_SPEED = 400;
-    private static final float MIN_DISTANCE_FROM_SCREEN_EDGE = 3;
+    private static final float MIN_DISTANCE_FROM_SCREEN_EDGE = 5;
     private final UserInputListener inputListener;
     private final Vector2 windowDimensions;
 
