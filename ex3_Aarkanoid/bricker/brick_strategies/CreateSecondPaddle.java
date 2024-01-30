@@ -35,7 +35,7 @@ public class CreateSecondPaddle extends RemoveBrickStrategy
         this.userInputListener = userInputListener;
         this.windowDimensions = windowDimensions;
         this.paddleCounter = paddleCounter;
-        this.numOfHits = new Counter(3);
+        this.numOfHits = new Counter(4);
     }
 
     /**

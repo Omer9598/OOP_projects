@@ -18,6 +18,7 @@ public class CreateBallsStrategy extends RemoveBrickStrategy
     private final GameObjectCollection gameObjects;
     private final ImageReader imageReader;
     private final SoundReader soundReader;
+    private final Vector2 MOCK_BALLS_DIMENSIONS = new Vector2(15, 15);
 
     /**
      * Class constructor
@@ -43,17 +44,16 @@ public class CreateBallsStrategy extends RemoveBrickStrategy
         super.onCollision(thisObj, otherObj);
         float brickWidth = otherObj.getDimensions().x();
         float ballSize = brickWidth / 3;
-        // creating 3 mock balls
-        for (int i = 0; i < 3; i++) {
+        // creating 2 mock balls
+        for (int i = 0; i < 2; i++) {
             float xTopLeft = i * ballSize + otherObj.getTopLeftCorner().x();
             float yTopLeft = otherObj.getTopLeftCorner().y();
             Vector2 ballTopLeftCorner = new Vector2(xTopLeft, yTopLeft);
-            Vector2 ballDimensions = new Vector2(15, 15);
             Renderable ballImage = imageReader.readImage(
                     "assets/mockBall.png", true);
             Sound collisionSound = soundReader.readSound(
                     "assets/blop_cut_silenced.wav");
-            Ball mockBall = new Ball(ballTopLeftCorner, ballDimensions,
+            Ball mockBall = new Ball(ballTopLeftCorner, MOCK_BALLS_DIMENSIONS,
                     ballImage, collisionSound);
             mockBall.setBallRandomDirection();
             gameObjects.addGameObject(mockBall);

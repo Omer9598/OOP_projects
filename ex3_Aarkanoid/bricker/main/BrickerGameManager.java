@@ -18,6 +18,7 @@ import danogl.util.Vector2;
 public class BrickerGameManager extends GameManager {
     private final int BORDERS = 12;
     private Ball ball;
+    private final Vector2 BALL_DIMENSIONS = new Vector2(20, 20);
     private Vector2 windowDimensions;
     private WindowController windowController;
     private final Counter brickCounter;
@@ -50,7 +51,7 @@ public class BrickerGameManager extends GameManager {
      *                         or not. See its
      *                         documentation.
      * @param windowController Contains an array of helpful,
-     *                         self explanatory methods
+     *                         self-explanatory methods
      *                         concerning the window.
      */
     @Override
@@ -72,14 +73,11 @@ public class BrickerGameManager extends GameManager {
         createWall(new Vector2(windowDimensions.x(), 0),
                 new Vector2(BORDERS, windowDimensions.y()));
         createWall(Vector2.ZERO, new Vector2(windowDimensions.x(), BORDERS));
-
         createBackground(imageReader);
-
         // Creating the brickFactory to be used in createBricks function
         createBrickStrategyFactory(imageReader, soundReader, inputListener,
                 windowDimensions, this);
         createBricks(imageReader);
-
         createGraphicLives(imageReader);
         createNumericLife();
     }
@@ -271,7 +269,7 @@ public class BrickerGameManager extends GameManager {
         // creating the Ball (inheriting from gameObject) and adding it
         Sound collisionSound = soundReader.readSound(
                 "assets/blop_cut_silenced.wav");
-        ball = new Ball(Vector2.ZERO, new Vector2(20, 20),
+        ball = new Ball(Vector2.ZERO, BALL_DIMENSIONS,
                 ballImage, collisionSound);
         startBall();
     }
