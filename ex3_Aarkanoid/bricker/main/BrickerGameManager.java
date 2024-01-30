@@ -133,7 +133,7 @@ public class BrickerGameManager extends GameManager {
         if (ballHeight > windowDimensions.y()) {
             livesCounter.decrement();
             checkForGameEnd();
-            // updating the ball's position to the middle of the board
+            // Updating the ball's position to the middle of the screen
             startBall();
         } else {
             checkForGameEnd();
@@ -141,6 +141,12 @@ public class BrickerGameManager extends GameManager {
         // checking the camera status and update if needed
         if (camera() != null && ball.getCollisionCounter() == 0) {
             setCamera(null);
+        }
+        // Deleting all the game objects that are out of the screen
+        for (GameObject gameObject: gameObjects()) {
+            if (gameObject.getCenter().y() > windowDimensions.y()) {
+                gameObjects().removeGameObject(gameObject);
+            }
         }
     }
 
