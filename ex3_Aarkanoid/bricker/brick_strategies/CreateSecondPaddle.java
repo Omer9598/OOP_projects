@@ -19,6 +19,8 @@ public class CreateSecondPaddle extends RemoveBrickStrategy
     private final Vector2 windowDimensions;
     private final  Counter paddleCounter;
     private final Counter numOfHits;
+    private static final String PADDLE = "assets/paddle.png";
+    private static final Vector2 PADDLE_DIMENSIONS = new Vector2(100, 15);
 
     /**
      * Class constructor
@@ -44,9 +46,9 @@ public class CreateSecondPaddle extends RemoveBrickStrategy
      */
     @Override
     public void onCollision(GameObject thisObj, GameObject otherObj) {
-        // deleting the brick
+        // Deleting the brick
         super.onCollision(thisObj, otherObj);
-        // checking if there is a second paddle already
+        // Checking if there is a second paddle already
         if (paddleCounter.value() >= 1)
         {
             // Fixing a bug that causes paddleCounter == 2
@@ -55,11 +57,12 @@ public class CreateSecondPaddle extends RemoveBrickStrategy
             return;
         }
         // creating a new paddle at the center of the screen
-        Vector2 topLeft = new Vector2(windowDimensions.x() / 2 - 50,
-                windowDimensions.y() / 2 - 7);
-        Vector2 dimensions = new Vector2(100, 15);
-        GameObject middlePaddle = new SecondPaddle(topLeft, dimensions,
-                imageReader.readImage("assets/botGood.png", false),
+        Vector2 topLeft = new Vector2(windowDimensions.x() / 2 -
+                PADDLE_DIMENSIONS.x() / 2,
+                windowDimensions.y() / 2 -
+                PADDLE_DIMENSIONS.y() / 2);
+        GameObject middlePaddle = new SecondPaddle(topLeft, PADDLE_DIMENSIONS,
+                imageReader.readImage(PADDLE, false),
                 userInputListener, windowDimensions, paddleCounter, numOfHits,
                 gameObjects);
         paddleCounter.increaseBy(1);
