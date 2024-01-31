@@ -96,7 +96,6 @@ public class BrickStrategyFactory {
     public CollisionStrategy getStrategy() {
         Random random = new Random();
         int randomStrategy = random.nextInt(10);
-
         switch (randomStrategy) {
             case MOCK_BALLS, SECOND_PADDLE, CAMERA_CHANGE, EXTRA_LIFE -> {
                 return getSpecialStrategy(randomStrategy);

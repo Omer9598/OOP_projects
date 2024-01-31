@@ -18,7 +18,6 @@ public class CreateSecondPaddle extends BasicCollisionStrategy
     private final UserInputListener userInputListener;
     private final Vector2 windowDimensions;
     private final  Counter paddleCounter;
-    private final Counter numOfHits;
     private static final String PADDLE = "assets/paddle.png";
     private static final Vector2 PADDLE_DIMENSIONS = new Vector2(100, 15);
 
@@ -37,7 +36,6 @@ public class CreateSecondPaddle extends BasicCollisionStrategy
         this.userInputListener = userInputListener;
         this.windowDimensions = windowDimensions;
         this.paddleCounter = paddleCounter;
-        this.numOfHits = new Counter(4);
     }
 
     /**
@@ -63,7 +61,8 @@ public class CreateSecondPaddle extends BasicCollisionStrategy
                 PADDLE_DIMENSIONS.y() / 2);
         GameObject middlePaddle = new SecondPaddle(topLeft, PADDLE_DIMENSIONS,
                 imageReader.readImage(PADDLE, false),
-                userInputListener, windowDimensions, paddleCounter, numOfHits,
+                userInputListener, windowDimensions, paddleCounter,
+                new Counter(4),
                 gameObjects);
         paddleCounter.increaseBy(1);
         gameObjects.addGameObject(middlePaddle);
