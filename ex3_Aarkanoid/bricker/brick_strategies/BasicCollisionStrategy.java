@@ -8,12 +8,12 @@ import danogl.util.Counter;
 /**
  * A class to remove a brick
  */
-public class RemoveBrickStrategy implements CollisionStrategy{
+public class BasicCollisionStrategy implements CollisionStrategy{
     private final GameObjectCollection gameObjects;
     private final Counter brickCounter;
 
-    public RemoveBrickStrategy(GameObjectCollection gameObjects,
-                               Counter brickCounter) {
+    public BasicCollisionStrategy(GameObjectCollection gameObjects,
+                                  Counter brickCounter) {
         this.gameObjects = gameObjects;
         this.brickCounter = brickCounter;
     }

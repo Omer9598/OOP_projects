@@ -6,12 +6,12 @@ import danogl.gui.ImageReader;
 import danogl.gui.UserInputListener;
 import danogl.util.Counter;
 import danogl.util.Vector2;
-import bricker.game_objects.SecondPaddle;
+import bricker.gameobjects.SecondPaddle;
 
 /**
  * A class that creates a second paddle
  */
-public class CreateSecondPaddle extends RemoveBrickStrategy
+public class CreateSecondPaddle extends BasicCollisionStrategy
         implements CollisionStrategy{
     private final GameObjectCollection gameObjects;
     private final ImageReader imageReader;

@@ -1,6 +1,6 @@
 package bricker.brick_strategies;
 
-import bricker.game_objects.Ball;
+import bricker.gameobjects.Ball;
 import bricker.main.BrickerGameManager;
 import danogl.collisions.GameObjectCollection;
 import danogl.gui.ImageReader;
@@ -78,7 +78,7 @@ public class BrickStrategyFactory {
                 new ExtraLifeStrategy(gameObjects, brickCounter,
                         livesCounter, heartDimensions, imageReader);
         collisionStrategiesArr[REGULAR_STRATEGY] =
-                new RemoveBrickStrategy(gameObjects, brickCounter);
+                new BasicCollisionStrategy(gameObjects, brickCounter);
     }
 
     /**

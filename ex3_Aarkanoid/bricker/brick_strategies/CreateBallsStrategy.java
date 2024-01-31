@@ -1,6 +1,6 @@
 package bricker.brick_strategies;
 
-import bricker.game_objects.Ball;
+import bricker.gameobjects.Ball;
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 import danogl.gui.ImageReader;
@@ -13,7 +13,7 @@ import danogl.util.Vector2;
 /**
  * This strategy will create 3 mock balls when a certain brick is collided
  */
-public class CreateBallsStrategy extends RemoveBrickStrategy
+public class CreateBallsStrategy extends BasicCollisionStrategy
         implements CollisionStrategy {
     private final GameObjectCollection gameObjects;
     private final ImageReader imageReader;

@@ -1,6 +1,6 @@
 package bricker.brick_strategies;
 
-import bricker.game_objects.Ball;
+import bricker.gameobjects.Ball;
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
@@ -11,7 +11,7 @@ import danogl.util.Vector2;
 /**
  * A class for camera change strategy
  */
-public class CameraChangeStrategy extends RemoveBrickStrategy
+public class CameraChangeStrategy extends BasicCollisionStrategy
         implements CollisionStrategy{
     private final Ball ball;
     private final BrickerGameManager brickerGameManager;

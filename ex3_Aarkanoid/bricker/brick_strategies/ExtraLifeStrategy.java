@@ -1,6 +1,6 @@
 package bricker.brick_strategies;
 
-import bricker.game_objects.WeightedHeart;
+import bricker.gameobjects.WeightedHeart;
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 import danogl.gui.ImageReader;
@@ -10,7 +10,7 @@ import danogl.util.Vector2;
 /**
  * A class for the extra life strategy
  */
-public class ExtraLifeStrategy extends RemoveBrickStrategy
+public class ExtraLifeStrategy extends BasicCollisionStrategy
         implements CollisionStrategy{
     private final Counter livesCounter;
     private final Vector2 dimensions;
