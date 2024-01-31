@@ -17,6 +17,10 @@ import danogl.util.Vector2;
  */
 public class BrickerGameManager extends GameManager {
     private static final int BORDERS = 12;
+    private static final String BRICK_PATH = "assets/Brick.png";
+    private static final String HEART_PATH = "assets/heart.png";
+    private static final String PADDLE_PATH = "assets/paddle.png";
+    private static final String BALL_PATH = "assets/ball.png";
     private Ball ball;
     public final Vector2 BALL_DIMENSIONS = new Vector2(20, 20);
     private Vector2 windowDimensions;
@@ -107,7 +111,7 @@ public class BrickerGameManager extends GameManager {
         int numOfLives = 3;
         GraphicLifeCounter hearts = new GraphicLifeCounter(heartsTopLeftCorner,
                 heartDimensions,
-                imageReader.readImage("assets/heart.png", true),
+                imageReader.readImage(HEART_PATH, true),
                 livesCounter, gameObjects(), numOfLives);
         gameObjects().addGameObject(hearts, Layer.BACKGROUND);
     }
@@ -201,7 +205,7 @@ public class BrickerGameManager extends GameManager {
                  colPixel += brickWidth + bricksGap) {
                 GameObject brick = new Brick(new Vector2(colPixel, rowPixel),
                         new Vector2(brickWidth, brickHeight),
-                        imageReader.readImage("assets/Brick.png", false),
+                        imageReader.readImage(BRICK_PATH, false),
                         brickStrategyFactory.getStrategy());
                 // adding the bricks to a static layer
                 gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
@@ -250,7 +254,7 @@ public class BrickerGameManager extends GameManager {
      */
     private void createPaddles(ImageReader imageReader,
                                UserInputListener userInputListener) {
-        Renderable paddleImage = imageReader.readImage("assets/paddle.png",
+        Renderable paddleImage = imageReader.readImage(PADDLE_PATH,
                 true);
         float gapPaddleToWindow = 40;
         // create user userPaddle
@@ -270,7 +274,7 @@ public class BrickerGameManager extends GameManager {
      */
     private void createBall(ImageReader imageReader, SoundReader soundReader) {
         // using the imageReader class from danogl
-        Renderable ballImage = imageReader.readImage("assets/ball.png",
+        Renderable ballImage = imageReader.readImage(BALL_PATH,
                 true);
         // creating the Ball (inheriting from gameObject) and adding it
         Sound collisionSound = soundReader.readSound(

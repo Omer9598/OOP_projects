@@ -19,6 +19,8 @@ public class CreateBallsStrategy extends BasicCollisionStrategy
     private final ImageReader imageReader;
     private final SoundReader soundReader;
     private final Vector2 MOCK_BALLS_DIMENSIONS = new Vector2(15, 15);
+    private static final String BALL_PATH = "assets/mockBall.png";
+    private static final String BALL_SOUND = "assets/blop_cut_silenced.wav";
 
     /**
      * Class constructor
@@ -50,9 +52,8 @@ public class CreateBallsStrategy extends BasicCollisionStrategy
             float yTopLeft = otherObj.getTopLeftCorner().y();
             Vector2 ballTopLeftCorner = new Vector2(xTopLeft, yTopLeft);
             Renderable ballImage = imageReader.readImage(
-                    "assets/mockBall.png", true);
-            Sound collisionSound = soundReader.readSound(
-                    "assets/blop_cut_silenced.wav");
+                    BALL_PATH, true);
+            Sound collisionSound = soundReader.readSound(BALL_SOUND);
             Ball mockBall = new Ball(ballTopLeftCorner, MOCK_BALLS_DIMENSIONS,
                     ballImage, collisionSound);
             mockBall.setBallRandomDirection();
