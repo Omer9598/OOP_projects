@@ -7,7 +7,6 @@ import danogl.util.Counter;
  * A class for the double-behaviour strategy
  */
 public class DoubledStrategy implements CollisionStrategy {
-
     private final CollisionStrategy firstStrategy;
     private final CollisionStrategy secondStrategy;
     private final Counter brickCounter;

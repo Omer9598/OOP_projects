@@ -2,13 +2,41 @@ omer_daniely
 206558835
 
 Exercise explanations:
-1. I created the classes according to the instructions in campus IL and the
-instruction given in the moodle.
-I divided the project to 3 packages:
-main - for the gameManager class that the main class is in.
-gameobjects - for all the game objects such as paddle, ball, second paddle...
-brick_strategies - for all the strategies of the bricks, each strategy is
-implemented in one class or more.
+1. To make bricks disappear, we created a new class called RemoveBrickStrategy,
+that removes the brick from the game objects and by that deletes the brick from
+view. In addition, it updates the number of bricks left in the game.
+Pros - a super class that other special bricks can inherit from and prevent
+code repetition.
+Cons - creates a small problem for the doubled or tripled behaviour - the brick
+counter needs to be updated manually in these cases
+
+2. We created a class for the numeric life counter, and for the graphic life
+counter.
+Both the numeric and graphic counters get a Counter called lifeCounter, and
+update the number of lives/ the graphic hearts:
+For the numeric, just the number changes according to the lifeCounter value,
+the change is made by overriding the update function of gameObject.
+For the graphic, we created a hearts array, initialized with the number of
+lives at the beginning of the game. We update the number of hearts and their
+rendering according to the lives counter.
+
+3. Explaining all the behaviours:
+MockBalls - creating 2 more ball objects with random direction, their size
+according to the instructions.
+Second_paddle - Created a class that initializes a counter called numOfHits
+to keep track of the number of hits to the second paddle so we can delete it
+when necessary.
+cameraChange - checking that the object that hits the brick is in the size of
+the regular ball to prevent mock balls to init the behaviour, also checking
+that the camera is null before changing it again. In addition, setting a
+counter to 5 hits of the regular ball to update the camera when needed.
+extraLife - creating a WeightedHeart object that collides only with the
+original paddle - this is done by overriding shouldCollideWith instance of
+paddle.
+
+4.
+
+// delete if not used:
 
 3. I limited the number of behaviors with a different class - if a doubled
 behavior is randomly picked, and then one of the strategies is another
@@ -16,4 +44,5 @@ doubled behavior, i create an instance of a class that implements 3 strategies
 to a single brick. The mentioned class inherits from DoubledStrategy class.
 
 4. If we want to expand the API to create more then 3 behaviors to a single
-brick, we can create a new class that implements the number of behaviors needed.
+brick, we can create a new class that implements the number of behaviors
+needed, that decorates the doubled behaviour class we implemented

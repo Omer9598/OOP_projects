@@ -16,6 +16,7 @@ public class ExtraLifeStrategy extends RemoveBrickStrategy
     private final Vector2 dimensions;
     private final ImageReader imageReader;
     private final GameObjectCollection gameObjects;
+    private static final String heartPath = "assets/heart.png";
 
     /**
      * Class constructor
@@ -43,7 +44,7 @@ public class ExtraLifeStrategy extends RemoveBrickStrategy
         // Creating a graphic heart
         GameObject fallingHeart = new WeightedHeart(heartTopLeftCorner,
                 dimensions,
-                imageReader.readImage("assets/heart.png", true),
+                imageReader.readImage(heartPath, true),
                 livesCounter, gameObjects);
         gameObjects.addGameObject(fallingHeart);
     }

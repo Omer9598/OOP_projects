@@ -17,6 +17,7 @@ public class NumericLifeCounter extends GameObject {
     private final Vector2 topLeftCorner;
     private final Vector2 dimensions;
     private GameObject textGameObject;
+    private static final String counterFormat = "Lives: %d";
 
     /**
      * Construct a new GameObject instance.
@@ -36,7 +37,7 @@ public class NumericLifeCounter extends GameObject {
         this.dimensions = dimensions;
         // creating the initial lives counter gameObject
         TextRenderable numericLives = new
-                TextRenderable(String.format("Lives: %d", numOfLives));
+                TextRenderable(String.format(counterFormat, numOfLives));
         this.textGameObject = new GameObject(topLeftCorner, dimensions,
                 numericLives);
         gameObjectCollection.addGameObject(textGameObject, Layer.BACKGROUND);
@@ -60,7 +61,7 @@ public class NumericLifeCounter extends GameObject {
             gameObjectCollection.removeGameObject(textGameObject,
                     Layer.BACKGROUND);
             TextRenderable numericLives = new TextRenderable(
-                    String.format("Lives: %d", livesCounter.value()));
+                    String.format(counterFormat, livesCounter.value()));
             textGameObject = new GameObject(topLeftCorner, dimensions,
                     numericLives);
             gameObjectCollection.addGameObject(textGameObject, Layer.BACKGROUND);

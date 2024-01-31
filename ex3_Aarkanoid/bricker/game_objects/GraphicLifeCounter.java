@@ -55,7 +55,7 @@ public class GraphicLifeCounter extends GameObject {
         float xCord = topLeftCorner.x();
         float yCord = topLeftCorner.y();
 
-        // creating the initial number of lives
+        // Creating the initial number of lives
         for (int i = 0; i < numOfLives; i++) {
             GameObject heart = createHeart(dimensions,
                     renderable, xCord, yCord);
