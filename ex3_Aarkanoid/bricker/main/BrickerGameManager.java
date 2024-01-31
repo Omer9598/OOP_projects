@@ -16,9 +16,9 @@ import danogl.util.Vector2;
  * A class for the game manager
  */
 public class BrickerGameManager extends GameManager {
-    private final int BORDERS = 12;
+    private static final int BORDERS = 12;
     private Ball ball;
-    private final Vector2 BALL_DIMENSIONS = new Vector2(20, 20);
+    public final Vector2 BALL_DIMENSIONS = new Vector2(20, 20);
     private Vector2 windowDimensions;
     private WindowController windowController;
     private final Counter brickCounter;

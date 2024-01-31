@@ -35,7 +35,9 @@ public class CameraChangeStrategy extends RemoveBrickStrategy
         // Deleting the brick hitted first
         super.onCollision(thisObj, otherObj);
         // Check if the main ball hitted the brick
-        if (!(otherObj instanceof Ball)) {
+        if (!otherObj.getDimensions().equals(
+                brickerGameManager.BALL_DIMENSIONS))
+        {
             return;
         }
         // Checking current camera
