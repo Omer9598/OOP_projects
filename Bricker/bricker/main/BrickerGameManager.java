@@ -22,6 +22,9 @@ public class BrickerGameManager extends GameManager {
     private static final String PADDLE_PATH = "assets/paddle.png";
     private static final String BALL_PATH = "assets/ball.png";
     private Ball ball;
+    /**
+     * The main ball's dimensions to differentiate it from mockBalls
+     */
     public final Vector2 BALL_DIMENSIONS = new Vector2(20, 20);
     private Vector2 windowDimensions;
     private WindowController windowController;

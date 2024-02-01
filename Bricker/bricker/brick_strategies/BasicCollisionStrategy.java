@@ -12,6 +12,9 @@ public class BasicCollisionStrategy implements CollisionStrategy{
     private final GameObjectCollection gameObjects;
     private final Counter brickCounter;
 
+    /**
+     * Strategy's constructor
+     */
     public BasicCollisionStrategy(GameObjectCollection gameObjects,
                                   Counter brickCounter) {
         this.gameObjects = gameObjects;

@@ -10,6 +10,9 @@ public class TripledStrategy extends DoubledStrategy{
     private final CollisionStrategy thirdStrategy;
     private final Counter brickCounter;
 
+    /**
+     * Constructor of the class
+     */
     public TripledStrategy(CollisionStrategy firstStrategy,
                            CollisionStrategy secondStrategy,
                            CollisionStrategy thirdStrategy,
