@@ -15,6 +15,7 @@ import java.util.Random;
  * A factory to build brick strategies
  */
 public class BrickStrategyFactory {
+    private static final int STRATEGY_POSSIBILITIES = 10;
     private final GameObjectCollection gameObjects;
     private final Counter brickCounter;
     private final Counter paddleCounter;
@@ -95,15 +96,15 @@ public class BrickStrategyFactory {
      */
     public CollisionStrategy getStrategy() {
         Random random = new Random();
-        int randomStrategy = random.nextInt(10);
+        int randomStrategy = random.nextInt(STRATEGY_POSSIBILITIES);
         switch (randomStrategy) {
             case MOCK_BALLS, SECOND_PADDLE, CAMERA_CHANGE, EXTRA_LIFE -> {
                 return getSpecialStrategy(randomStrategy);
             }
             case DOUBLED_BEHAVIOR -> {
                 // 2 new random numbers - not including regular behavior
-                int firstRandom = random.nextInt(5);
-                int secondRandom = random.nextInt(5);
+                int firstRandom = random.nextInt(REGULAR_STRATEGY);
+                int secondRandom = random.nextInt(REGULAR_STRATEGY);
                 if(firstRandom == DOUBLED_BEHAVIOR ||
                         secondRandom == DOUBLED_BEHAVIOR) {
                     return getTripledStrategy();

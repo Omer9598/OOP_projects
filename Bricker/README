@@ -1,4 +1,4 @@
-omer_daniely
+omer_daniely, omri_porat
 206558835
 
 Exercise explanations:
@@ -34,15 +34,17 @@ extraLife - creating a WeightedHeart object that collides only with the
 original paddle - this is done by overriding shouldCollideWith instance of
 paddle.
 
-4.
-
-// delete if not used:
-
-3. I limited the number of behaviors with a different class - if a doubled
-behavior is randomly picked, and then one of the strategies is another
-doubled behavior, i create an instance of a class that implements 3 strategies
-to a single brick. The mentioned class inherits from DoubledStrategy class.
-
-4. If we want to expand the API to create more then 3 behaviors to a single
+4. We implemented the doubled behaviour class with a decorator class called
+DoubledStrategy that inherits from BasicCollisionStrategy class. In this class
+we randomly pick 2 special behaviours. If a doubled behavior is randomly
+picked, and then one of the strategies is another doubled behavior, we create
+an instance of a class that implements 3 strategies to a single brick.
+The mentioned class inherits from DoubledStrategy class and acts as a
+decorator of the DoubledStrategy class.
+If we want to expand the API to create more then 3 behaviors to a single
 brick, we can create a new class that implements the number of behaviors
-needed, that decorates the doubled behaviour class we implemented
+needed, that decorates the doubled behaviour class we implemented with minimal
+code change
+
+5. We didn't change the implementation of the first part, only expanding it.
+

@@ -17,7 +17,7 @@ import danogl.util.Vector2;
  */
 public class BrickerGameManager extends GameManager {
     private static final int BORDERS = 12;
-    private static final String BRICK_PATH = "assets/Brick.png";
+    private static final String BRICK_PATH = "assets/brick.png";
     private static final String HEART_PATH = "assets/heart.png";
     private static final String PADDLE_PATH = "assets/paddle.png";
     private static final String BALL_PATH = "assets/ball.png";
