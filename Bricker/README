@@ -1,5 +1,5 @@
-omer_daniely, omri_porat
-206558835
+omer_daniely, omriporat
+206558835, 209043025
 
 Exercise explanations:
 1. To make bricks disappear, we created a new class called RemoveBrickStrategy,
