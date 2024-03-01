@@ -2,11 +2,12 @@ package ascii_art;
 
 import ascii_art.img_to_char.BrightnessImgCharMatcher;
 import ascii_output.AsciiOutput;
+import ascii_output.ConsoleAsciiOutput;
 import ascii_output.HtmlAsciiOutput;
 import image.Image;
 
+import java.io.IOException;
 import java.util.HashSet;
-import java.util.Scanner;
 import java.util.Set;
 
 public class Shell {
@@ -16,7 +17,7 @@ public class Shell {
     private static final String ADD_COMMAND = "add";
     private static final String REMOVE_COMMAND = "remove";
     private static final String RESOLUTION_COMMAND = "res";
-    private static final String RENDER_COMMAND = "render";
+    private static final String OUTPUT_COMMAND = "output";
     private static final String FONT_NAME = "Courier New";
     private static final String OUTPUT_FILENAME = "out.html";
     private static final String INCORRECT_COMMAND = "Did not execute due to" +
@@ -26,34 +27,53 @@ public class Shell {
     private static final String EXCEED_BOUNDARIES = "Did not change" +
             " resolution due to exceeding boundaries.";
     private static final String RES_MESSAGE = "Resolution set to %d%n";
+    private static final String RES_UP = "up";
+    private static final String RES_DOWN = "down";
     private static final char[] INITIAL_CHARS_RANGE = new char[] {'0', '9'};
     private static final int INITIAL_CHARS_IN_ROW = 128;
     private static final int MIN_PIXELS_PER_CHAR = 2;
     private static final String INCORRECT_RESOLUTION_COMMAND = "Did not" +
             " change resolution due to incorrect format.";
-    private final int minCharsInRow;
-    private final int maxCharsInRow;
+    private static final String HTML_OUTPUT = "html";
+    private static final String CONSOLE_OUTPUT = "console";
+    private static final String INVALID_OUTPUT = "Did not change output" +
+            " method due to incorrect format.";
+    private static final String ASCII_ART_COMMAND = "asciiArt";
+    private static final String CHARSET_EMPTY = "Did not execute. Charset" +
+            " is empty.";
+    private static final String IMAGE_COMMAND = "image";
+    private static final String IMAGE_NOT_LOADED = "Did not execute due " +
+            "to problem with image file.";
+    private Image image;
+    private int minCharsInRow;
+    private int maxCharsInRow;
     private int charsInRow;
-    private final BrightnessImgCharMatcher charMatcher;
-    private final AsciiOutput output;
+    private BrightnessImgCharMatcher charMatcher;
+    private final HtmlAsciiOutput htmlAsciiOutput;
+    private final ConsoleAsciiOutput consoleAsciiOutput;
+    private AsciiOutput asciiOutput;
     private final Set<Character> charSet = new HashSet<>();
 
-    public Shell(Image img) {
-        this.minCharsInRow = Math.max(1, img.getWidth() / img.getHeight());
-        this.maxCharsInRow = img.getWidth() / MIN_PIXELS_PER_CHAR;
-        this.charsInRow = Math.max(Math.min(INITIAL_CHARS_IN_ROW,
-                maxCharsInRow), minCharsInRow);
-        this.charMatcher = new BrightnessImgCharMatcher(img, FONT_NAME);
-        this.output = new HtmlAsciiOutput(OUTPUT_FILENAME, FONT_NAME);
-        // default charSet
+    /**
+     * Constructor to the shell
+     */
+    public Shell() {
+        this.htmlAsciiOutput = new HtmlAsciiOutput(OUTPUT_FILENAME,
+                FONT_NAME);
+        this.consoleAsciiOutput = new ConsoleAsciiOutput();
+        // Default parameters
+        this.asciiOutput = consoleAsciiOutput;
         addChars(INITIAL_CHARS_RANGE);
+        // todo - check what is the default image if there is one
+        this.image = null;
     }
 
+    /**
+     * This function will run the asciiArt
+     */
     public void run() throws Exception {
-        // todo - use only KeyboardInput that they gave us
-        Scanner scanner = new Scanner(System.in);
         System.out.print(">>> ");
-        String cmd = scanner.nextLine().trim();
+        String cmd = KeyboardInput.readLine();
         String[] words = cmd.split("\\s+");
         while (!words[0].equalsIgnoreCase(CMD_EXIT)) {
             // checking if the input is one of the commands
@@ -61,25 +81,54 @@ public class Shell {
                 case CHARS_COMMAND -> showChars();
                 case ADD_COMMAND, REMOVE_COMMAND -> AddRemoveCommands(words);
                 case RESOLUTION_COMMAND -> resChange(words);
-                case RENDER_COMMAND -> render();
+                case IMAGE_COMMAND -> image_change(words[1]);
+                case OUTPUT_COMMAND -> output(words[1]);
+                case ASCII_ART_COMMAND -> asciiArt();
                 default -> throw new Exception(INCORRECT_COMMAND);
             }
             // Moving to the next command
             System.out.print(">>> ");
-            cmd = scanner.nextLine().trim();
+            cmd = KeyboardInput.readLine();
             words = cmd.split("\\s+");
         }
     }
 
-    /**
-     * This function will create the HTML file
-     */
-    private void render() {
+    private void image_change(String filePath) throws IOException {
+        image = Image.fromFile(filePath);
+        if(image == null) {
+            throw new IOException(IMAGE_NOT_LOADED);
+        }
+        this.minCharsInRow = Math.max(1, image.getWidth()
+                / image.getHeight());
+        this.maxCharsInRow = image.getWidth() / MIN_PIXELS_PER_CHAR;
+        this.charsInRow = Math.max(Math.min(INITIAL_CHARS_IN_ROW,
+                maxCharsInRow), minCharsInRow);
+        this.charMatcher = new BrightnessImgCharMatcher(image, FONT_NAME);
+    }
+
+    private void asciiArt() throws Exception {
         // Creating the ascii array
+        if(charSet.isEmpty()) {
+            throw new Exception(CHARSET_EMPTY);
+        }
         Character[] charArray = charSet.toArray(new Character[0]);
         char[][] asciiArray = charMatcher.chooseChars(charsInRow, charArray);
-        // Creating the html file
-        output.output(asciiArray);
+        asciiOutput.out(asciiArray);
+    }
+
+    /**
+     * This function will change the output of the asciiArt image
+     */
+    private void output(String render) throws Exception {
+        if(render.equals(HTML_OUTPUT)) {
+            asciiOutput = htmlAsciiOutput;
+            return;
+        }
+        if(render.equals(CONSOLE_OUTPUT)) {
+            asciiOutput = consoleAsciiOutput;
+            return;
+        }
+        throw new Exception(INVALID_OUTPUT);
     }
 
     /**
@@ -90,10 +139,10 @@ public class Shell {
     private void resChange(String[] words) throws Exception {
         // Checking valid command after "res"
         if(words.length != 2 ||
-                (!words[1].equals("up") && !words[1].equals("down"))) {
+                (!words[1].equals(RES_UP) && !words[1].equals(RES_DOWN))) {
             throw new Exception(INCORRECT_RESOLUTION_COMMAND);
         }
-        if(words[1].equals("up")) {
+        if(words[1].equals(RES_UP)) {
             // checking we are not exceeding the maxCharsIn
             if(charsInRow == maxCharsInRow) {
                 throw new Exception(EXCEED_BOUNDARIES);
@@ -101,7 +150,7 @@ public class Shell {
             // Changing the resolution
             charsInRow = charsInRow * 2;
         }
-        if(words[1].equals("down")) {
+        if(words[1].equals(RES_DOWN)) {
             if(charsInRow == minCharsInRow) {
                 throw new Exception(EXCEED_BOUNDARIES);
             }
@@ -196,7 +245,7 @@ public class Shell {
                     char singleChar = word.charAt(0);
                     returnValue = new char[] {singleChar, singleChar};
                 }
-                if(word.length() == 3) {
+                if(word.length() == 3 && word.charAt(1) == '-') {
                     returnValue = new char[] {word.charAt(0), word.charAt(2)};
                 }
             }

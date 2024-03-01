@@ -15,6 +15,6 @@ public class Driver {
                     + args[0]);
             return;
         }
-        new Shell(img).run();
+        new Shell().run();
     }
 }
