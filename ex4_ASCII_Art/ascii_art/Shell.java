@@ -19,9 +19,18 @@ public class Shell {
     private static final String RENDER_COMMAND = "render";
     private static final String FONT_NAME = "Courier New";
     private static final String OUTPUT_FILENAME = "out.html";
+    private static final String INCORRECT_COMMAND = "Did not execute due to" +
+            " incorrect command.";
+    private static final String INCORRECT_FORMAT = "Did not add due to" +
+            " incorrect format.";
+    private static final String EXCEED_BOUNDARIES = "Did not change" +
+            " resolution due to exceeding boundaries.";
+    private static final String RES_MESSAGE = "Resolution set to %d%n";
     private static final char[] INITIAL_CHARS_RANGE = new char[] {'0', '9'};
-    private static final int INITIAL_CHARS_IN_ROW = 64;
+    private static final int INITIAL_CHARS_IN_ROW = 128;
     private static final int MIN_PIXELS_PER_CHAR = 2;
+    private static final String INCORRECT_RESOLUTION_COMMAND = "Did not" +
+            " change resolution due to incorrect format.";
     private final int minCharsInRow;
     private final int maxCharsInRow;
     private int charsInRow;
@@ -41,6 +50,7 @@ public class Shell {
     }
 
     public void run() throws Exception {
+        // todo - use only KeyboardInput that they gave us
         Scanner scanner = new Scanner(System.in);
         System.out.print(">>> ");
         String cmd = scanner.nextLine().trim();
@@ -52,8 +62,7 @@ public class Shell {
                 case ADD_COMMAND, REMOVE_COMMAND -> AddRemoveCommands(words);
                 case RESOLUTION_COMMAND -> resChange(words);
                 case RENDER_COMMAND -> render();
-                default -> throw new Exception("Did not executed due to" +
-                        " incorrect command");
+                default -> throw new Exception(INCORRECT_COMMAND);
             }
             // Moving to the next command
             System.out.print(">>> ");
@@ -82,26 +91,24 @@ public class Shell {
         // Checking valid command after "res"
         if(words.length != 2 ||
                 (!words[1].equals("up") && !words[1].equals("down"))) {
-            throw new Exception("Did not executed due to incorrect command");
+            throw new Exception(INCORRECT_RESOLUTION_COMMAND);
         }
         if(words[1].equals("up")) {
             // checking we are not exceeding the maxCharsIn
             if(charsInRow == maxCharsInRow) {
-                throw new
-                        Exception("Did not change due to exceeding boundaries");
+                throw new Exception(EXCEED_BOUNDARIES);
             }
             // Changing the resolution
             charsInRow = charsInRow * 2;
         }
         if(words[1].equals("down")) {
             if(charsInRow == minCharsInRow) {
-                throw new
-                        Exception("Did not change due to exceeding boundaries");
+                throw new Exception(EXCEED_BOUNDARIES);
             }
             charsInRow = charsInRow / 2;
         }
         // Change made successfully, print the new resolution:
-        System.out.printf("Width set to %d%n", charsInRow);
+        System.out.printf(RES_MESSAGE, charsInRow);
         }
 
     /**
@@ -114,7 +121,7 @@ public class Shell {
         if(words.length == 2) {
             char[] parseCharRange = parseCharRange(words[1]);
             if(parseCharRange == null) {
-                throw new Exception("Did not add due to incorrect format");
+                throw new Exception(INCORRECT_FORMAT);
             }
             if (words[0].equals(ADD_COMMAND)) {
                 addChars(parseCharRange);
@@ -126,7 +133,7 @@ public class Shell {
             }
         }
         // words.length < 2 or words[1] is not a valid command
-        throw new Exception("Did not add due to incorrect format");
+        throw new Exception(INCORRECT_FORMAT);
     }
 
     /**
