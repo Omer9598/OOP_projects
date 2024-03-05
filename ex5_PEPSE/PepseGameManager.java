@@ -52,7 +52,10 @@ public class PepseGameManager extends GameManager {
         gameObjects().layers().shouldLayersCollide(LEAVES_LAYER, TERRAIN_LAYER,
                 true);
         Vector2 windowDimensions = windowController.getWindowDimensions();
-        Sky.create(gameObjects(), windowDimensions, SKY_LAYER);
+
+        GameObject sky = Sky.create(windowDimensions);
+        gameObjects().addGameObject(sky, SKY_LAYER);
+
         Night.create(gameObjects(), windowDimensions, CYCLE_LENGTH, NIGHT_LAYER);
         leftBorder = Terrain.changeMinMaxX(MIN_X_TERRAIN, false);
         rightBorder = Terrain.changeMinMaxX(MAX_X_TERRAIN, true);
@@ -142,6 +145,9 @@ public class PepseGameManager extends GameManager {
         }
     }
 
+    /**
+     * Main function of the game
+     */
     public static void main(String[] args) {
         new PepseGameManager().run();
     }
