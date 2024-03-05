@@ -1,26 +1,28 @@
 package pepse.world;
 
-import danogl.collisions.GameObjectCollection;
+
+import danogl.collisions.Layer;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import pepse.util.NoiseGenerator;
 
 public class Terrain {
-    private final GameObjectCollection gameObjects;
-    private final int groundLayer;
     private final int seed;
-    private static final float TERRAIN_DEPTH = 18;
-    private static final Color BASE_GROUND_COLOR = new Color(180, 115, 50);
+    private static final float TERRAIN_DEPTH = 20;
+    private static final int TERRAIN_LAYER = Layer.STATIC_OBJECTS;
+    private static final String GROUND_TAG = "ground block";
+    private final float groundHeightAtX0;
+    private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
     private final Vector2 windowDimensions;
-    public Terrain(GameObjectCollection gameObjects,
-                   int groundLayer, Vector2 windowDimensions,
-                   int seed) {
-        this.gameObjects = gameObjects;
-        this.groundLayer = groundLayer;
+    public Terrain(Vector2 windowDimensions, int seed) {
         this.seed = seed;
         this.windowDimensions = windowDimensions;
+        this.groundHeightAtX0 = windowDimensions.y() * 2 / 3;
     }
 
     /**
@@ -29,49 +31,67 @@ public class Terrain {
      * The y value will be determined by the Perlin NoiseGenerator function
      */
     public float groundHeightAt(float x) {
-        NoiseGenerator perlinFunction = new NoiseGenerator(seed);
-        float value = (float) (windowDimensions.y()
-                -perlinFunction.noise(x / (Block.SIZE))
-                * windowDimensions.y() - windowDimensions.y() / 3);
-        return changeMinMaxX(value, true);
+        NoiseGenerator perlinFunction = new NoiseGenerator(seed,
+                (int) groundHeightAtX0);
+        float noise = (float) perlinFunction.noise(x, Block.SIZE * 2);
+        return groundHeightAtX0 + noise;
     }
 
     /**
      * This function will create the terrain in the game, using groundHeightAt
      * function to determine the height
      */
-    public void createInRange(float minX, float maxX) {
-        // Change the minX and maxX to be divided by Block.SIZE
-        minX = changeMinMaxX(minX, true);
-        maxX = changeMinMaxX(maxX, false);
-        // Creating the terrain
-        for (float xVal = minX; xVal < maxX; xVal += Block.SIZE) {
-            float yVal = ((int)(groundHeightAt(xVal) / Block.SIZE)) * Block.SIZE;
-            // Setting only the 2 first layers to be solid ground
-            int layer = groundLayer;
-            for (int depth = 0; depth < TERRAIN_DEPTH; depth++) {
-                RectangleRenderable renderable =
-                        new RectangleRenderable(ColorSupplier.approximateColor
+     public List<Block> createInRange(float minX, float maxX) {
+         List<Block> terrain = new ArrayList<>();
+         // Change the minX and maxX to be divided by Block.SIZE
+         minX = changeMinMaxX(minX, true);
+         maxX = changeMinMaxX(maxX, false);
+
+         for(float xVal = minX; xVal < maxX; xVal += Block.SIZE) {
+             float yVal = ((int)(groundHeightAt(xVal) / Block.SIZE))
+                     * Block.SIZE;
+             for(int depth = 0; depth < TERRAIN_DEPTH; depth++) {
+                 RectangleRenderable renderable = new
+                         RectangleRenderable(ColorSupplier.approximateColor
                                 (BASE_GROUND_COLOR));
-                if(depth < 2) {
-                    layer = groundLayer;
-                }
-                createBlock(renderable, xVal, yVal, "ground block", layer);
-                yVal += Block.SIZE;
-                layer = groundLayer - 1;
-            }
-        }
-    }
+                 terrain.add(createBlock(renderable, xVal, yVal));
+                 yVal += Block.SIZE;
+             }
+         }
+         return terrain;
+     }
+//    public List<Block> createInRange(float minX, float maxX) {
+//        // Change the minX and maxX to be divided by Block.SIZE
+//        minX = changeMinMaxX(minX, true);
+//        maxX = changeMinMaxX(maxX, false);
+//        // Creating the terrain
+//        for (float xVal = minX; xVal < maxX; xVal += Block.SIZE) {
+//            float yVal = ((int)(groundHeightAt(xVal) / Block.SIZE)) * Block.SIZE;
+//            // Setting only the 2 first layers to be solid ground
+//            int layer = groundLayer;
+//            for (int depth = 0; depth < TERRAIN_DEPTH; depth++) {
+//                RectangleRenderable renderable =
+//                        new RectangleRenderable(ColorSupplier.approximateColor
+//                                (BASE_GROUND_COLOR));
+//                if(depth < 2) {
+//                    layer = groundLayer;
+//                }
+//                createBlock(renderable, xVal, yVal, "ground block", layer);
+//                yVal += Block.SIZE;
+//                layer = groundLayer - 1;
+//            }
+//        }
+//    }
 
     /**
      * This function will create a single ground block
      */
-    public void createBlock(RectangleRenderable renderable, float xVal,
-                            float yVal, String tag, int layer) {
+    private Block createBlock(RectangleRenderable renderable, float xVal,
+                            float yVal) {
         Vector2 blockPosition = new Vector2(xVal, yVal);
         Block block = new Block(blockPosition, renderable);
-        gameObjects.addGameObject(block, layer);
-        block.setTag(tag);
+        block.setTag(GROUND_TAG);
+        return block;
     }
 
     /**

@@ -1,14 +1,29 @@
 package pepse.util;
 
+import java.util.Random;
 
 public class NoiseGenerator {
     private double seed;
     private long default_size;
     private int[] p;
     private int[] permutation;
+    private double startPoint;
 
-    public NoiseGenerator(double seed) {
+    /**
+     * The constructor of the NoiseGenerator class.
+     *
+     * @param seed can be anything you want (even 1234 or new Random().nextGaussian()).
+     *             This seed is the basis of the random generator, which
+     *             will draw upon it to generate pseudo-random noise.
+     *
+     * @param startPoint is a relative point that the noise will be generated from.
+     *                   In our case it should be your ground height at X0 (specified in
+     *                   ex4 when we talk about the terrain: 2.2.1).
+     *
+     */
+    public NoiseGenerator(double seed, int startPoint) {
         this.seed = seed;
+        this.startPoint = startPoint;
         init();
     }
 
@@ -44,20 +59,34 @@ public class NoiseGenerator {
 
     }
 
-    public double noise(double x) {
+    /**
+     * Noise is responsible to generate pseudo random noise according to the seed given upon constructing the object.
+     *
+     * @param x the wanted x to receive noise for (in our case, the x coordinate of the terrain you'd want to create).
+     * @param factor describes how large the noise should be (play with it, but BLOCK_SIZE *7 should be enough).
+     * @return returns a noise you should *add* to the groundHeightAtX0 you have.
+     *
+     * example:
+     * public float groundHeightAt(float x) {
+     *           float noise = (float) noiseGenerator.noise(x, BLOCK_SIZE *7);
+     *           return groundHeightAtX0 + noise;
+     *       }
+     *
+     */
+    public double noise(double x, double factor) {
         double value = 0.0;
-        double size = default_size;
-        double initialSize = size;
+        double currentPoint = startPoint;
 
-        while (size >= 1) {
-            value += smoothNoise((x / size), (0f / size), (0f / size)) * size;
-            size /= 2.0;
+        while (currentPoint >= 1) {
+            value += smoothNoise((x / currentPoint), 0, 0) * currentPoint;
+            currentPoint /= 2.0;
         }
 
-        return (value / initialSize);
+        return value * factor / startPoint;
     }
 
-    public double smoothNoise(double x, double y, double z) {
+
+    private double smoothNoise(double x, double y, double z) {
         // Offset each coordinate by the seed value
         x += this.seed;
         y += this.seed;
@@ -104,7 +133,6 @@ public class NoiseGenerator {
         int h = hash & 15; // CONVERT LO 4 BITS OF HASH CODE
         double u = h < 8 ? x : y, // INTO 12 GRADIENT DIRECTIONS.
                 v = h < 4 ? y : h == 12 || h == 14 ? x : z;
-//        return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
-        return (((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v))/5;
+        return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
     }
 }

@@ -17,6 +17,7 @@ import pepse.world.daynight.SunHalo;
 import pepse.world.trees.Tree;
 
 import java.awt.*;
+import java.util.List;
 
 public class PepseGameManager extends GameManager {
     private static final int MIN_X_TERRAIN = -180;
@@ -87,9 +88,11 @@ public class PepseGameManager extends GameManager {
     }
 
     private Terrain createTerrain(Vector2 windowDimensions) {
-        Terrain terrain = new Terrain(gameObjects(), TERRAIN_LAYER,
-                windowDimensions, 5);
-        terrain.createInRange(leftBorder, rightBorder);
+        Terrain terrain = new Terrain(windowDimensions, 5);
+        List<Block> blocksList = terrain.createInRange(leftBorder, rightBorder);
+        for(Block block: blocksList) {
+            gameObjects().addGameObject(block);
+        }
         return terrain;
     }
 

@@ -50,7 +50,7 @@ public class Tree {
                     RectangleRenderable treeRenderable =
                             new RectangleRenderable(ColorSupplier.approximateColor(
                                     TREE_TRUNK_COLOR));
-                    terrain.createBlock(treeRenderable, xVal, yVal,
+                    createTreeBlock(treeRenderable, xVal, yVal,
                             "tree block", treesLayer);
                     yVal -= Block.SIZE;
                 }
@@ -58,6 +58,17 @@ public class Tree {
                 createTreeTop(xVal, yVal);
             }
         }
+    }
+
+    /**
+     * This function will create a single tree block
+     */
+    private void createTreeBlock(RectangleRenderable renderable, float xVal,
+                                 float yVal, String tag, int layer) {
+        Vector2 blockPosition = new Vector2(xVal, yVal);
+        Block block = new Block(blockPosition, renderable);
+        gameObjects.addGameObject(block, layer);
+        block.setTag(tag);
     }
 
     /**
