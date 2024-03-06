@@ -16,7 +16,6 @@ import pepse.world.daynight.Sun;
 import pepse.world.daynight.SunHalo;
 import pepse.world.trees.Tree;
 
-import java.awt.*;
 import java.util.List;
 
 public class PepseGameManager extends GameManager {
@@ -28,7 +27,6 @@ public class PepseGameManager extends GameManager {
     private static float rightBorder;
     private static float avatarPrevX;
     private static Avatar avatar;
-    private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
     // Game layers - in ascending order
     private static final int SKY_LAYER = Layer.BACKGROUND;
     private static final int SUN_LAYER = Layer.BACKGROUND + 1;
@@ -84,9 +82,11 @@ public class PepseGameManager extends GameManager {
     }
 
     private void createSunAndHalo(Vector2 windowDimensions) {
-        GameObject sun = Sun.create(windowDimensions, CYCLE_LENGTH,
-                gameObjects(),SUN_LAYER);
-        SunHalo.create(gameObjects(), sun, SUN_HALO_COLOR, SUN_HALO_LAYER);
+        GameObject sun = Sun.create(windowDimensions, CYCLE_LENGTH);
+        gameObjects().addGameObject(sun, SUN_LAYER);
+        GameObject sunHalo = SunHalo.create(sun);
+        gameObjects().addGameObject(sunHalo, SUN_HALO_LAYER);
+        SunHalo.create(sun);
     }
 
     private Terrain createTerrain(Vector2 windowDimensions) {
