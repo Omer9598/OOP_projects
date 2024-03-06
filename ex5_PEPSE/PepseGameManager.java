@@ -22,7 +22,7 @@ import java.util.List;
 public class PepseGameManager extends GameManager {
     private static final int MIN_X_TERRAIN = -180;
     private static final int MAX_X_TERRAIN = 1710;
-    private static final int CYCLE_LENGTH = 50;
+    private static final int CYCLE_LENGTH = 30;
     private static final float worldChunk = Block.SIZE * 5;
     private static float leftBorder;
     private static float rightBorder;
@@ -57,7 +57,9 @@ public class PepseGameManager extends GameManager {
         GameObject sky = Sky.create(windowDimensions);
         gameObjects().addGameObject(sky, SKY_LAYER);
 
-        Night.create(gameObjects(), windowDimensions, CYCLE_LENGTH, NIGHT_LAYER);
+        GameObject night = Night.create(windowDimensions, CYCLE_LENGTH);
+        gameObjects().addGameObject(night, NIGHT_LAYER);
+
         leftBorder = Terrain.changeMinMaxX(MIN_X_TERRAIN, false);
         rightBorder = Terrain.changeMinMaxX(MAX_X_TERRAIN, true);
         terrain = createTerrain(windowDimensions);
