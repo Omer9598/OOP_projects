@@ -1,27 +1,22 @@
 package pepse.world;
 
 
-import danogl.collisions.Layer;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
+import pepse.util.NoiseGenerator;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import pepse.util.NoiseGenerator;
-
 public class Terrain {
     private final int seed;
     private static final float TERRAIN_DEPTH = 20;
-    private static final int TERRAIN_LAYER = Layer.STATIC_OBJECTS;
     private static final String GROUND_TAG = "ground block";
     private final float groundHeightAtX0;
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
-    private final Vector2 windowDimensions;
     public Terrain(Vector2 windowDimensions, int seed) {
         this.seed = seed;
-        this.windowDimensions = windowDimensions;
         this.groundHeightAtX0 = windowDimensions.y() * 2 / 3;
     }
 
@@ -60,28 +55,6 @@ public class Terrain {
          }
          return terrain;
      }
-//    public List<Block> createInRange(float minX, float maxX) {
-//        // Change the minX and maxX to be divided by Block.SIZE
-//        minX = changeMinMaxX(minX, true);
-//        maxX = changeMinMaxX(maxX, false);
-//        // Creating the terrain
-//        for (float xVal = minX; xVal < maxX; xVal += Block.SIZE) {
-//            float yVal = ((int)(groundHeightAt(xVal) / Block.SIZE)) * Block.SIZE;
-//            // Setting only the 2 first layers to be solid ground
-//            int layer = groundLayer;
-//            for (int depth = 0; depth < TERRAIN_DEPTH; depth++) {
-//                RectangleRenderable renderable =
-//                        new RectangleRenderable(ColorSupplier.approximateColor
-//                                (BASE_GROUND_COLOR));
-//                if(depth < 2) {
-//                    layer = groundLayer;
-//                }
-//                createBlock(renderable, xVal, yVal, "ground block", layer);
-//                yVal += Block.SIZE;
-//                layer = groundLayer - 1;
-//            }
-//        }
-//    }
 
     /**
      * This function will create a single ground block

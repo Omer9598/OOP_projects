@@ -91,7 +91,7 @@ public class PepseGameManager extends GameManager {
         Terrain terrain = new Terrain(windowDimensions, 5);
         List<Block> blocksList = terrain.createInRange(leftBorder, rightBorder);
         for(Block block: blocksList) {
-            gameObjects().addGameObject(block);
+            gameObjects().addGameObject(block, TERRAIN_LAYER);
         }
         return terrain;
     }
