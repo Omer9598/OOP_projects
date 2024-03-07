@@ -1,16 +1,14 @@
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
+import danogl.components.CoordinateSpace;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.gui.rendering.Camera;
 import danogl.util.Vector2;
-import pepse.world.Avatar;
-import pepse.world.Block;
-import pepse.world.Sky;
-import pepse.world.Terrain;
+import pepse.world.*;
 import pepse.world.daynight.Night;
 import pepse.world.daynight.Sun;
 import pepse.world.daynight.SunHalo;
@@ -30,11 +28,11 @@ public class PepseGameManager extends GameManager {
     // Game layers - in ascending order
     private static final int SKY_LAYER = Layer.BACKGROUND;
     private static final int SUN_LAYER = Layer.BACKGROUND + 1;
+    private static final int ENERGY_DISPLAY_LAYER = Layer.BACKGROUND + 5;
     private static final int SUN_HALO_LAYER = Layer.BACKGROUND + 10;
     private static final int TERRAIN_LAYER = Layer.STATIC_OBJECTS;
     private static final int TREE_TRUNKS_LAYER = Layer.STATIC_OBJECTS + 10;
     private static final int LEAVES_LAYER = Layer.STATIC_OBJECTS + 20;
-//        private static final int GAME_OBJECTS_LAYER = Layer.STATIC_OBJECTS + 30;
     private static final int AVATAR_LAYER = Layer.DEFAULT;
     private static final int NIGHT_LAYER = Layer.FOREGROUND;
     private static Terrain terrain;
@@ -66,12 +64,20 @@ public class PepseGameManager extends GameManager {
         float avatarYCord = terrain.groundHeightAt(windowDimensions.x() * 2)
                 - Block.SIZE * 2;
         avatarPrevX = windowDimensions.x() * 0.5f;
-        avatar = Avatar.create(gameObjects(), AVATAR_LAYER,
-                new Vector2(avatarPrevX, avatarYCord),
+
+        avatar = new Avatar(new Vector2(avatarPrevX, avatarYCord),
                 inputListener, imageReader);
+        gameObjects().addGameObject(avatar, AVATAR_LAYER);
+
         setCamera(new Camera(avatar,
                 windowDimensions.mult(0.5f).subtract(avatar.getCenter()),
                 windowDimensions, windowDimensions));
+
+        EnergyDisplay energyDisplay = new EnergyDisplay();
+        avatar.setEnergyChangeCallback(energyDisplay);
+        GameObject energy = energyDisplay.getDisplayObject();
+        energy.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
+        gameObjects().addGameObject(energy, ENERGY_DISPLAY_LAYER);
     }
 
     private Tree createTrees(Terrain terrain) {
