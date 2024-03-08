@@ -1,11 +1,13 @@
 package pepse.world;
 
 import danogl.GameObject;
+import danogl.collisions.Collision;
 import danogl.gui.ImageReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.AnimationRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+import pepse.world.trees.Fruit;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -82,13 +84,6 @@ public class Avatar extends GameObject {
         }
         // Notify energy change with the callback
         energyChangeCallback.onEnergyChanged(energy);
-    }
-
-    /**
-     * Add energy to the avatar
-     */
-    public void addEnergy(int amount) {
-        energy += amount;
     }
 
     /**

@@ -19,7 +19,11 @@ import java.util.Random;
 public class Flora {
     private static final Color TREE_TRUNK_COLOR = new Color(100, 50, 20);
     private static final Color LEAVES_COLOR = new Color(50, 200, 30);
-    private static final String TRUNKS_TAG = "trunk";
+    private static final float FRUIT_PROBABILITY = 0.9f;
+    /**
+     * The tag of a tree trunk
+     */
+    public static final String TRUNKS_TAG = "trunk";
     private final Random random = new Random();
     private final int treeHeight;
     private final Terrain terrain;
@@ -65,6 +69,14 @@ public class Flora {
     }
 
     /**
+     * This function will create a single fruit
+     */
+    private Block createFruit(float xVal, float yVal) {
+        Vector2 fruitPosition = new Vector2(xVal, yVal);
+        return new Fruit(fruitPosition);
+    }
+
+    /**
      * This function will create a single tree block
      */
     private Block createTreeBlock(RectangleRenderable renderable, float xVal,
@@ -92,8 +104,12 @@ public class Flora {
             for (int col = 0; col < treeSize * 2 + 1; col++) {
                 float currentX = rootX - treeSize * leafBlockSize +
                         col * leafBlockSize;
-                // Create leaves in probability of 0.8
-                if (random.nextDouble() > 0.8) {
+                // Create leaves in probability of 0.7 and fruit in 0.1
+                if (random.nextDouble() > 0.7) {
+                    if(random.nextDouble() > 0.8) {
+                        Block fruit = createFruit(currentX, currentY);
+                        treeTops.add(fruit);
+                    }
                     continue;
                 }
                 RectangleRenderable leavesRenderable =

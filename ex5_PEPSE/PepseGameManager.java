@@ -11,6 +11,7 @@ import pepse.world.daynight.Night;
 import pepse.world.daynight.Sun;
 import pepse.world.daynight.SunHalo;
 import pepse.world.trees.Flora;
+import pepse.world.trees.Fruit;
 import pepse.world.trees.Leaf;
 
 import java.util.List;
@@ -28,9 +29,11 @@ public class PepseGameManager extends GameManager {
     private static final int SUN_HALO_LAYER = Layer.BACKGROUND + 10;
     private static final int TERRAIN_LAYER = Layer.STATIC_OBJECTS;
     private static final int TREE_TRUNKS_LAYER = Layer.DEFAULT;
+    private static final int FRUIT_LAYER = Layer.DEFAULT;
     private static final int LEAVES_LAYER = Layer.STATIC_OBJECTS + 20;
     private static final int AVATAR_LAYER = Layer.DEFAULT;
     private static final int NIGHT_LAYER = Layer.FOREGROUND;
+    private static Avatar avatar;
 
     @Override
     public void initializeGame(ImageReader imageReader,
@@ -60,7 +63,7 @@ public class PepseGameManager extends GameManager {
                 - Block.SIZE * 2;
         float avatarXCord = windowDimensions.x() * 0.5f;
 
-        Avatar avatar = new Avatar(new Vector2(avatarXCord, avatarYCord),
+        avatar = new Avatar(new Vector2(avatarXCord, avatarYCord),
                 inputListener, imageReader);
         gameObjects().addGameObject(avatar, AVATAR_LAYER);
 
@@ -76,10 +79,14 @@ public class PepseGameManager extends GameManager {
         for(Block block: blockList) {
             if(block.getTag().equals(Leaf.LEAF_TAG)) {
                 gameObjects().addGameObject(block, LEAVES_LAYER);
-                continue;
             }
-            // Else - it's a trunk block
-            gameObjects().addGameObject(block, TREE_TRUNKS_LAYER);
+            if(block.getTag().equals(Flora.TRUNKS_TAG)) {
+                gameObjects().addGameObject(block, TREE_TRUNKS_LAYER);
+            }
+            if(block.getTag().equals(Fruit.FRUIT_TAG)) {
+                gameObjects().addGameObject(block, FRUIT_LAYER);
+            }
+//            avatar.registerJumpObserver(block);
         }
     }
 
