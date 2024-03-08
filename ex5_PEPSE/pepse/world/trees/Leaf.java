@@ -1,35 +1,30 @@
 package pepse.world.trees;
 
-import danogl.GameObject;
-import danogl.collisions.Collision;
 import danogl.components.ScheduledTask;
 import danogl.components.Transition;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import pepse.world.Block;
+import pepse.world.JumpObserver;
 
 import java.util.Random;
 
 /**
  * A class to create the leaves in the game
  */
-public class Leaf extends Block {
+public class Leaf extends Block implements JumpObserver {
     private static final int LEAVES_ANGLE = 13;
     /**
      * The tag of the leaf
      */
     public static final String LEAF_TAG = "leaf";
-    private final Vector2 originalCenter;
     private static final Vector2 LEAVES_DIMENSIONS =
             new Vector2(Block.SIZE, Block.SIZE);
     private static final Random random = new Random();
-    private static final int FADE_OUT_TIME = 10;
-    private static final float FALL_VELOCITY = 45f;
 
     public Leaf(Vector2 topLeftCorner, Renderable renderable) {
         super(topLeftCorner, renderable);
         physics().preventIntersectionsFromDirection(Vector2.ZERO);
-        this.originalCenter = this.getCenter();
         this.setTag(LEAF_TAG);
         this.renderer().setRenderableAngle(LEAVES_ANGLE);
         this.setDimensions(LEAVES_DIMENSIONS);
@@ -37,9 +32,6 @@ public class Leaf extends Block {
         // Setting the leaves wind movement in some delay
         new ScheduledTask(this, random.nextInt(4),
                 true, this::LeavesWindMovement);
-        // Setting the leaves life cycle
-        new ScheduledTask(this, random.nextInt(10),
-                false, this::leavesLifeCycle);
     }
 
     /**
@@ -61,71 +53,88 @@ public class Leaf extends Block {
                 null);
     }
 
-    /**
-     * This function will add the leaves life cycle, including the fall of the
-     * leaf, its fadeout and return to its original location
-     * When called, the leaf will start to fall, and at the end of the cycle
-     * the leaf will be back in its original location on the tree
-     */
-    private void leavesLifeCycle() {
-        // Wait random amount of time before starting to fall and fadeout
-        new ScheduledTask(this, random.nextInt(100),
-                false, this::fallAndFadeOut);
-    }
+//    /**
+//     * This function will add the leaves life cycle, including the fall of the
+//     * leaf, its fadeout and return to its original location
+//     * When called, the leaf will start to fall, and at the end of the cycle
+//     * the leaf will be back in its original location on the tree
+//     */
+//    private void leavesLifeCycle() {
+//        // Wait random amount of time before starting to fall and fadeout
+//        new ScheduledTask(this, random.nextInt(100),
+//                false, this::fallAndFadeOut);
+//    }
+//
+//    /**
+//     * This function will make the leaf fall and fade out - to be called after
+//     * a random amount of time
+//     */
+//    private void fallAndFadeOut() {
+//        this.transform().setVelocityY(FALL_VELOCITY);
+//        // Setting the horizontal movement
+//        new Transition<>(this,
+//                x -> this.transform().setVelocityX(x),
+//                -20f, 20f,
+//                Transition.CUBIC_INTERPOLATOR_FLOAT, 2f,
+//                Transition.TransitionType.TRANSITION_BACK_AND_FORTH, null);
+//        this.renderer().fadeOut(FADE_OUT_TIME, this::leafCycleEnd);
+//    }
+//
+//    /**
+//     * This function will wait a random amount of time until resetting a leaf
+//     */
+//    private void leafCycleEnd() {
+//        // Wait a random amount of time until resetting the leaf
+//        new ScheduledTask(this, random.nextInt(10),
+//                false, this::resetLeaf);
+//    }
+//
+//    /**
+//     * This function will reset a leaf
+//     */
+//    private void resetLeaf() {
+//        this.setCenter(originalCenter);
+//        this.renderer().setOpaqueness(1f);
+//        this.setVelocity(Vector2.ZERO);
+//        // Removing the horizontal transition
+//        removeHorizontalMovement();
+//        leavesLifeCycle();
+//    }
+//
+//    /**
+//     * This function will set the horizontal movement to 0 - creating a new
+//     * Transition
+//     */
+//    private void removeMovement() {
+//        new Transition<>(this,
+//                x -> this.transform().setVelocityX(x),
+//                0f, 0f,
+//                Transition.CUBIC_INTERPOLATOR_FLOAT, 100f,
+//                Transition.TransitionType.TRANSITION_ONCE, null);
+//        new Transition<>(this,
+//                this.renderer()::setRenderableAngle, 0f, 0f,
+//                Transition.LINEAR_INTERPOLATOR_FLOAT, 100f,
+//                Transition.TransitionType.TRANSITION_ONCE,
+//                null);
+//    }
+//
+//    @Override
+//    public void onCollisionEnter(GameObject other, Collision collision) {
+//        super.onCollisionEnter(other, collision);
+//        // Removing the horizontal transition
+//        removeHorizontalMovement();
+//        this.setVelocity(Vector2.ZERO);
+//    }
 
     /**
-     * This function will make the leaf fall and fade out - to be called after
-     * a random amount of time
+     * Rotate the leaves by 90 degrees
      */
-    private void fallAndFadeOut() {
-        this.transform().setVelocityY(FALL_VELOCITY);
-        // Setting the horizontal movement
-        new Transition<>(this,
-                x -> this.transform().setVelocityX(x),
-                -20f, 20f,
-                Transition.CUBIC_INTERPOLATOR_FLOAT, 2f,
-                Transition.TransitionType.TRANSITION_BACK_AND_FORTH, null);
-        this.renderer().fadeOut(FADE_OUT_TIME, this::leafCycleEnd);
-    }
-
-    /**
-     * This function will wait a random amount of time until resetting a leaf
-     */
-    private void leafCycleEnd() {
-        // Wait a random amount of time until resetting the leaf
-        new ScheduledTask(this, random.nextInt(10),
-                false, this::resetLeaf);
-    }
-
-    /**
-     * This function will reset a leaf
-     */
-    private void resetLeaf() {
-        this.setCenter(originalCenter);
-        this.renderer().setOpaqueness(1f);
-        this.setVelocity(Vector2.ZERO);
-        // Removing the horizontal transition
-        removeHorizontalMovement();
-        leavesLifeCycle();
-    }
-
-    /**
-     * This function will set the horizontal movement to 0 - creating a new
-     * Transition
-     */
-    private void removeHorizontalMovement() {
-        new Transition<>(this,
-                x -> this.transform().setVelocityX(x),
-                0f, 0f,
-                Transition.CUBIC_INTERPOLATOR_FLOAT, 100f,
-                Transition.TransitionType.TRANSITION_BACK_AND_FORTH, null);
-    }
-
     @Override
-    public void onCollisionEnter(GameObject other, Collision collision) {
-        super.onCollisionEnter(other, collision);
-        // Removing the horizontal transition
-        removeHorizontalMovement();
-        this.setVelocity(Vector2.ZERO);
+    public void onJump() {
+        new Transition<>(this,
+                this.renderer()::setRenderableAngle, 0f, 90f,
+                Transition.LINEAR_INTERPOLATOR_FLOAT, 1f,
+                Transition.TransitionType.TRANSITION_ONCE,
+                null);
     }
 }

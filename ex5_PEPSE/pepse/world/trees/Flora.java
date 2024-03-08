@@ -4,6 +4,7 @@ import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
 import pepse.world.Block;
+import pepse.world.JumpObserver;
 import pepse.world.Terrain;
 
 import java.util.ArrayList;
@@ -16,14 +17,16 @@ import java.util.Random;
 /**
  * A class for the trees in the game
  */
-public class Flora {
+public class Flora implements JumpObserver {
     private static final Color TREE_TRUNK_COLOR = new Color(100, 50, 20);
     private static final Color LEAVES_COLOR = new Color(50, 200, 30);
     private static final float FRUIT_PROBABILITY = 0.9f;
+    private static final float LEAVES_PROBABILITY = 0.7f;
     /**
      * The tag of a tree trunk
      */
     public static final String TRUNKS_TAG = "trunk";
+    private static final double TREE_PROBABILITY = 0.1f;
     private final Random random = new Random();
     private final int treeHeight;
     private final Terrain terrain;
@@ -50,7 +53,7 @@ public class Flora {
             // Plant the trees pseudo-randomly
             Random randomTree = new Random(Objects.hash(xVal));
             // Plant tree in probability of 0.1
-            if (randomTree.nextDouble() < 0.1) {
+            if (randomTree.nextDouble() < TREE_PROBABILITY) {
                 float yVal = ((int) (terrain.groundHeightAt(xVal) /
                         Block.SIZE)) * Block.SIZE - Block.SIZE;
                 for (int i = 0; i < treeHeight; i++) {
@@ -105,8 +108,8 @@ public class Flora {
                 float currentX = rootX - treeSize * leafBlockSize +
                         col * leafBlockSize;
                 // Create leaves in probability of 0.7 and fruit in 0.1
-                if (random.nextDouble() > 0.7) {
-                    if(random.nextDouble() > 0.8) {
+                if (random.nextDouble() > LEAVES_PROBABILITY) {
+                    if(random.nextDouble() > FRUIT_PROBABILITY) {
                         Block fruit = createFruit(currentX, currentY);
                         treeTops.add(fruit);
                     }
@@ -121,6 +124,14 @@ public class Flora {
             }
         }
         return treeTops;
+    }
+
+    /**
+     * Making the tree trunks to change color
+     */
+    @Override
+    public void onJump() {
+
     }
 }
 

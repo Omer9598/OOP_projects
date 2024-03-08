@@ -16,6 +16,9 @@ import pepse.world.trees.Leaf;
 
 import java.util.List;
 
+/**
+ * Game manager to init the game
+ */
 public class PepseGameManager extends GameManager {
     private static final int MIN_X_TERRAIN = -180;
     private static final int MAX_X_TERRAIN = 1710;
@@ -35,6 +38,9 @@ public class PepseGameManager extends GameManager {
     private static final int NIGHT_LAYER = Layer.FOREGROUND;
     private static Avatar avatar;
 
+    /**
+     * Init the game
+     */
     @Override
     public void initializeGame(ImageReader imageReader,
                                SoundReader soundReader,
@@ -55,10 +61,8 @@ public class PepseGameManager extends GameManager {
 
         leftBorder = Terrain.changeMinMaxX(MIN_X_TERRAIN, false);
         rightBorder = Terrain.changeMinMaxX(MAX_X_TERRAIN, true);
-
         Terrain terrain = createTerrain(windowDimensions);
-        createSunAndHalo(windowDimensions);
-        createTrees(terrain);
+
         float avatarYCord = terrain.groundHeightAt(windowDimensions.x() * 2)
                 - Block.SIZE * 2;
         float avatarXCord = windowDimensions.x() * 0.5f;
@@ -71,6 +75,9 @@ public class PepseGameManager extends GameManager {
         avatar.setEnergyChangeCallback(energyDisplay);
         GameObject energy = energyDisplay.getDisplayObject();
         gameObjects().addGameObject(energy, ENERGY_DISPLAY_LAYER);
+
+        createSunAndHalo(windowDimensions);
+        createTrees(terrain);
     }
 
     private void createTrees(Terrain terrain) {
@@ -79,14 +86,15 @@ public class PepseGameManager extends GameManager {
         for(Block block: blockList) {
             if(block.getTag().equals(Leaf.LEAF_TAG)) {
                 gameObjects().addGameObject(block, LEAVES_LAYER);
+                avatar.registerJumpObserver((Leaf) block);
             }
             if(block.getTag().equals(Flora.TRUNKS_TAG)) {
                 gameObjects().addGameObject(block, TREE_TRUNKS_LAYER);
             }
             if(block.getTag().equals(Fruit.FRUIT_TAG)) {
                 gameObjects().addGameObject(block, FRUIT_LAYER);
+                avatar.registerJumpObserver((Fruit) block);
             }
-//            avatar.registerJumpObserver(block);
         }
     }
 

@@ -1,7 +1,6 @@
 package pepse.world;
 
 import danogl.GameObject;
-import danogl.collisions.Collision;
 import danogl.gui.ImageReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.AnimationRenderable;
@@ -75,6 +74,7 @@ public class Avatar extends GameObject {
             transform().setVelocityY(VELOCITY_Y);
             energy -= 10;
             renderer().setRenderable(jumpAvatar);
+            notifyJumpObservers();
         }
         if(getVelocity().y() == 0 && getVelocity().x() == 0 && energy < 100) {
             energy++;
