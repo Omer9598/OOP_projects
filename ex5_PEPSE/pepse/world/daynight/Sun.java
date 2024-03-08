@@ -14,6 +14,8 @@ import java.awt.*;
 public class Sun {
     private static final Vector2 SUN_DIMENSIONS = new Vector2(120, 120);
     private static final float RADIUS_SCALE_FACTOR = 3f;
+    private static final String SUN_TAG = "sun";
+
     /**
      * Creating the sun object
      */
@@ -22,7 +24,7 @@ public class Sun {
         OvalRenderable ovalShape = new OvalRenderable(Color.yellow);
         GameObject sun = new GameObject(Vector2.ZERO, SUN_DIMENSIONS, ovalShape);
         sun.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
-        sun.setTag("sun");
+        sun.setTag(SUN_TAG);
 
         Vector2 initialSunCenter = new Vector2(windowDimensions.x() / 2,
                 (float) (windowDimensions.y() / 2.4));

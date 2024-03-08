@@ -14,6 +14,7 @@ import java.awt.*;
  */
 public class Night {
     private static final float MIDNIGHT_OPACITY = 0.5f;
+    private static final String NIGHT_TAG = "night";
 
     /**
      * Creating the night object.
@@ -25,7 +26,7 @@ public class Night {
         GameObject night = new GameObject(Vector2.ZERO, windowDimensions,
                 blackCube);
         night.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
-        night.setTag("night");
+        night.setTag(NIGHT_TAG);
 
         new Transition<> (night, night.renderer()::setOpaqueness, 0f,
                 MIDNIGHT_OPACITY, Transition.CUBIC_INTERPOLATOR_FLOAT,

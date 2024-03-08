@@ -10,8 +10,14 @@ import pepse.world.Block;
 
 import java.util.Random;
 
+/**
+ * A class to create the leaves in the game
+ */
 public class Leaf extends Block {
     private static final int LEAVES_ANGLE = 13;
+    /**
+     * The tag of the leaf
+     */
     public static final String LEAF_TAG = "leaf";
     private final Vector2 originalCenter;
     private static final Vector2 LEAVES_DIMENSIONS =
@@ -48,7 +54,8 @@ public class Leaf extends Block {
                 null);
 
         new Transition<>(this,
-                x -> this.setDimensions(new Vector2((1 + x / 100) * Block.SIZE, Block.SIZE)),
+                x -> this.setDimensions(new Vector2(
+                        (1 + x / 100) * Block.SIZE, Block.SIZE)),
                 -6f, 6f, Transition.LINEAR_INTERPOLATOR_FLOAT,
                 0.6f, Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
                 null);

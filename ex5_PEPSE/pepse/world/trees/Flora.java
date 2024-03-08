@@ -13,6 +13,9 @@ import java.awt.*;
 import java.util.Objects;
 import java.util.Random;
 
+/**
+ * A class for the trees in the game
+ */
 public class Flora {
     private static final Color TREE_TRUNK_COLOR = new Color(100, 50, 20);
     private static final Color LEAVES_COLOR = new Color(50, 200, 30);
@@ -21,6 +24,9 @@ public class Flora {
     private final int treeHeight;
     private final Terrain terrain;
 
+    /**
+     * Class constructor
+     */
     public Flora(Terrain terrain) {
         this.terrain = terrain;
         this.treeHeight = random.nextInt(4) + 5;

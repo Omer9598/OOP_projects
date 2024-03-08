@@ -29,6 +29,9 @@ public class EnergyDisplay implements EnergyChangeCallback{
         return displayObject;
     }
 
+    /**
+     * Change the text renderable on energy change of the avatar
+     */
     public void onEnergyChanged(int newEnergy) {
         textRenderable.setString(String.format(ENERGY_FORMAT, newEnergy));
     }

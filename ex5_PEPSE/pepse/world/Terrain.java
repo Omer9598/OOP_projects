@@ -9,12 +9,19 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A class to create the terrain of the game
+ */
 public class Terrain {
     private final int seed;
     private static final float TERRAIN_DEPTH = 20;
     private static final String GROUND_TAG = "ground block";
     private final float groundHeightAtX0;
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
+
+    /**
+     * Class constructor
+     */
     public Terrain(Vector2 windowDimensions, int seed) {
         this.seed = seed;
         this.groundHeightAtX0 = windowDimensions.y() * 2 / 3;

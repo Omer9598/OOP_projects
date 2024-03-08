@@ -16,6 +16,7 @@ public class Avatar extends GameObject {
     private static final float VELOCITY_Y = -650;
     private static final float GRAVITY = 600;
     private static final int INITIAL_ENERGY = 100;
+    private static final String AVATAR_TAG = "avatar";
     private int energy;
     private static final Vector2 AVATAR_DIMENSIONS = new Vector2(50, 70);
     private static AnimationRenderable staticAvatar;
@@ -33,7 +34,7 @@ public class Avatar extends GameObject {
         transform().setAccelerationY(GRAVITY);
         this.inputListener = inputListener;
         this.energy = INITIAL_ENERGY;
-        this.setTag("avatar");
+        this.setTag(AVATAR_TAG);
         createRenderables(imageReader);
     }
 
