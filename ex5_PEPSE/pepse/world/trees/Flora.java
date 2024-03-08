@@ -1,32 +1,28 @@
 package pepse.world.trees;
 
-import danogl.collisions.GameObjectCollection;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
 import pepse.world.Block;
 import pepse.world.Terrain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import java.awt.*;
 import java.util.Objects;
 import java.util.Random;
 
-public class Tree {
+public class Flora {
     private static final Color TREE_TRUNK_COLOR = new Color(100, 50, 20);
-    private static final Color LEAVES_COLOR = new Color(30, 180, 65);
+    private static final Color LEAVES_COLOR = new Color(50, 200, 30);
+    private static final String TRUNKS_TAG = "trunk";
     private final Random random = new Random();
     private final int treeHeight;
     private final Terrain terrain;
-    private final GameObjectCollection gameObjects;
-    private final int treesLayer;
-    private final int leavesLayer;
 
-    public Tree(Terrain terrain, GameObjectCollection gameObjects,
-                int treesLayer, int leavesLayer) {
+    public Flora(Terrain terrain) {
         this.terrain = terrain;
-        this.gameObjects = gameObjects;
-        this.treesLayer = treesLayer;
-        this.leavesLayer = leavesLayer;
         this.treeHeight = random.nextInt(4) + 5;
     }
 
@@ -34,7 +30,8 @@ public class Tree {
      * This function will create trees randomly - in probability of 0.1 for each
      * x value in the range given.
      */
-    public void createInRange(float minX, float maxX) {
+    public List<Block> createInRange(float minX, float maxX) {
+        List<Block> trees = new ArrayList<>();
         // Change the minX and maxX to be divided by Block.SIZE
         minX = Terrain.changeMinMaxX(minX, true);
         maxX = Terrain.changeMinMaxX(maxX, false);
@@ -44,31 +41,32 @@ public class Tree {
             Random randomTree = new Random(Objects.hash(xVal));
             // Plant tree in probability of 0.1
             if (randomTree.nextDouble() < 0.1) {
-                float yVal = ((int) (terrain.groundHeightAt(xVal) / Block.SIZE)) *
-                        Block.SIZE - Block.SIZE;
+                float yVal = ((int) (terrain.groundHeightAt(xVal) /
+                        Block.SIZE)) * Block.SIZE - Block.SIZE;
                 for (int i = 0; i < treeHeight; i++) {
                     RectangleRenderable treeRenderable =
-                            new RectangleRenderable(ColorSupplier.approximateColor(
-                                    TREE_TRUNK_COLOR));
-                    createTreeBlock(treeRenderable, xVal, yVal,
-                            "tree block", treesLayer);
+                            new RectangleRenderable(ColorSupplier
+                                    .approximateColor(TREE_TRUNK_COLOR));
+                    Block trunk = createTreeBlock(treeRenderable, xVal, yVal);
+                    trees.add(trunk);
                     yVal -= Block.SIZE;
                 }
                 // Handling the tree tops
-                createTreeTop(xVal, yVal);
+                trees.addAll(createTreeTop(xVal, yVal));
             }
         }
+        return trees;
     }
 
     /**
      * This function will create a single tree block
      */
-    private void createTreeBlock(RectangleRenderable renderable, float xVal,
-                                 float yVal, String tag, int layer) {
+    private Block createTreeBlock(RectangleRenderable renderable, float xVal,
+                                 float yVal) {
         Vector2 blockPosition = new Vector2(xVal, yVal);
         Block block = new Block(blockPosition, renderable);
-        gameObjects.addGameObject(block, layer);
-        block.setTag(tag);
+        block.setTag(TRUNKS_TAG);
+        return block;
     }
 
     /**
@@ -76,7 +74,8 @@ public class Tree {
      * Choosing randomly from 2 to 4 to represent the size of the tree top
      * xVal and yVal are the values of the root block of the current tree
      */
-    private void createTreeTop(float rootX, float rootY) {
+    private List<Block> createTreeTop(float rootX, float rootY) {
+        List<Block> treeTops = new ArrayList<>();
         int treeSize = random.nextInt(2) + 1;
         float leafBlockSize = Block.SIZE;
 
@@ -96,9 +95,10 @@ public class Tree {
                                 LEAVES_COLOR));
                 Vector2 leafPosition = new Vector2(currentX, currentY);
                 Leaf leaf = new Leaf(leafPosition, leavesRenderable);
-                gameObjects.addGameObject(leaf, leavesLayer);
+                treeTops.add(leaf);
             }
         }
+        return treeTops;
     }
 }
 

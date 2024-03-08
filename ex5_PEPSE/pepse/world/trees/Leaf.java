@@ -10,8 +10,9 @@ import pepse.world.Block;
 
 import java.util.Random;
 
-public class Leaf extends GameObject {
+public class Leaf extends Block {
     private static final int LEAVES_ANGLE = 13;
+    public static final String LEAF_TAG = "leaf";
     private final Vector2 originalCenter;
     private static final Vector2 LEAVES_DIMENSIONS =
             new Vector2(Block.SIZE, Block.SIZE);
@@ -20,10 +21,10 @@ public class Leaf extends GameObject {
     private static final float FALL_VELOCITY = 45f;
 
     public Leaf(Vector2 topLeftCorner, Renderable renderable) {
-        super(topLeftCorner, LEAVES_DIMENSIONS, renderable);
+        super(topLeftCorner, renderable);
         physics().preventIntersectionsFromDirection(Vector2.ZERO);
         this.originalCenter = this.getCenter();
-        this.setTag("leaf");
+        this.setTag(LEAF_TAG);
         this.renderer().setRenderableAngle(LEAVES_ANGLE);
         this.setDimensions(LEAVES_DIMENSIONS);
 

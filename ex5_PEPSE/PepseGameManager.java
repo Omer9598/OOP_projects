@@ -10,7 +10,8 @@ import pepse.world.*;
 import pepse.world.daynight.Night;
 import pepse.world.daynight.Sun;
 import pepse.world.daynight.SunHalo;
-import pepse.world.trees.Tree;
+import pepse.world.trees.Flora;
+import pepse.world.trees.Leaf;
 
 import java.util.List;
 
@@ -26,12 +27,10 @@ public class PepseGameManager extends GameManager {
     private static final int ENERGY_DISPLAY_LAYER = Layer.BACKGROUND + 5;
     private static final int SUN_HALO_LAYER = Layer.BACKGROUND + 10;
     private static final int TERRAIN_LAYER = Layer.STATIC_OBJECTS;
-    private static final int TREE_TRUNKS_LAYER = Layer.STATIC_OBJECTS + 10;
+    private static final int TREE_TRUNKS_LAYER = Layer.DEFAULT;
     private static final int LEAVES_LAYER = Layer.STATIC_OBJECTS + 20;
     private static final int AVATAR_LAYER = Layer.DEFAULT;
     private static final int NIGHT_LAYER = Layer.FOREGROUND;
-    private static Terrain terrain;
-    private static Tree trees;
 
     @Override
     public void initializeGame(ImageReader imageReader,
@@ -53,10 +52,10 @@ public class PepseGameManager extends GameManager {
 
         leftBorder = Terrain.changeMinMaxX(MIN_X_TERRAIN, false);
         rightBorder = Terrain.changeMinMaxX(MAX_X_TERRAIN, true);
-        
-        terrain = createTerrain(windowDimensions);
+
+        Terrain terrain = createTerrain(windowDimensions);
         createSunAndHalo(windowDimensions);
-        trees = createTrees(terrain);
+        createTrees(terrain);
         float avatarYCord = terrain.groundHeightAt(windowDimensions.x() * 2)
                 - Block.SIZE * 2;
         float avatarXCord = windowDimensions.x() * 0.5f;
@@ -71,11 +70,17 @@ public class PepseGameManager extends GameManager {
         gameObjects().addGameObject(energy, ENERGY_DISPLAY_LAYER);
     }
 
-    private Tree createTrees(Terrain terrain) {
-        Tree trees = new Tree(terrain, gameObjects(), TREE_TRUNKS_LAYER,
-                LEAVES_LAYER);
-        trees.createInRange(leftBorder, rightBorder);
-        return trees;
+    private void createTrees(Terrain terrain) {
+        Flora trees = new Flora(terrain);
+        List<Block> blockList = trees.createInRange(leftBorder, rightBorder);
+        for(Block block: blockList) {
+            if(block.getTag().equals(Leaf.LEAF_TAG)) {
+                gameObjects().addGameObject(block, LEAVES_LAYER);
+                continue;
+            }
+            // Else - it's a trunk block
+            gameObjects().addGameObject(block, TREE_TRUNKS_LAYER);
+        }
     }
 
     private void createSunAndHalo(Vector2 windowDimensions) {
