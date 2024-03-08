@@ -1,31 +1,24 @@
 package pepse.world.trees;
 
-import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
-import pepse.util.ColorSupplier;
 import pepse.world.Block;
-import pepse.world.JumpObserver;
 import pepse.world.Terrain;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import java.awt.*;
 import java.util.Objects;
 import java.util.Random;
 
 /**
  * A class for the trees in the game
  */
-public class Flora implements JumpObserver {
-    private static final Color TREE_TRUNK_COLOR = new Color(100, 50, 20);
-    private static final Color LEAVES_COLOR = new Color(50, 200, 30);
+public class Flora {
     private static final float FRUIT_PROBABILITY = 0.9f;
-    private static final float LEAVES_PROBABILITY = 0.7f;
+    private static final float LEAVES_PROBABILITY = 0.8f;
     /**
      * The tag of a tree trunk
      */
-    public static final String TRUNKS_TAG = "trunk";
     private static final double TREE_PROBABILITY = 0.1f;
     private final Random random = new Random();
     private final int treeHeight;
@@ -57,11 +50,7 @@ public class Flora implements JumpObserver {
                 float yVal = ((int) (terrain.groundHeightAt(xVal) /
                         Block.SIZE)) * Block.SIZE - Block.SIZE;
                 for (int i = 0; i < treeHeight; i++) {
-                    RectangleRenderable treeRenderable =
-                            new RectangleRenderable(ColorSupplier
-                                    .approximateColor(TREE_TRUNK_COLOR));
-                    Block trunk = createTreeBlock(treeRenderable, xVal, yVal);
-                    trees.add(trunk);
+                    trees.add(createTrunkBlock(xVal, yVal));
                     yVal -= Block.SIZE;
                 }
                 // Handling the tree tops
@@ -82,12 +71,9 @@ public class Flora implements JumpObserver {
     /**
      * This function will create a single tree block
      */
-    private Block createTreeBlock(RectangleRenderable renderable, float xVal,
-                                 float yVal) {
+    private Block createTrunkBlock( float xVal, float yVal) {
         Vector2 blockPosition = new Vector2(xVal, yVal);
-        Block block = new Block(blockPosition, renderable);
-        block.setTag(TRUNKS_TAG);
-        return block;
+        return new Trunk(blockPosition);
     }
 
     /**
@@ -109,29 +95,21 @@ public class Flora implements JumpObserver {
                         col * leafBlockSize;
                 // Create leaves in probability of 0.7 and fruit in 0.1
                 if (random.nextDouble() > LEAVES_PROBABILITY) {
-                    if(random.nextDouble() > FRUIT_PROBABILITY) {
+                    if (random.nextDouble() > FRUIT_PROBABILITY) {
                         Block fruit = createFruit(currentX, currentY);
                         treeTops.add(fruit);
                     }
                     continue;
                 }
-                RectangleRenderable leavesRenderable =
-                        new RectangleRenderable(ColorSupplier.approximateColor(
-                                LEAVES_COLOR));
-                Vector2 leafPosition = new Vector2(currentX, currentY);
-                Leaf leaf = new Leaf(leafPosition, leavesRenderable);
+                Leaf leaf = createLeaf(currentY, currentX);
                 treeTops.add(leaf);
             }
         }
         return treeTops;
     }
 
-    /**
-     * Making the tree trunks to change color
-     */
-    @Override
-    public void onJump() {
-
+    private static Leaf createLeaf(float currentY, float currentX) {
+        Vector2 leafPosition = new Vector2(currentX, currentY);
+        return new Leaf(leafPosition);
     }
 }
-

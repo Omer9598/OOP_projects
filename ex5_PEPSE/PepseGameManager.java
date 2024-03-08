@@ -13,6 +13,7 @@ import pepse.world.daynight.SunHalo;
 import pepse.world.trees.Flora;
 import pepse.world.trees.Fruit;
 import pepse.world.trees.Leaf;
+import pepse.world.trees.Trunk;
 
 import java.util.List;
 
@@ -88,8 +89,9 @@ public class PepseGameManager extends GameManager {
                 gameObjects().addGameObject(block, LEAVES_LAYER);
                 avatar.registerJumpObserver((Leaf) block);
             }
-            if(block.getTag().equals(Flora.TRUNKS_TAG)) {
+            if(block.getTag().equals(Trunk.TRUNK_TAG)) {
                 gameObjects().addGameObject(block, TREE_TRUNKS_LAYER);
+                avatar.registerJumpObserver((Trunk) block);
             }
             if(block.getTag().equals(Fruit.FRUIT_TAG)) {
                 gameObjects().addGameObject(block, FRUIT_LAYER);

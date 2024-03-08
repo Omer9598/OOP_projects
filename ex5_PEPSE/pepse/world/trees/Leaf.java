@@ -2,29 +2,32 @@ package pepse.world.trees;
 
 import danogl.components.ScheduledTask;
 import danogl.components.Transition;
-import danogl.gui.rendering.Renderable;
+import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
+import pepse.util.ColorSupplier;
 import pepse.world.Block;
 import pepse.world.JumpObserver;
 
+import java.awt.*;
 import java.util.Random;
 
 /**
  * A class to create the leaves in the game
  */
 public class Leaf extends Block implements JumpObserver {
-    private static final int LEAVES_ANGLE = 13;
+    private static final int LEAVES_ANGLE = 12;
     /**
      * The tag of the leaf
      */
     public static final String LEAF_TAG = "leaf";
+    private static final Color LEAVES_COLOR = new Color(50, 200, 30);
     private static final Vector2 LEAVES_DIMENSIONS =
             new Vector2(Block.SIZE, Block.SIZE);
     private static final Random random = new Random();
 
-    public Leaf(Vector2 topLeftCorner, Renderable renderable) {
-        super(topLeftCorner, renderable);
-        physics().preventIntersectionsFromDirection(Vector2.ZERO);
+    public Leaf(Vector2 topLeftCorner) {
+        super(topLeftCorner, new RectangleRenderable(ColorSupplier
+                .approximateColor(LEAVES_COLOR)));
         this.setTag(LEAF_TAG);
         this.renderer().setRenderableAngle(LEAVES_ANGLE);
         this.setDimensions(LEAVES_DIMENSIONS);
@@ -49,7 +52,7 @@ public class Leaf extends Block implements JumpObserver {
                 x -> this.setDimensions(new Vector2(
                         (1 + x / 100) * Block.SIZE, Block.SIZE)),
                 -6f, 6f, Transition.LINEAR_INTERPOLATOR_FLOAT,
-                0.6f, Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
+                0.8f, Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
                 null);
     }
 
@@ -133,7 +136,7 @@ public class Leaf extends Block implements JumpObserver {
     public void onJump() {
         new Transition<>(this,
                 this.renderer()::setRenderableAngle, 0f, 90f,
-                Transition.LINEAR_INTERPOLATOR_FLOAT, 1f,
+                Transition.LINEAR_INTERPOLATOR_FLOAT, 1.5f,
                 Transition.TransitionType.TRANSITION_ONCE,
                 null);
     }
