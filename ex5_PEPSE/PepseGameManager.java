@@ -1,12 +1,10 @@
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
-import danogl.components.CoordinateSpace;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
-import danogl.gui.rendering.Camera;
 import danogl.util.Vector2;
 import pepse.world.*;
 import pepse.world.daynight.Night;
@@ -20,11 +18,8 @@ public class PepseGameManager extends GameManager {
     private static final int MIN_X_TERRAIN = -180;
     private static final int MAX_X_TERRAIN = 1710;
     private static final int CYCLE_LENGTH = 30;
-    private static final float worldChunk = Block.SIZE * 5;
     private static float leftBorder;
     private static float rightBorder;
-    private static float avatarPrevX;
-    private static Avatar avatar;
     // Game layers - in ascending order
     private static final int SKY_LAYER = Layer.BACKGROUND;
     private static final int SUN_LAYER = Layer.BACKGROUND + 1;
@@ -58,25 +53,21 @@ public class PepseGameManager extends GameManager {
 
         leftBorder = Terrain.changeMinMaxX(MIN_X_TERRAIN, false);
         rightBorder = Terrain.changeMinMaxX(MAX_X_TERRAIN, true);
+        
         terrain = createTerrain(windowDimensions);
         createSunAndHalo(windowDimensions);
         trees = createTrees(terrain);
         float avatarYCord = terrain.groundHeightAt(windowDimensions.x() * 2)
                 - Block.SIZE * 2;
-        avatarPrevX = windowDimensions.x() * 0.5f;
+        float avatarXCord = windowDimensions.x() * 0.5f;
 
-        avatar = new Avatar(new Vector2(avatarPrevX, avatarYCord),
+        Avatar avatar = new Avatar(new Vector2(avatarXCord, avatarYCord),
                 inputListener, imageReader);
         gameObjects().addGameObject(avatar, AVATAR_LAYER);
-
-        setCamera(new Camera(avatar,
-                windowDimensions.mult(0.5f).subtract(avatar.getCenter()),
-                windowDimensions, windowDimensions));
 
         EnergyDisplay energyDisplay = new EnergyDisplay();
         avatar.setEnergyChangeCallback(energyDisplay);
         GameObject energy = energyDisplay.getDisplayObject();
-        energy.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         gameObjects().addGameObject(energy, ENERGY_DISPLAY_LAYER);
     }
 
@@ -105,61 +96,62 @@ public class PepseGameManager extends GameManager {
     }
 
     /**
-     * Updating the world according to the avatar movement
-     */
-    @Override
-    public void update(float deltaTime) {
-        super.update(deltaTime);
-        avatarMovement();
-    }
-
-    /**
-     * This function handles avatar movement - creating and deleting the world
-     */
-    private void avatarMovement() {
-        // If avatar moved worldChunk to the right
-        if(avatar.getCenter().x() >= avatarPrevX + worldChunk) {
-            avatarPrevX = avatar.getCenter().x();
-            // Creating a world chunk to the right
-            terrain.createInRange(rightBorder, rightBorder + worldChunk);
-            trees.createInRange(rightBorder, rightBorder + worldChunk);
-            removeWorldChunk(leftBorder, leftBorder + worldChunk);
-            leftBorder += worldChunk;
-            rightBorder += worldChunk;
-        }
-        // If avatar moved worldChunk to the left
-        if(avatar.getCenter().x() <= avatarPrevX - worldChunk) {
-            avatarPrevX = avatar.getCenter().x();
-            // Creating a world chunk to the left
-            terrain.createInRange(leftBorder - worldChunk, leftBorder);
-            trees.createInRange(leftBorder - worldChunk, leftBorder);
-            removeWorldChunk(rightBorder - worldChunk, rightBorder);
-            rightBorder -= worldChunk;
-            leftBorder -= worldChunk;
-        }
-    }
-
-    /**
-     * This function will remove all the objects in all layers, from
-     * x value of startPoint to endPoint
-     */
-    private void removeWorldChunk(float startPoint, float endPoint) {
-        for(GameObject gameObject: gameObjects()) {
-            if(startPoint <= gameObject.getCenter().x() &&
-                    gameObject.getCenter().x() <= endPoint) {
-                gameObjects().removeGameObject(gameObject, LEAVES_LAYER);
-                gameObjects().removeGameObject(gameObject, TERRAIN_LAYER);
-                // None-solid terrain layer
-                gameObjects().removeGameObject(gameObject, TERRAIN_LAYER - 1);
-                gameObjects().removeGameObject(gameObject, TREE_TRUNKS_LAYER);
-            }
-        }
-    }
-
-    /**
      * Main function of the game
      */
     public static void main(String[] args) {
         new PepseGameManager().run();
     }
 }
+
+
+//    /**
+//     * Updating the world according to the avatar movement
+//     */
+//    @Override
+//    public void update(float deltaTime) {
+//        super.update(deltaTime);
+////        avatarMovement();
+//    }
+//
+//    /**
+//     * This function handles avatar movement - creating and deleting the world
+//     */
+//    private void avatarMovement() {
+//        // If avatar moved worldChunk to the right
+//        if(avatar.getCenter().x() >= avatarPrevX + worldChunk) {
+//            avatarPrevX = avatar.getCenter().x();
+//            // Creating a world chunk to the right
+//            terrain.createInRange(rightBorder, rightBorder + worldChunk);
+//            trees.createInRange(rightBorder, rightBorder + worldChunk);
+//            removeWorldChunk(leftBorder, leftBorder + worldChunk);
+//            leftBorder += worldChunk;
+//            rightBorder += worldChunk;
+//        }
+//        // If avatar moved worldChunk to the left
+//        if(avatar.getCenter().x() <= avatarPrevX - worldChunk) {
+//            avatarPrevX = avatar.getCenter().x();
+//            // Creating a world chunk to the left
+//            terrain.createInRange(leftBorder - worldChunk, leftBorder);
+//            trees.createInRange(leftBorder - worldChunk, leftBorder);
+//            removeWorldChunk(rightBorder - worldChunk, rightBorder);
+//            rightBorder -= worldChunk;
+//            leftBorder -= worldChunk;
+//        }
+//    }
+//
+//    /**
+//     * This function will remove all the objects in all layers, from
+//     * x value of startPoint to endPoint
+//     */
+//    private void removeWorldChunk(float startPoint, float endPoint) {
+//        for(GameObject gameObject: gameObjects()) {
+//            if(startPoint <= gameObject.getCenter().x() &&
+//                    gameObject.getCenter().x() <= endPoint) {
+//                gameObjects().removeGameObject(gameObject, LEAVES_LAYER);
+//                gameObjects().removeGameObject(gameObject, TERRAIN_LAYER);
+//                // None-solid terrain layer
+//                gameObjects().removeGameObject(gameObject, TERRAIN_LAYER - 1);
+//                gameObjects().removeGameObject(gameObject, TREE_TRUNKS_LAYER);
+//            }
+//        }
+//    }

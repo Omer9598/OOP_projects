@@ -76,7 +76,7 @@ public class Avatar extends GameObject {
         if(getVelocity().y() == 0 && getVelocity().x() == 0 && energy < 100) {
             energy++;
         }
-        if(getVelocity().x() == 0) {
+        if(getVelocity().x() == 0 && getVelocity().y() == 0) {
             renderer().setRenderable(staticAvatar);
         }
         // Notify energy change with the callback
