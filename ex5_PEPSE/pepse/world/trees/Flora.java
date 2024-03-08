@@ -83,7 +83,7 @@ public class Flora {
      */
     private List<Block> createTreeTop(float rootX, float rootY) {
         List<Block> treeTops = new ArrayList<>();
-        int treeSize = random.nextInt(2) + 1;
+        int treeSize = random.nextInt(3) + 1;
         float leafBlockSize = Block.SIZE;
 
         for (int row = 0; row < treeSize * 2 + 1; row++) {

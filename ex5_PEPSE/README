@@ -1,0 +1,64 @@
+omer_daniely, omriporat
+206558835, 209043025
+
+How we implemented the tree package:
+First, we want to explain about the JumpObserver interface, although it is not
+in the trees package, most of the classes implement it so it is important.
+The interface has one method - onJump which is called when the avatar jumps
+to all the observers of this interface (all the classes that implement the
+jumpObserver interface).
+
+Now let's explain all the classes in the package separately:
+
+Trunk - in this class we create the tree trunk blocks with different blocks
+creating each trunk (using approximateColor method on each block we create).
+The class implements the JumpObserver interface, making it an observer to the
+jumps of the avatar. When the avatar jumps, in the onJump method, we create
+a new trunk renderable that will randomize the colors of the trunk as needed.
+The class sets each block with the tag "trunk"
+
+Leaf - in this class we create the leaves of the trees, with different colors
+using the same method as described fot the trunks. We create a ScheduledTask
+with random wait time up to 4 seconds, such that the leaves will move randomly
+and not uniformly as needed. The movement is created using 2 Transitions - one
+that changes the angles of the leaves , and one that changes the dimensions,
+both use TRANSITION_BACK_AND_FORTH for repeatedly moving.
+The leaf implements the JumpObserver interface, which onJump will create a new
+TRANSITION_ONCE Transition that rotates the leaves by 90 degrees as described
+in the instructions.
+The class sets each block with the tag "leaf"
+
+Fruit - in this class we create the fruit as round, red colored. The class
+implements JumpObserver, which will change the color of the fruit from red to
+yellow if the avatar jumps, and from yellow to red.
+The class sets each block with the tag "fruit"
+
+** finish with disappearing of the fruit and adding energy to the avatar when
+collides**
+
+Flora - in this class we create the full trees, using the classes mentioned
+above:
+We randomize trees on the terrain with probability of 0.1 to create a tree.
+To plant a tree, we use terrains method groundHeightAt to know where to place
+the bottom trunk block, and create the trunks with random height from 5 blocks
+to 9 blocks (block size is 30 as mentioned in the instructions).
+After creating the trunks, we create the treetops - the size of each treetop
+is from 2*2 to 7*7 randomly, and the leaves are also randomly created with
+probability of 0.7. In addition, we randomly create fruits with probability of
+0.1 to be placed in empty locations at the treetops (places without leaves).
+All the blocks we create, we add to the List<Block> trees list, and we return
+this list in createInRange method, such that we can conveniently add all these
+game objects in the pepseGameManager class in the relevant layers of the game.
+
+
+The connections between the classes is that the Flora uses all the other
+classes to create the needed blocks for planting the tree - we can say that
+the Flora class is the manager of the trees (and a great pizza place in
+Jerusalem). In addition as we mentioned above, the Trunk, Leaf and Fruit
+classes implement JumpObserver interface, so they all have the onJump method
+that will be called when the avatar jumps (they are all observers to avatar
+jumping).
+
+
+As mentioned above, we used the observer pattern in the packages classes, to
+get the behaviours needed according to the instructions of the exercise.

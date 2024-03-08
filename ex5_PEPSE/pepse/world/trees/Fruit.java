@@ -1,7 +1,6 @@
 package pepse.world.trees;
 
 import danogl.gui.rendering.OvalRenderable;
-import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import pepse.world.Block;
 import pepse.world.JumpObserver;
@@ -29,7 +28,7 @@ public class Fruit extends Block implements JumpObserver {
 
     @Override
     public void onJump() {
-        if(redColor) {
+        if (redColor) {
             redColor = false;
             renderer().setRenderable(new OvalRenderable(Color.YELLOW));
             return;
@@ -38,4 +37,3 @@ public class Fruit extends Block implements JumpObserver {
         redColor = true;
     }
 }
-
