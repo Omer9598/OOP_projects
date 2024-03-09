@@ -6,7 +6,6 @@ import danogl.gui.UserInputListener;
 import danogl.gui.rendering.AnimationRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import pepse.world.trees.Fruit;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class Avatar extends GameObject {
     public Avatar(Vector2 pos, UserInputListener inputListener,
                   ImageReader imageReader) {
         super(pos, AVATAR_DIMENSIONS,
-                imageReader.readImage("pepse/assets/idle_0.png",
+                imageReader.readImage("assets/idle_0.png",
                         true));
         physics().preventIntersectionsFromDirection(Vector2.ZERO);
         transform().setAccelerationY(GRAVITY);
@@ -120,7 +119,7 @@ public class Avatar extends GameObject {
     private static Renderable[] loadRenderables(String baseFileName, int count,
                                                 ImageReader imageReader) {
         Renderable[] renderables = new Renderable[count];
-        String directoryPath = "pepse/assets/";
+        String directoryPath = "assets/";
         for (int i = 0; i < count; i++) {
             String fullPath = directoryPath + baseFileName + (i + 1) + ".png";
             renderables[i] = imageReader.readImage(fullPath, true);
