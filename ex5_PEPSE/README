@@ -1,7 +1,4 @@
-omer_daniely, omriporat
-206558835, 209043025
-
-How we implemented the tree package:
+How I implemented the tree package:
 First, we want to explain about the JumpObserver interface, although it is not
 in the trees package, most of the classes implement it so it is important.
 The interface has one method - onJump which is called when the avatar jumps
